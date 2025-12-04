@@ -1,3 +1,6 @@
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+
+
 export default function Navbar() {
   return (
     <nav className="w-full bg-white shadow-sm border-b border-gray-200">
@@ -11,7 +14,12 @@ export default function Navbar() {
         <div className="flex gap-6 text-gray-700">
           <a href="/products">Products</a>
           <a href="/cart">Cart</a>
-          <a href="/login">Login</a>
+          <SignedOut>
+            <SignInButton mode="redirect" redirectUrl="/"/>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
     </nav>
