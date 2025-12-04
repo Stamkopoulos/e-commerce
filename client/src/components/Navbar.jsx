@@ -3,7 +3,7 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-reac
 
 export default function Navbar() {
   return (
-    <nav className="w-full bg-white shadow-sm border-b border-gray-200">
+    <nav className="fixed w-full bg-white shadow-sm border-b border-gray-200">
       <div className="mx-auto px-4 py-4 flex justify-between items-center">
         {/* Left - Logo */}
         <div className="flex items-center gap-2">
