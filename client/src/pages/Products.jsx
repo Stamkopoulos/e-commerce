@@ -36,8 +36,8 @@ export default function Products() {
 
   return (
     <>
-      <Navbar />
-
+    <Navbar />
+      <main className="flex flex-col min-h-screen">
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold mb-10 text-center">All Products</h1>
 
@@ -50,7 +50,7 @@ export default function Products() {
             className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-          />
+            />
           {/* Sort Dropdown */}
           <select
             className="border rounded-xl px-4 py-2"
@@ -78,7 +78,7 @@ export default function Products() {
           </p>
         )}
       </section>
-
+        </main>
       <Footer />
     </>
   );

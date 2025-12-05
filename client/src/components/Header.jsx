@@ -1,6 +1,10 @@
+import bg from '../assets/bg.jpg';
+
 function Header() {
   return (
-    <section className="w-full min-h-screen flex items-center justify-center bg-[radial-gradient(circle,_rgba(63,94,251,1)_0%,_rgba(252,70,107,1)_100%)] py-20 text-center">
+    <section className="w-full min-h-screen flex items-center justify-center py-20 text-center" 
+    style={{backgroundImage: `url(${bg})`
+    , backgroundSize: 'cover'}}>
       {/* Gradient container */}
       <div className="px-6 py-20 rounded-xl w-full max-w-3xl text-white">
         <h1 className="text-5xl font-bold mb-4">Welcome to Our Store</h1>
