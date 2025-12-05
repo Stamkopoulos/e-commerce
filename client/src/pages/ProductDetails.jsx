@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { getProductById } from "../services/productService";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/useCart";
 
 export default function ProductDetails() {
   const { id } = useParams(); //URL parameter
