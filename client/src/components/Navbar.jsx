@@ -15,7 +15,7 @@ export default function Navbar() {
           <a href="/products">Products</a>
           <a href="/cart">Cart</a>
           <SignedOut>
-            <SignInButton mode="redirect" redirectUrl="/"/>
+            <SignInButton mode="redirect" redirecturl="/"/>
           </SignedOut>
           <SignedIn>
             <UserButton />
