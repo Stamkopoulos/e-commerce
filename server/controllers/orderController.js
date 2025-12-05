@@ -1,16 +1,25 @@
 import Order from "../models/Order.js";
+import User from "../models/User.js";
+import { getAuth } from "@clerk/express";
 
 //Create a new order
 export const createOrder = async (req, res) => {
   try {
+    const { userId } = getAuth(req);
+    //const userId = req.auth.userId; //its the same
+
+    let user = null;
+    if (userId) {
+      user = await User.findOne({ clerkId: userId }); //Find user from clerkId
+    }
+
     const {
-      user,
       customerFirstName,
       customerLastName,
       email,
       phone,
       address,
-      zipcode,
+      zipCode,
       items,
       totalPrice,
       /*status,
@@ -18,13 +27,13 @@ export const createOrder = async (req, res) => {
     } = req.body;
 
     const newOrder = await Order.create({
-      user,
+      user: user ? user._id : null, //If (mongo)user exists, store their _id, if not exists store null
       customerFirstName,
       customerLastName,
       email,
       phone,
       address,
-      zipcode,
+      zipCode,
       items,
       totalPrice,
       /*status,
@@ -51,7 +60,6 @@ export const getAllOrders = async (req, res) => {
 export const getOrderById = async (req, res) => {
   try {
     const id = req.params.id;
-
     const order = await Order.findById(id).populate("user", "name email");
 
     if (!order) {
@@ -64,12 +72,18 @@ export const getOrderById = async (req, res) => {
   }
 };
 
-// Get orders by user ID
+// Get orders by user ID - get orders of logged-in user
 export const getOrdersByUser = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { userId } = getAuth(req);
 
-    const orders = await Order.find({ user: id }).populate(
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const orders = await Order.find({ user: user._id }).populate(
       "user",
       "name email"
     );
@@ -85,7 +99,7 @@ export const getOrdersByUser = async (req, res) => {
 };
 
 // Update order status / payment (admin only)
-export const updateOrder = async (req, res) => {
+export const updateOrderStatus = async (req, res) => {
   try {
     const id = req.params.id;
     const { status, paymentStatus } = req.body;

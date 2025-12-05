@@ -3,14 +3,15 @@ import User from "../models/User.js";
 // Create a user
 export const createUser = async (req, res) => {
   try {
-    //const clerkId = req.auth.userId;
+    const clerkId = req.auth.userId;
     const { name, email, role } = req.body;
 
-    const existing = await User.findOne({ email }); // Later check clerkId as well
+    //const existing = await User.findOne({ email }); // Later check clerkId as well
+    const existing = await User.findOne({ clerkId });
     if (existing) return res.status(400).json({ error: "User already exists" });
 
     const newUser = await User.create({
-      //clerkId,
+      clerkId,
       name,
       email,
       role,
@@ -51,11 +52,11 @@ export const updateUser = async (req, res) => {
   try {
     //const clerkId = req.auth.userId; // Uncomment when integrating with Clerk
     const id = req.params.id;
-    const { name, email, role } = req.body;
+    const { name, /*email,*/ role } = req.body;
 
     const user = await User.findByIdAndUpdate(
       id,
-      { name, email, role },
+      { name, /*email,*/ role },
       { new: true }
     );
     if (!user) {
