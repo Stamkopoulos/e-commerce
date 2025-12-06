@@ -5,6 +5,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
+import Collections from "./pages/Collections";
 import Cart from "./pages/Cart";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/collections" element={<Collections />} />
       </Routes>
     </BrowserRouter>
   );

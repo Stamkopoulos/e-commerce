@@ -4,6 +4,7 @@ import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 
 import productRoutes from "./routes/productRoutes.js";
+import collectionRoutes  from "./routes/collectionRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import connectDB from "./config/db.js";
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 
 //Routes
+app.use("/api/collections", collectionRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);

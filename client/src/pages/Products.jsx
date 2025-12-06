@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import { getAllProducts } from "../services/productService";
+import bg from '../assets/bg.jpg';
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -37,8 +38,8 @@ export default function Products() {
   return (
     <>
     <Navbar />
-      <main className="flex flex-col min-h-screen">
-      <section className="max-w-6xl mx-auto px-4 py-16">
+      <main className="flex flex-col min-h-screen" style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
+      <section className="max-w-6xl mx-auto px-4 py-16" >
         <h1 className="text-4xl font-bold mb-10 text-center">All Products</h1>
 
         {/* Search + Sort */}
