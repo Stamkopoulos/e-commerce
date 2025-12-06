@@ -2,6 +2,7 @@ import React from "react";
 import { useCart } from "../context/useCart";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 export default function Cart() {
   const { cart, updateQuantity, removeFromCart, totalPrice } = useCart();
@@ -70,9 +71,12 @@ export default function Cart() {
             <div className="text-right mt-10">
               <p className="text-2xl font-bold">Total: €{totalPrice}</p>
 
-              <button className="mt-6 bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition">
+              <Link
+                to="/checkout"
+                className="mt-6 inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
+              >
                 Proceed to Checkout
-              </button>
+              </Link>
             </div>
           </div>
         )}
