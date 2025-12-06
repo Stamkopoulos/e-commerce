@@ -11,7 +11,7 @@ export default function Navbar() {
           <a href='/' className="text-xl font-semibold p-4">Home</a>
           <Menu as="div" className="relative inline-block">
             <MenuButton className="text-xl font-semibold inline-flex items-center justify-center px-3 py-2">
-              Products
+              Collections
               <ChevronDownIcon aria-hidden="true" className="size-5 text-black-400" />
             </MenuButton>
 
@@ -22,26 +22,26 @@ export default function Navbar() {
               <div className="py-1">
                 <MenuItem>
                   <a
-                    href="#"
+                    href="/products"
                     className="block px-4 py-2 text-md text-black-700"
                   >
-                    Product 1
+                    Men
                   </a>
                 </MenuItem>
                 <MenuItem>
                   <a
-                    href="#"
+                    href="/products"
                     className="block px-4 py-2 text-md text-black-700"
                   >
-                    Product 2
+                    Women
                   </a>
                 </MenuItem>
                 <MenuItem>
                   <a
-                    href="#"
+                    href="/products"
                     className="block px-4 py-2 text-md text-black-700"
                   >
-                    Product 3
+                    Accessories
                   </a>
                 </MenuItem>
               </div>
