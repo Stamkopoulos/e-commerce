@@ -1,11 +1,17 @@
 import mongoose from "mongoose";
 import axios from "axios";
 import dotenv from "dotenv";
+import path from "path";
 import Product from "../models/Product.js";
 
-dotenv.config();
+dotenv.config({ path: path.resolve("./server/.env") });
 
 const { MONGODB_URI } = process.env;
+
+if (!MONGODB_URI) {
+  console.error("❌ MONGODB_URI is not defined in your .env file!");
+  process.exit(1);
+}
 
 const CATEGORY_MAP = {
   jeans: ["jean", "denim"],
@@ -28,15 +34,16 @@ function detectCategory(product) {
 
 const fetchClothes = async () => {
   const urls = [
-    "https://fakestoreapi.com/products/category/men's clothing",
-    "https://fakestoreapi.com/products/category/women's clothing",
+    {url:"https://fakestoreapi.com/products/category/men's clothing", gender:'men'},
+    {url:"https://fakestoreapi.com/products/category/women's clothing", gender:'women'},
   ];
 
   let allProducts = [];
 
-  for (const url of urls) {
-    const res = await axios.get(url);
-    allProducts = allProducts.concat(res.data);
+  for (const entry of urls) {
+    const res = await axios.get(entry.url);
+    const withGender = res.data.map(item => ({ ...item, gender: entry.gender }));
+    allProducts = allProducts.concat(withGender);
   }
 
   return allProducts;
@@ -62,6 +69,7 @@ const seed = async () => {
       price: item.price,
       image: item.image,
       category: detectCategory(item),
+      gender: item.gender
     }));
 
     console.log("Inserting into database...");

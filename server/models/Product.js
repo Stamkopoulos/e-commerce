@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     stock: { type: Number, default: 0 },
     category: { type: String, required: true },
+    gender: { type: String, enum: ["men", "women"], required: true},
   },
   { timestamps: true }
 );

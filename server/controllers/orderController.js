@@ -77,6 +77,10 @@ export const getOrdersByUser = async (req, res) => {
   try {
     const { userId } = getAuth(req);
 
+    if (!userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
     const user = await User.findOne({ clerkId: userId });
 
     if (!user) {

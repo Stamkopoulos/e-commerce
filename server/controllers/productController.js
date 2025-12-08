@@ -25,7 +25,7 @@ export const getProductById = async (req, res) => {
 //Admin only. Needs authentication from clerk
 export const createProduct = async (req, res) => {
   try {
-    const { name, image, description, price, stock } = req.body;
+    const { name, image, description, price, stock, category } = req.body;
 
     const newProduct = await Product.create({
       name,
@@ -33,6 +33,7 @@ export const createProduct = async (req, res) => {
       description,
       price,
       stock,
+      category,
     });
 
     res.status(201).json(newProduct);
@@ -45,11 +46,11 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, image, description, price, stock } = req.body;
+    const { name, image, description, price, stock, category } = req.body;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, image, description, price, stock },
+      { name, image, description, price, stock, category },
       { new: true }
     );
 
