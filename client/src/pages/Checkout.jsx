@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/useCart";
 import { placeOrder } from "../services/orderService";
+import { toast } from "react-hot-toast";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -28,6 +29,9 @@ export default function Checkout() {
     return e;
   };
 
+  // Handle form field changes.
+  // A small closure to avoid writing separate handlers for each input:
+  // onChange("name") returns a function that updates form.name.
   const onChange = (k) => (ev) => {
     setForm((s) => ({ ...s, [k]: ev.target.value }));
   };
@@ -51,6 +55,7 @@ export default function Checkout() {
         total: totalPrice,
       });
 
+      toast.success("Order placed successfully! 🎉");
       clearCart();
       setConfirmation(order);
     } catch (err) {
