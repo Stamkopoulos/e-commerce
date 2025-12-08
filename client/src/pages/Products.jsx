@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { getAllProducts } from "../services/productService";
 import bg from "../assets/bg.jpg";
 import { useParams } from "react-router-dom";
 
