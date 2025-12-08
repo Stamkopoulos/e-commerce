@@ -3,8 +3,8 @@ import User from "../models/User.js";
 // Create a user
 export const createUser = async (req, res) => {
   try {
-    const clerkId = req.auth.userId;
-    const { name, email, role } = req.body;
+    //const clerkId = req.auth.userId;
+    const { clerkId, name, email, role } = req.body;
 
     //const existing = await User.findOne({ email }); // Later check clerkId as well
     const existing = await User.findOne({ clerkId });
