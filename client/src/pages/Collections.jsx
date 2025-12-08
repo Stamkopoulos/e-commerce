@@ -1,4 +1,3 @@
-// ...existing code...
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import bg from '../assets/bg.jpg';

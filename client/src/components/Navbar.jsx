@@ -1,18 +1,33 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
-
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { useCart } from "../context/useCart";
+import { Toaster } from "react-hot-toast";
 
 export default function Navbar() {
+  const { cart } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <nav className="fixed w-full">
       <div className="mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <a href='/' className="text-xl font-semibold p-4">Home</a>
+          <a href="/" className="text-xl font-semibold p-4">
+            Home
+          </a>
           <Menu as="div" className="relative inline-block">
             <MenuButton className="text-xl font-semibold inline-flex items-center justify-center px-3 py-2">
               Collections
-              <ChevronDownIcon aria-hidden="true" className="size-5 text-black-400" />
+              <ChevronDownIcon
+                aria-hidden="true"
+                className="size-5 text-black-400"
+              />
             </MenuButton>
 
             <MenuItems
@@ -51,15 +66,32 @@ export default function Navbar() {
 
         {/* Right - Links */}
         <div className="flex gap-6 text-gray-700 text-left">
-          <a href="/cart" className="text-xl font-semibold p-4">Cart</a>
+          {/* Cart Icon */}
+          <a href="/cart" className="relative p-3">
+            <ShoppingCartIcon className="w-7 h-7" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
+          </a>
+
           <SignedOut>
-            <SignInButton className="text-xl font-semibold p-4"mode="redirect" redirecturl="/"/>
+            <SignInButton
+              className="text-xl font-semibold p-4"
+              mode="redirect"
+              redirecturl="/"
+            />
           </SignedOut>
           <SignedIn>
             <UserButton />
           </SignedIn>
         </div>
       </div>
+      <Toaster
+        position="top-right"
+        containerStyle={{ marginTop: "70px", marginRight: "40px" }}
+      />
     </nav>
   );
 }
