@@ -4,23 +4,32 @@ import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import { getAllProducts } from "../services/productService";
 import bg from '../assets/bg.jpg';
+import { useParams } from "react-router-dom";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("default");
+  const {category} = useParams();
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const data = await getAllProducts();
+        let data;
+        if (category) {
+          const { getProductsByCategory } = await import("../services/productService");
+          data = await getProductsByCategory(category);
+        } else {
+          const { getAllProducts } = await import("../services/productService");
+          data = await getAllProducts();
+        }
         setProducts(data);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
     };
     loadProducts();
-  }, []);
+  }, [category]);
 
   const filteredProducts = products.filter((p) =>
     p.name?.toLowerCase().includes(search.toLowerCase())

@@ -22,7 +22,7 @@ export default function Navbar() {
               <div className="py-1">
                 <MenuItem>
                   <a
-                    href="/products"
+                    href="/collections/men"
                     className="block px-4 py-2 text-md text-black-700"
                   >
                     Men
@@ -30,7 +30,7 @@ export default function Navbar() {
                 </MenuItem>
                 <MenuItem>
                   <a
-                    href="/products"
+                    href="/collections/women"
                     className="block px-4 py-2 text-md text-black-700"
                   >
                     Women
@@ -38,7 +38,7 @@ export default function Navbar() {
                 </MenuItem>
                 <MenuItem>
                   <a
-                    href="/products"
+                    href="/collections/accessories"
                     className="block px-4 py-2 text-md text-black-700"
                   >
                     Accessories
