@@ -71,7 +71,7 @@ export default function Checkout() {
     return (
       <>
         <Navbar />
-        <main className="max-w-3xl mx-auto px-4 py-16 text-center">
+        <main className="flex flex-col min-h-screen max-w-3xl mx-auto px-4 py-16 text-center">
           <h1 className="text-3xl font-bold mb-4">Thank you — order placed!</h1>
           <p className="mb-2">
             Order ID: <span className="font-mono">{confirmation.orderId}</span>
@@ -119,76 +119,84 @@ export default function Checkout() {
     <>
       <Navbar />
 
-      <main className="max-w-3xl mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+      <main className="flex flex-col min-h-screen">
+        <section className="min-h-screen flex items-center justify-center py-20 text-center">
+          <div className="w-full max-w-3xl mx-auto px-4">
+            <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
-        {errors.form && <div className="mb-4 text-red-600">{errors.form}</div>}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input
-              value={form.name}
-              onChange={onChange("name")}
-              className={`w-full px-4 py-2 border rounded-lg ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.name && (
-              <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+            {errors.form && (
+              <div className="mb-4 text-red-600">{errors.form}</div>
             )}
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Address</label>
-            <textarea
-              value={form.address}
-              onChange={onChange("address")}
-              className={`w-full px-4 py-2 border rounded-lg ${
-                errors.address ? "border-red-500" : "border-gray-300"
-              }`}
-              rows={3}
-            />
-            {errors.address && (
-              <p className="text-red-600 text-sm mt-1">{errors.address}</p>
-            )}
-          </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  value={form.name}
+                  onChange={onChange("name")}
+                  className={`w-full px-4 py-2 border rounded-lg ${
+                    errors.name ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.name && (
+                  <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+                )}
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              value={form.email}
-              onChange={onChange("email")}
-              className={`w-full px-4 py-2 border rounded-lg ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.email && (
-              <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Address
+                </label>
+                <textarea
+                  value={form.address}
+                  onChange={onChange("address")}
+                  className={`w-full px-4 py-2 border rounded-lg ${
+                    errors.address ? "border-red-500" : "border-gray-300"
+                  }`}
+                  rows={3}
+                />
+                {errors.address && (
+                  <p className="text-red-600 text-sm mt-1">{errors.address}</p>
+                )}
+              </div>
 
-          <div className="bg-gray-50 border rounded-lg p-4">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Items</span>
-              <span className="text-sm text-gray-600">{cart.length}</span>
-            </div>
-            <div className="flex justify-between mt-2 text-lg font-semibold">
-              <span>Total</span>
-              <span>€{Number(totalPrice).toFixed(2)}</span>
-            </div>
-          </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <input
+                  value={form.email}
+                  onChange={onChange("email")}
+                  className={`w-full px-4 py-2 border rounded-lg ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.email && (
+                  <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full px-4 py-3 bg-black text-white rounded-lg hover:bg-gray-900 disabled:opacity-60"
-            >
-              {submitting ? "Placing order..." : "Place Order"}
-            </button>
+              <div className="bg-gray-50 border rounded-lg p-4">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Items</span>
+                  <span className="text-sm text-gray-600">{cart.length}</span>
+                </div>
+                <div className="flex justify-between mt-2 text-lg font-semibold">
+                  <span>Total</span>
+                  <span>€{Number(totalPrice).toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full px-4 py-3 bg-black text-white rounded-lg hover:bg-gray-900 disabled:opacity-60"
+                >
+                  {submitting ? "Placing order..." : "Place Order"}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </section>
       </main>
 
       <Footer />
