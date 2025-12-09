@@ -19,7 +19,7 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (product) => {
-    toast.remove(); // <- ensures toast will show every time
+    toast.remove();
     toast.success("Added to cart!");
     setCart((prev) => {
       const exists = prev.find((item) => item._id === product._id);
@@ -38,6 +38,7 @@ export function CartProvider({ children }) {
 
   const removeFromCart = (productId) => {
     setCart((prevCart) => prevCart.filter((item) => item._id !== productId));
+    toast.error("Removed from cart! 🗑️");
   };
 
   const updateQuantity = (productId, newQty) => {
@@ -49,7 +50,10 @@ export function CartProvider({ children }) {
     );
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    toast.success("Cart cleared! 🗑️");
+  };
 
   const totalPrice = cart
     .reduce((total, item) => total + item.price * item.quantity, 0)

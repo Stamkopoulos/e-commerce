@@ -5,7 +5,8 @@ import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
-  const { cart, updateQuantity, removeFromCart, totalPrice } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart, totalPrice } =
+    useCart();
 
   return (
     <>
@@ -60,20 +61,26 @@ export default function Cart() {
                 {/* Remove button */}
                 <button
                   onClick={() => removeFromCart(item._id)}
-                  className="text-red-500 hover:underline"
+                  className="text-red-500 hover:underline font-bold"
                 >
                   Remove
                 </button>
               </div>
             ))}
 
-            {/* Total price */}
-            <div className="text-right mt-10">
+            <div className="flex flex-col items-end text-right mt-10 gap-6">
+              <button
+                onClick={clearCart}
+                className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-red-800 transition"
+              >
+                Clear Cart
+              </button>
+
               <p className="text-2xl font-bold">Total: €{totalPrice}</p>
 
               <Link
                 to="/checkout"
-                className="mt-6 inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
+                className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
               >
                 Proceed to Checkout
               </Link>
