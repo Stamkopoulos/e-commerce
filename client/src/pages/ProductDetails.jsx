@@ -42,36 +42,36 @@ export default function ProductDetails() {
   return (
     <>
       <Navbar />
+      <main className="flex flex-col min-h-screen">
+        <section className="max-w-5xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Left: Product Image */}
+          <div className="w-full">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="rounded-xl w-full object-cover border"
+            />
+          </div>
 
-      <section className="max-w-5xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Left: Product Image */}
-        <div className="w-full">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="rounded-xl w-full object-cover border"
-          />
-        </div>
+          {/* Right: Product Info */}
+          <div className="flex flex-col gap-6">
+            <h1 className="text-4xl font-bold">{product.name}</h1>
 
-        {/* Right: Product Info */}
-        <div className="flex flex-col gap-6">
-          <h1 className="text-4xl font-bold">{product.name}</h1>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              {product.description}
+            </p>
 
-          <p className="text-lg text-gray-600 leading-relaxed">
-            {product.description}
-          </p>
+            <p className="text-3xl font-semibold">€{product.price}</p>
 
-          <p className="text-3xl font-semibold">€{product.price}</p>
-
-          <button
-            onClick={() => addToCart(product)}
-            className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
-          >
-            Add to Cart
-          </button>
-        </div>
-      </section>
-
+            <button
+              onClick={() => addToCart(product)}
+              className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </section>
+      </main>
       <Footer />
     </>
   );

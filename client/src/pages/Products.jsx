@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import bg from "../assets/bg.jpg";
 import { useParams } from "react-router-dom";
 
 export default function Products() {
@@ -48,10 +47,7 @@ export default function Products() {
   return (
     <>
       <Navbar />
-      <main
-        className="flex flex-col min-h-screen"
-        style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover" }}
-      >
+      <main className="flex flex-col min-h-screen">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h1 className="text-4xl font-bold mb-10 text-center">All Products</h1>
 
