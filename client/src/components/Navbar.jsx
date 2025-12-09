@@ -79,15 +79,14 @@ export default function Navbar() {
             )}
           </Link>
 
-            <SignedOut>
-              <SignInButton mode="redirect" redirectUrl="/">
-                <button className="text-xl p-4">Sign in</button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </div>
+          <SignedOut>
+            <SignInButton mode="redirect" redirectUrl="/">
+              <button className="text-xl p-4">Sign in</button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
         <Toaster
           position="top-right"
