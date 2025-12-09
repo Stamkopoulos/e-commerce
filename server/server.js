@@ -4,9 +4,10 @@ import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 
 import productRoutes from "./routes/productRoutes.js";
-import collectionRoutes  from "./routes/collectionRoutes.js";
+import collectionRoutes from "./routes/collectionRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import webhookRoutes from "./routes/webhookRoutes.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use("/api/collections", collectionRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/webhook", webhookRoutes);
 
 //Start server
 app.listen(PORT, () => {
