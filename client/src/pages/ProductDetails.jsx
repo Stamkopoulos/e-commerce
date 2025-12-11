@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { getProductById } from "../services/productService";
 import { useCart } from "../context/useCart";
+import { useNavigate } from "react-router";
 
 export default function ProductDetails() {
   const { id } = useParams(); //URL parameter
@@ -11,6 +12,7 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
 
+  let navigate = useNavigate();
   useEffect(() => {
     const loadProduct = async () => {
       try {
@@ -68,6 +70,14 @@ export default function ProductDetails() {
               className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
             >
               Add to Cart
+            </button>
+            <button
+              onClick={() => {
+                navigate(-1);
+              }}
+              className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
+            >
+              Back
             </button>
           </div>
         </section>

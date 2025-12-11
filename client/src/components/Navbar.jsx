@@ -26,7 +26,7 @@ export default function Navbar() {
             Home
           </a>
           <Menu as="div" className="relative inline-block">
-            <MenuButton className="text-xl inline-flex items-center justify-center px-3 py-2">
+            <MenuButton className="text-xl inline-flex items-center justify-center px-3 py-2 hover:underline">
               Collections
               <ChevronDownIcon aria-hidden="true" className="size-5" />
             </MenuButton>

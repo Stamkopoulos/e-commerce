@@ -81,12 +81,21 @@ export default function Cart() {
 
                   <p className="text-2xl font-bold">Total: €{totalPrice}</p>
 
-                  <Link
-                    to="/checkout"
-                    className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
-                  >
-                    Proceed to Checkout
-                  </Link>
+                  <div className="flex justify-between items-center w-full mt-4">
+                    <Link
+                      to="/"
+                      className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
+                    >
+                      Back
+                    </Link>
+
+                    <Link
+                      to="/checkout"
+                      className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
+                    >
+                      Proceed to Checkout
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}

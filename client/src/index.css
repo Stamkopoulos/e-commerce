@@ -20,8 +20,6 @@ main {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
   font-family: "Roboto", sans-serif;
-  height: 100vh;
-  width: 100vw;
 }
