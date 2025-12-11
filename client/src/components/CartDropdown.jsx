@@ -2,45 +2,65 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/useCart";
 
-export default function CartDropdown() {
+export default function CartDropdown({ animate, onMouseEnter, onMouseLeave }) {
   const { cart, totalPrice } = useCart();
 
   return (
-    <div className="absolute right-0 top-10 w-80 bg-white shadow-xl rounded-xl p-4 z-50 border">
-      {cart.length === 0 ? (
-        <p className="text-center text-gray-500 py-4">Your cart is empty.</p>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {cart.slice(0, 3).map((item) => (
-            <div key={item._id} className="flex items-center gap-4">
-              <img
-                src={item.image}
-                className="w-16 h-16 object-cover rounded-lg border"
-              />
+    <div
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`absolute right-0 top-full w-80 bg-white shadow-2xl rounded-xl p-4 z-50 border ${animate}`}
+    >
+      <h3 className="text-lg font-semibold mb-3">Your Cart</h3>
 
+      {/* Scrollable items */}
+      <div className="max-h-60 overflow-y-auto pr-2">
+        {cart.length === 0 ? (
+          <p className="text-gray-500 text-sm">Your cart is empty.</p>
+        ) : (
+          cart.map((item) => (
+            <div
+              key={item._id}
+              className="flex items-center gap-3 py-3 border-b last:border-b-0"
+            >
+              <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded-md border">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="flex-1">
-                <p className="font-semibold">{item.name}</p>
-                <p className="text-sm text-gray-500">{item.price}</p>
+                <p className="text-sm font-medium truncate">{item.name}</p>
                 <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                <p className="text-sm font-semibold">€{item.price}</p>
               </div>
             </div>
-          ))}
+          ))
+        )}
+      </div>
 
-          {/* Show a "View Cart" button */}
-          <div className="border-t pt-3">
-            <p className="font-semibold text-right mb-2">
-              Total: €{totalPrice}
-            </p>
+      {/* Subtotal */}
+      <div className="mt-4 flex justify-between items-center">
+        <span className="font-semibold text-base">Total:</span>
+        <span className="font-bold text-lg">€{totalPrice}</span>
+      </div>
 
-            <Link
-              to="/cart"
-              className="block text-center bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
-            >
-              View Cart
-            </Link>
-          </div>
-        </div>
-      )}
+      {/* Buttons */}
+      <div className="mt-4 flex flex-col gap-2">
+        <Link
+          to="/cart"
+          className="block text-center bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+        >
+          View Cart
+        </Link>
+        <Link
+          to="/checkout"
+          className="block text-center bg-gray-900 text-white py-2 rounded-lg hover:bg-black transition"
+        >
+          Checkout
+        </Link>
+      </div>
     </div>
   );
 }

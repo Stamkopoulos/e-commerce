@@ -4,7 +4,7 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/clerk-react";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
@@ -14,13 +14,28 @@ import { Link } from "react-router-dom";
 import CartDropdown from "./CartDropdown";
 
 export default function Navbar() {
-  const [showCartDropdown, setShowCartDropdown] = useState(false);
   const { cart } = useCart();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [animate, setAnimate] = useState("");
+  const hideTimeoutRef = useRef(null);
+
+  const showCart = () => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
+    setAnimate("animate-slideFadeIn");
+    setIsOpen(true);
+  };
+
+  const hideCart = () => {
+    setAnimate("animate-slideFadeOut");
+    hideTimeoutRef.current = setTimeout(() => setIsOpen(false), 200);
+  };
 
   return (
     <nav className="fixed w-full relative">
-      <div className="mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="mx-auto px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <a href="/" className="text-xl p-4">
             Home
@@ -66,11 +81,11 @@ export default function Navbar() {
         </div>
 
         {/* Right - Links */}
-        <div className="flex items-center gap-4 flex-nowrap text-black">
+        <div className="flex items-center gap-6 flex-nowrap text-black">
           <div
-            className="relative"
-            onMouseEnter={() => setShowCartDropdown(true)}
-            onMouseLeave={() => setShowCartDropdown(false)}
+            className="relative cursor-pointer"
+            onMouseEnter={showCart}
+            onMouseLeave={hideCart}
           >
             <Link to="/cart" className="flex items-center gap-2 cursor-pointer">
               <span className="text-xl">Your Cart</span>
@@ -82,7 +97,13 @@ export default function Navbar() {
               )}
             </Link>
 
-            {showCartDropdown && <CartDropdown />}
+            {isOpen && (
+              <CartDropdown
+                animate={animate}
+                onMouseEnter={showCart}
+                onMouseLeave={hideCart}
+              />
+            )}
           </div>
 
           <SignedOut>

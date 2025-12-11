@@ -25,3 +25,36 @@ main {
   height: 100vh;
   width: 100vw;
 }
+
+
+@layer utilities {
+  .animate-slideFadeIn {
+    animation: slideFadeIn 0.25s ease-out forwards;
+  }
+
+  .animate-slideFadeOut {
+    animation: slideFadeOut 0.2s ease-in forwards;
+  }
+
+  @keyframes slideFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideFadeOut {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+}
