@@ -10,11 +10,11 @@ import {
 } from "../controllers/productController.js";
 import Product from "../models/Product.js";
 
-
 const router = Router();
 
 //Public
 router.get("/", getAllProducts);
+
 router.get("/collections/:gender", async (req, res) => {
   const { gender } = req.params;
   try {
@@ -25,7 +25,6 @@ router.get("/collections/:gender", async (req, res) => {
   }
 });
 router.get("/:id", getProductById);
-
 
 //Admin only. Would be secured with authentication
 router.post("/", requireAuth(), requireAdmin, createProduct);
