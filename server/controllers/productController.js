@@ -25,15 +25,15 @@ export const getProductById = async (req, res) => {
 //Admin only. Needs authentication from clerk
 export const createProduct = async (req, res) => {
   try {
-    const { name, image, description, price, stock, category } = req.body;
+    const { name, description, price, category, gender, variants } = req.body;
 
     const newProduct = await Product.create({
       name,
-      image,
       description,
       price,
-      stock,
       category,
+      gender,
+      variants,
     });
 
     res.status(201).json(newProduct);
@@ -46,13 +46,11 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, image, description, price, stock, category } = req.body;
+    const updatedData = req.body;
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      { name, image, description, price, stock, category },
-      { new: true }
-    );
+    const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
 
     if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
