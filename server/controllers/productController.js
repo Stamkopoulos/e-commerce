@@ -3,7 +3,16 @@ import Product from "../models/Product.js";
 export const getAllProducts = async (req, res) => {
   try {
 
-    const {gender,category,color,size,minPrice,maxPrice,search} = req.query;
+    const {
+      gender,
+      category,
+      color,
+      size,
+      minPrice,
+      maxPrice,
+      search,
+      sort, // "price_asc", "price_desc", "latest"
+    } = req.query;
 
     // Build dynamic filter object
     let filters = {};
@@ -37,9 +46,15 @@ export const getAllProducts = async (req, res) => {
     }
 
 
-    const products = await Product.find(filters);
+    let query = Product.find(filters);
 
-    //res.json(products);
+    // Sorting --> /api/products?gender=men&category=jackets&sort=price_desc
+    if(sort === "price_asc") query =query.sort({price: 1});
+    else if(sort === "price_desc") query = query.sort({price: -1});
+    else if(sort === "latest") query = query.sort({createdAt: -1});
+
+    const products = await query;
+
     res.json({totalResults: products.length, results: products});
 
   } catch (error) {
