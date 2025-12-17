@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/useCart";
 
 export default function CartDropdown({ animate, onMouseEnter, onMouseLeave }) {
-  const { cart, totalPrice } = useCart();
+  const { cart, totalPrice, removeFromCart } = useCart();
 
   return (
     <div
@@ -30,8 +30,23 @@ export default function CartDropdown({ animate, onMouseEnter, onMouseLeave }) {
                   className="w-full h-full object-cover"
                 />
               </div>
+
               <div className="flex-1">
-                <p className="text-sm font-medium truncate">{item.name}</p>
+                {/* Name + delete button */}
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-sm font-medium truncate w-40">
+                    {item.name}
+                  </p>
+
+                  <button
+                    onClick={() => removeFromCart(item._id)}
+                    aria-label={`Remove ${item.name}`}
+                    className="text-gray-400 hover:text-red-500 transition"
+                  >
+                    ✕
+                  </button>
+                </div>
+
                 <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                 <p className="text-sm font-semibold">€{item.price}</p>
               </div>
