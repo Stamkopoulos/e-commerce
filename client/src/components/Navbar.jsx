@@ -3,6 +3,7 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  RedirectToSignIn,
 } from "@clerk/clerk-react";
 import React, { useState, useRef } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
@@ -37,11 +38,11 @@ export default function Navbar() {
     <nav className="fixed w-full relative">
       <div className="mx-auto px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <a href="/" className="text-xl p-4">
+          <a href="/" className="text-base p-4 sm:text-md md:text-xl">
             Home
           </a>
           <Menu as="div" className="relative inline-block">
-            <MenuButton className="text-xl inline-flex items-center justify-center px-3 py-2 hover:underline">
+            <MenuButton className="text-base p-4 sm:text-md md:text-xl inline-flex items-center justify-center px-3 py-2 hover:underline">
               Collections
               <ChevronDownIcon aria-hidden="true" className="size-5" />
             </MenuButton>
@@ -79,8 +80,7 @@ export default function Navbar() {
             </MenuItems>
           </Menu>
         </div>
-
-        {/* Right - Links */}
+        {/* Cart */}
         <div className="flex items-center gap-6 flex-nowrap text-black">
           <div
             className="relative cursor-pointer"
@@ -88,7 +88,7 @@ export default function Navbar() {
             onMouseLeave={hideCart}
           >
             <Link to="/cart" className="flex items-center gap-2 cursor-pointer">
-              <span className="text-xl">Your Cart</span>
+              <span className="hidden md:inline text-xl">Your Cart</span>
               <ShoppingCartIcon className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
@@ -105,15 +105,17 @@ export default function Navbar() {
               />
             )}
           </div>
-
-          <SignedOut>
-            <SignInButton mode="redirect" redirectUrl="/">
-              <button className="text-xl p-4 cursor-pointer">Sign in</button>
-            </SignInButton>
-          </SignedOut>
+          {/* Sign in button */}
           <SignedIn>
             <UserButton />
           </SignedIn>
+          <SignedOut>
+            <SignInButton mode="redirect" redirectUrl="/">
+              <div className="text-base sm:text-md md:text-xl p-2 cursor-pointer">
+                Sign in
+              </div>
+            </SignInButton>
+          </SignedOut>
         </div>
         <Toaster
           position="top-right"

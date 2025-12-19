@@ -11,17 +11,19 @@ import Checkout from "./pages/Checkout";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/collections" element={<Collections />} />
-        <Route path="/collections/:category" element={<Products />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="bg-main min-h-screen bg-cover bg-center bg-fixed">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/collections" element={<Collections />} />
+          <Route path="/collections/:category" element={<Products />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 

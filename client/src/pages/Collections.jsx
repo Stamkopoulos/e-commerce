@@ -13,14 +13,14 @@ export default function Collections() {
     <>
       <Navbar />
       <section className="w-full min-h-screen flex flex-col justify-center items-center py-20 text-center bg-center bg-no-repeat">
-        <div className="w-full max-w-3xl mx-auto px-6 py-8 text-black">
-          <h1 className="text-5xl font-bold mb-4 drop-shadow-lg">
+        <div className="w-full max-w-3xl mx-auto text-black">
+          <h1 className="text-2xl lg:text-5xl font-bold drop-shadow-lg">
             All Collections
           </h1>
         </div>
 
-        <div className="w-full max-w-6xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="w-full max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3">
             {collections.map((c) => (
               <Link
                 key={c.id}
@@ -30,7 +30,7 @@ export default function Collections() {
               >
                 <div className="absolute inset-0" />
 
-                <div className="relative z-10 text-center px-6">
+                <div className="relative z-10 text-center">
                   <h2 className="text-2xl sm:text-3xl font-semibold text-black drop-shadow-md">
                     {c.title}
                   </h2>

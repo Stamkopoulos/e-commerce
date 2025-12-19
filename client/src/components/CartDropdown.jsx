@@ -9,7 +9,7 @@ export default function CartDropdown({ animate, onMouseEnter, onMouseLeave }) {
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={`absolute right-0 top-full w-80 bg-white shadow-2xl rounded-xl p-4 z-50 border ${animate}`}
+      className={`absolute right-0 top-full w-80 bg-white shadow-2xl rounded-xl p-4 z-50 border ${animate} hidden md:block`}
     >
       <h3 className="text-lg font-semibold mb-3">Your Cart</h3>
 

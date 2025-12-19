@@ -86,7 +86,7 @@ export default function Cart() {
                       to="/"
                       className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition"
                     >
-                      Back
+                      Continue Shopping
                     </Link>
 
                     <Link
