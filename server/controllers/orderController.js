@@ -1,6 +1,7 @@
 import Order from "../models/Order.js";
 import User from "../models/User.js";
 import { getAuth } from "@clerk/express";
+import { decreaseStock } from "../services/stockService.js";
 
 //Create a new order
 export const createOrder = async (req, res) => {
@@ -39,6 +40,12 @@ export const createOrder = async (req, res) => {
       /*status,
         paymentStatus,*/
     });
+
+    //Decrease stock for each item
+    for (const item of items) {
+      const { productId, color, size, quantity } = item;
+      await decreaseStock({ productId, color, size, quantity });
+    }
 
     res.status(201).json(newOrder);
   } catch (error) {
