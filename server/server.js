@@ -9,6 +9,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -29,6 +30,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/webhook", webhookRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/cart", cartRoutes);
 
 //Start server
 app.listen(PORT, () => {

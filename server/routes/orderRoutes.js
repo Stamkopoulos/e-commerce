@@ -8,6 +8,7 @@ import {
   getOrderById,
   getOrdersByUser,
   updateOrderStatus,
+  getMyOrders,
 } from "../controllers/orderController.js";
 
 const router = Router();
@@ -15,6 +16,8 @@ const router = Router();
 router.post("/", createOrder); //Dont need auth if can order as guest
 
 router.get("/user/:userId", requireAuth(), getOrdersByUser);
+
+router.get("/my-orders", requireAuth(), getMyOrders);
 
 router.get("/:id", getOrderById); //dont know yet if need auth to view specific order
 
