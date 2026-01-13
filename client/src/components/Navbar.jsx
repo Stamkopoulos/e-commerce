@@ -119,6 +119,18 @@ export default function Navbar() {
         </div>
         <Toaster
           position="top-right"
+          toastOptions={{
+            duration: 2200,
+            style: {
+              background: "#111",
+              color: "#fff",
+              padding: "14px 18px",
+              borderRadius: "12px",
+              fontSize: "14px",
+              fontWeight: 500,
+              letterSpacing: "0.02em",
+            },
+          }}
           containerStyle={{ marginTop: "70px", marginRight: "40px" }}
         />
       </div>

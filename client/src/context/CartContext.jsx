@@ -39,13 +39,13 @@ export function CartProvider({ children }) {
 
   const removeFromCart = (productId) => {
     setCart((prevCart) => prevCart.filter((item) => item._id !== productId));
-    toast.error("Removed from cart! 🗑️");
+    toast.error("Removed from cart.");
   };
 
   const updateQuantity = (productId, newQty) => {
     if (newQty < 1) {
       setCart((prevCart) => prevCart.filter((item) => item._id !== productId));
-      toast.error("Removed from cart! 🗑️");
+      toast.error("Removed from cart.");
       return;
     }
     
@@ -58,7 +58,7 @@ export function CartProvider({ children }) {
 
   const clearCart = () => {
     setCart([]);
-    toast.success("Cart cleared! 🗑️");
+    toast.success("Cart cleared!");
   };
 
   const totalPrice = cart

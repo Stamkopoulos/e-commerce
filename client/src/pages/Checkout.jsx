@@ -55,7 +55,7 @@ export default function Checkout() {
         total: totalPrice,
       });
 
-      toast.success("Order placed successfully! 🎉");
+      toast.success("Order placed successfully!");
       clearCart();
       setConfirmation(order);
     } catch (err) {
