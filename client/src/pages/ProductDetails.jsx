@@ -10,6 +10,7 @@ export default function ProductDetails() {
   const { id } = useParams(); //URL parameter
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
 
   let navigate = useNavigate();
@@ -41,6 +42,19 @@ export default function ProductDetails() {
       </p>
     );
 
+  const handleAddToCart = () => {
+    if (isAdding) return;
+
+    setIsAdding(true);
+    addToCart(product);
+
+    const timeout = setTimeout(() => {
+      setIsAdding(false);
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  };
+
   return (
     <>
       <Navbar />
@@ -66,10 +80,17 @@ export default function ProductDetails() {
             <p className="text-3xl font-semibold">€{product.price}</p>
 
             <button
-              onClick={() => addToCart(product)}
-              className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
+              onClick={handleAddToCart}
+              disabled={isAdding}
+              className={`py-3 px-6 rounded-xl transition
+                ${
+                  isAdding
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-black text-white hover:bg-gray-800"
+                }
+              `}
             >
-              Add to Cart
+              {isAdding ? "Adding..." : "Add to Cart"}
             </button>
             <button
               onClick={() => {
