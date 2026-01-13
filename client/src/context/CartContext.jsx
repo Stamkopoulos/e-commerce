@@ -19,10 +19,11 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (product) => {
-    toast.remove();
-    toast.success("Added to cart!");
     setCart((prev) => {
       const exists = prev.find((item) => item._id === product._id);
+
+      toast.remove();
+      toast.success("Added to cart!");
 
       if (exists) {
         return prev.map((item) =>
@@ -42,7 +43,12 @@ export function CartProvider({ children }) {
   };
 
   const updateQuantity = (productId, newQty) => {
-    if (newQty < 1) return;
+    if (newQty < 1) {
+      setCart((prevCart) => prevCart.filter((item) => item._id !== productId));
+      toast.error("Removed from cart! 🗑️");
+      return;
+    }
+    
     setCart((prevCart) =>
       prevCart.map((item) =>
         item._id === productId ? { ...item, quantity: newQty } : item
@@ -56,8 +62,7 @@ export function CartProvider({ children }) {
   };
 
   const totalPrice = cart
-    .reduce((total, item) => total + item.price * item.quantity, 0)
-    .toFixed(2);
+    .reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider

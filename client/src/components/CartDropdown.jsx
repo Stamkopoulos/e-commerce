@@ -58,7 +58,7 @@ export default function CartDropdown({ animate, onMouseEnter, onMouseLeave }) {
       {/* Subtotal */}
       <div className="mt-4 flex justify-between items-center">
         <span className="font-semibold text-base">Total:</span>
-        <span className="font-bold text-lg">€{totalPrice}</span>
+        <span className="font-bold text-lg">€{totalPrice.toFixed(2)}</span>
       </div>
 
       {/* Buttons */}

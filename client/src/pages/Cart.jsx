@@ -79,7 +79,9 @@ export default function Cart() {
                     Clear Cart
                   </button>
 
-                  <p className="text-2xl font-bold">Total: €{totalPrice}</p>
+                  <p className="text-2xl font-bold">
+                    Total: €{totalPrice.toFixed(2)}
+                  </p>
 
                   <div className="flex justify-between items-center w-full mt-4">
                     <Link
