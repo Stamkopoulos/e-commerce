@@ -34,15 +34,24 @@ function detectCategory(product) {
 
 const fetchClothes = async () => {
   const urls = [
-    {url:"https://fakestoreapi.com/products/category/men's clothing", gender:'men'},
-    {url:"https://fakestoreapi.com/products/category/women's clothing", gender:'women'},
+    {
+      url: "https://fakestoreapi.com/products/category/men's clothing",
+      gender: "men",
+    },
+    {
+      url: "https://fakestoreapi.com/products/category/women's clothing",
+      gender: "women",
+    },
   ];
 
   let allProducts = [];
 
   for (const entry of urls) {
     const res = await axios.get(entry.url);
-    const withGender = res.data.map(item => ({ ...item, gender: entry.gender }));
+    const withGender = res.data.map((item) => ({
+      ...item,
+      gender: entry.gender,
+    }));
     allProducts = allProducts.concat(withGender);
   }
 
@@ -69,7 +78,7 @@ const seed = async () => {
       price: item.price,
       image: item.image,
       category: detectCategory(item),
-      gender: item.gender
+      gender: item.gender,
     }));
 
     console.log("Inserting into database...");
