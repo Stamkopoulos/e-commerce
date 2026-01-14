@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import CollectionsSection from "../components/CollectionsSection";
 
 export default function Home() {
  
@@ -10,6 +11,8 @@ export default function Home() {
       <Navbar />
 
       <Header />
+
+      <CollectionsSection />
 
       <Footer />
            
