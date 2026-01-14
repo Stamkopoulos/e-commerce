@@ -34,3 +34,14 @@ export const getProductsByCategory = async (category) => {
     throw error;
   }
 };
+// Get bestseller products
+export const getBestsellerProducts = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    const products = response.data.results || []; // safe fallback
+    return products.filter((p) => p.bestseller); // now it works
+  } catch (error) {
+    console.error("Error fetching bestseller products:", error);
+    throw error;
+  }
+};

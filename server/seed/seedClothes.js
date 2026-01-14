@@ -79,6 +79,7 @@ const seed = async () => {
       image: item.image,
       category: detectCategory(item),
       gender: item.gender,
+      bestseller: Math.random() < 0.3, // ~30% chance to be a bestseller
     }));
 
     console.log("Inserting into database...");

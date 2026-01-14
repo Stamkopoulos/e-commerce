@@ -40,6 +40,7 @@ const productSchema = new mongoose.Schema(
         ],
       },
     ],
+    bestseller: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
