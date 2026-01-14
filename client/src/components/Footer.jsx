@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="bottom-0 w-full bg-white border-t border-gray-200 p-4">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div className="container mx-auto sm:px-4 lg:px-6 md:py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           <div>
             <h3 className="text-xl font-serif font-light tracking-wider mb-4">
@@ -14,8 +14,10 @@ export default function Footer() {
               and sustainability in every stitch.
             </p>
           </div>
-          <div>
-            <h4 className="text-sm font-medium tracking-wide mb-4">COMPANY</h4>
+          <div></div>
+          <div></div>
+          <div className="text-right">
+            {/* <h4 className="text-sm font-medium tracking-wide mb-4">COMPANY</h4> */}
             <ul className="space-y-3">
               <li>
                 <Link

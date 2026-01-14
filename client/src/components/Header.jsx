@@ -1,29 +1,9 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getBestsellerProducts } from "../services/productService";
+import BestSellerProducts from "./BestSellerProducts";
+import Newsletter from "./Newsletter";
+import CollectionsSection from "./CollectionsSection";
 
 export default function Header() {
-  const [bestsellerProducts, setBestsellerProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBestsellers = async () => {
-      try {
-        const products = await getBestsellerProducts();
-        setBestsellerProducts(products);
-      } catch (err) {
-        console.error("Failed to fetch bestsellers:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBestsellers();
-  }, []);
-
-  if (loading)
-    return <p className="text-center mt-8">Loading bestsellers...</p>;
-
   return (
     <main>
       <section className="w-full min-h-screen flex-col justify-center items-center text-center p-8 flex">
@@ -42,69 +22,12 @@ export default function Header() {
           View All Collections
         </Link>
       </section>
+      {/* Collections */}
+      <CollectionsSection />
       {/* Best Sellers */}
-      <section className="py-16 md:py-24 px-4 bg-muted/30">
-        <div className="container mx-auto">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-serif font-light tracking-wide mb-2">
-                Best Sellers
-              </h2>
-              <p className="text-muted-foreground">Our most-loved pieces</p>
-            </div>
-            <Link variant="ghost" asChild className="hidden md:flex">
-              <Link to="/collections">View All</Link>
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {bestsellerProducts.slice(0, 4).map((product) => (
-              <Link
-                key={product._id}
-                to={`/products/${product._id}`}
-                className="group"
-              >
-                <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm">
-                  <img
-                    src={
-                      product.variants?.[0]?.images?.[0] || "/placeholder.svg"
-                    }
-                    alt={product.name}
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="text-sm md:text-base font-medium mb-1 group-hover:text-muted-foreground transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  ${product.price}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      <BestSellerProducts />
       {/* Newsletter */}
-      <section className="py-16 md:py-40 px-4 bg-muted/30">
-        <div className="container mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl md:text-3xl font-serif font-light tracking-wide mb-4">
-            Join Our Community
-          </h2>
-          <p className="text-muted-foreground mb-8 leading-relaxed">
-            Subscribe to receive exclusive offers, style inspiration, and
-            updates on new arrivals
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 border border-input rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-            <button type="button" className="sm:w-auto">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
+      <Newsletter />
     </main>
   );
 }
