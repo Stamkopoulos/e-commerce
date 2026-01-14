@@ -83,7 +83,7 @@ export default function Navbar() {
         {/* Cart */}
         <div className="flex items-center gap-6 flex-nowrap text-black">
           <div
-            className="relative cursor-pointer"
+            className="relative"
             onMouseEnter={showCart}
             onMouseLeave={hideCart}
           >
@@ -97,13 +97,7 @@ export default function Navbar() {
               )}
             </Link>
 
-            {isOpen && (
-              <CartDropdown
-                animate={animate}
-                onMouseEnter={showCart}
-                onMouseLeave={hideCart}
-              />
-            )}
+            {isOpen && <CartDropdown animate={animate} />}
           </div>
           {/* Sign in button */}
           <SignedIn>

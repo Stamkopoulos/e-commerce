@@ -2,13 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/useCart";
 
-export default function CartDropdown({ animate, onMouseEnter, onMouseLeave }) {
+export default function CartDropdown({ animate }) {
   const { cart, totalPrice, removeFromCart } = useCart();
 
   return (
     <div
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
       className={`absolute right-0 top-full w-80 bg-white shadow-2xl rounded-xl p-4 z-50 border ${animate} hidden md:block`}
     >
       <h3 className="text-lg font-semibold mb-3">Your Cart</h3>
