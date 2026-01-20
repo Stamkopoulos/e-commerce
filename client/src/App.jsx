@@ -9,6 +9,8 @@ import Collections from "./pages/Collections";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 
+import AdminRoutes from "./admin/AdminRoutes";
+
 function App() {
   return (
     <div className="bg-main min-h-screen bg-cover bg-center bg-fixed">
@@ -21,6 +23,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/collections/:category" element={<Products />} />
+          {/* Admin routes */}
+          <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
       </BrowserRouter>
     </div>

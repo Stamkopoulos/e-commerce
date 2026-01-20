@@ -12,7 +12,7 @@ export const getDashboardOverview = async (req, res) => {
     const orders = await Order.find({}); //.sort({createdAt:-1}).limit(5);
     const totalRevenue = orders.reduce(
       (sum, order) => sum + order.totalPrice,
-      0
+      0,
     );
 
     const recentOrders = await Order.find({}).sort({ createdAt: -1 }).limit(5);
@@ -33,6 +33,54 @@ export const getDashboardOverview = async (req, res) => {
       { $sort: { _id: 1 } },
     ]);
 
+    // Top products by total quantity sold
+    let topProducts = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.productId",
+          name: { $first: "$items.name" },
+          totalSold: { $sum: "$items.quantity" },
+          revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } },
+          image: { $first: "$items.image" },
+        },
+      },
+      { $sort: { totalSold: -1 } },
+      { $limit: 5 },
+    ]);
+
+    // Fetch the product documents to get the image
+    const productIds = topProducts.map((p) => p._id);
+    const products = await Product.find({ _id: { $in: productIds } }).lean();
+
+    // Map images from products
+    topProducts = topProducts.map((p) => {
+      const prod = products.find(
+        (pr) => pr._id.toString() === p._id.toString(),
+      );
+
+      // Pick the first image of the first variant that has images
+      let image = "/images/placeholder.png"; // fallback
+      if (prod?.variants?.length) {
+        const firstVariantWithImages = prod.variants.find(
+          (v) => v.images && v.images.length > 0,
+        );
+        if (firstVariantWithImages) {
+          image = firstVariantWithImages.images[0];
+        }
+      }
+
+      return {
+        productId: p._id,
+        name: p.name,
+        totalSold: p.totalSold,
+        revenue: p.revenue,
+        image,
+      };
+    });
+
+    console.log("Top Products Aggregation Result:", topProducts);
+
     res.json({
       totalRevenue,
       totalOrders,
@@ -40,6 +88,7 @@ export const getDashboardOverview = async (req, res) => {
       totalUsers,
       recentOrders,
       salesOverview,
+      topProducts,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

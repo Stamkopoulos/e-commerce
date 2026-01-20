@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema(
       default: "unpaid",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Order", orderSchema);
