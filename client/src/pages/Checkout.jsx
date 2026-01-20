@@ -11,9 +11,12 @@ export default function Checkout() {
   const { cart, totalPrice, clearCart } = useCart();
 
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     address: "",
     email: "",
+    phone: "",
+    zipCode: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -22,8 +25,11 @@ export default function Checkout() {
 
   const validate = () => {
     const e = {};
-    if (!form.name.trim()) e.name = "Name is required";
+    if (!form.firstName.trim()) e.firstName = "First name is required";
+    if (!form.lastName.trim()) e.lastName = "Last name is required";
     if (!form.address.trim()) e.address = "Address is required";
+    if (!form.phone.trim()) e.phone = "Phone number is required";
+    if (!form.zipCode.trim()) e.zipCode = "Zip code is required";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       e.email = "Valid email required";
     return e;
@@ -50,14 +56,42 @@ export default function Checkout() {
     setSubmitting(true);
     try {
       const order = await placeOrder({
-        customer: form,
-        items: cart,
-        total: totalPrice,
+        customerFirstName: form.firstName,
+        customerLastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+        zipCode: form.zipCode,
+        items: cart.map((item) => ({
+          productId:
+            typeof item.product === "object" ? item.product._id : item.product,
+          name:
+            typeof item.product === "object" ? item.product.name : item.name,
+          price:
+            typeof item.product === "object"
+              ? Number(item.product.price)
+              : Number(item.price),
+          quantity: Number(item.quantity),
+          size: item.size || null,
+          color: item.color || null,
+        })),
+        totalPrice:
+          Number(totalPrice) ||
+          Number(
+            cart.reduce((s, it) => {
+              const p =
+                typeof it.product === "object" ? it.product.price : it.price;
+              return s + Number(p || 0) * Number(it.quantity || 0);
+            }, 0)
+          ),
       });
 
-      toast.success("Order placed successfully! 🎉");
-      clearCart();
-      setConfirmation(order);
+      toast.success("Order confirmed.", { icon: "✓" });
+
+      setTimeout(() => {
+        clearCart();
+        setConfirmation(order);
+      }, 400);
     } catch (err) {
       console.error(err);
       setErrors({ form: "Failed to place order. Try again." });
@@ -71,15 +105,14 @@ export default function Checkout() {
     return (
       <>
         <Navbar />
-        <main className="flex flex-col min-h-screen max-w-3xl mx-auto px-4 py-16 text-center">
+        <main className="flex flex-col min-h-screen max-w-3xl mx-auto px-4 py-16 text-center animate-fadeSlideUp">
           <h1 className="text-3xl font-bold mb-4">Thank you — order placed!</h1>
           <p className="mb-2">
-            Order ID: <span className="font-mono">{confirmation.orderId}</span>
+            Order ID: <span className="font-mono">{confirmation._id}</span>
           </p>
           <p className="mb-6 text-gray-600">
-            We sent a confirmation to{" "}
-            <strong>{confirmation.customer.email}</strong>. This is a simulated
-            checkout — no payment was processed.
+            We sent a confirmation to <strong>{confirmation.email}</strong>.
+            This is a simulated checkout — no payment was processed.
           </p>
 
           <div className="bg-gray-50 border rounded-lg p-6 text-left">
@@ -96,7 +129,7 @@ export default function Checkout() {
             </ul>
 
             <div className="mt-4 text-right text-xl font-bold">
-              Total: €{Number(confirmation.total).toFixed(2)}
+              Total: €{Number(confirmation.totalPrice).toFixed(2)}
             </div>
           </div>
 
@@ -129,50 +162,30 @@ export default function Checkout() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  value={form.name}
-                  onChange={onChange("name")}
-                  className={`w-full px-4 py-2 border rounded-lg ${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors.name && (
-                  <p className="text-red-600 text-sm mt-1">{errors.name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Address
-                </label>
-                <textarea
-                  value={form.address}
-                  onChange={onChange("address")}
-                  className={`w-full px-4 py-2 border rounded-lg ${
-                    errors.address ? "border-red-500" : "border-gray-300"
-                  }`}
-                  rows={3}
-                />
-                {errors.address && (
-                  <p className="text-red-600 text-sm mt-1">{errors.address}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
-                <input
-                  value={form.email}
-                  onChange={onChange("email")}
-                  className={`w-full px-4 py-2 border rounded-lg ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors.email && (
-                  <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-                )}
-              </div>
+              {[
+                ["First name", "firstName"],
+                ["Last name", "lastName"],
+                ["Email", "email"],
+                ["Phone", "phone"],
+                ["Address", "address"],
+                ["Zip Code", "zipCode"],
+              ].map(([label, key]) => (
+                <div key={key}>
+                  <label className="block text-sm font-medium mb-1">
+                    {label}
+                  </label>
+                  <input
+                    value={form[key]}
+                    onChange={onChange(key)}
+                    className={`w-full px-4 py-2 border rounded-lg ${
+                      errors[key] ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  {errors[key] && (
+                    <p className="text-red-600 text-sm mt-1">{errors[key]}</p>
+                  )}
+                </div>
+              ))}
 
               <div className="bg-gray-50 border rounded-lg p-4">
                 <div className="flex justify-between">

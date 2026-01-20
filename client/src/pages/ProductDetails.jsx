@@ -10,7 +10,13 @@ export default function ProductDetails() {
   const { id } = useParams(); //URL parameter
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [variantError, setVariantError] = useState("");
+  const availableSizes = ["S", "M", "L", "XL"];
+  const availableColors = ["Red", "Blue", "Green", "Black", "White"];
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -41,6 +47,30 @@ export default function ProductDetails() {
       </p>
     );
 
+  const handleAddToCart = () => {
+    if (!selectedSize || !selectedColor) {
+      setVariantError("Please select a size and color.");
+      return;
+    }
+
+    if (isAdding) return;
+
+    setVariantError("");
+    setIsAdding(true);
+    addToCart({
+      product,
+      quantity: 1,
+      size: selectedSize,
+      color: selectedColor,
+    });
+
+    const timeout = setTimeout(() => {
+      setIsAdding(false);
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  };
+
   return (
     <>
       <Navbar />
@@ -65,11 +95,70 @@ export default function ProductDetails() {
 
             <p className="text-3xl font-semibold">€{product.price}</p>
 
+            {/* Size */}
+            <div>
+              <p className="font-medium mb-2">Size</p>
+              <div className="flex gap-2 flex-wrap">
+                {availableSizes.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => {
+                      setSelectedSize(size);
+                      setVariantError("");
+                    }}
+                    className={`px-4 py-2 border rounded-lg ${
+                      selectedSize === size
+                        ? "bg-black text-white"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Color */}
+            <div>
+              <p className="font-medium mb-2">Color</p>
+              <div className="flex gap-2 flex-wrap">
+                {availableColors.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => {
+                      setSelectedColor(color);
+                      setVariantError("");
+                    }}
+                    className={`px-4 py-2 border rounded-lg ${
+                      selectedColor === color
+                        ? "bg-black text-white"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {variantError && (
+              <p className="text-red-600 text-sm">{variantError}</p>
+            )}
+
             <button
-              onClick={() => addToCart(product)}
-              className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
+              onClick={handleAddToCart}
+              disabled={isAdding}
+              className={`py-3 px-6 rounded-xl transition
+                ${
+                  isAdding
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-black text-white hover:bg-gray-800"
+                }
+              `}
             >
-              Add to Cart
+              {isAdding ? "Adding..." : "Add to Cart"}
             </button>
             <button
               onClick={() => {

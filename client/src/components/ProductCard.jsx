@@ -6,7 +6,7 @@ export default function ProductCard({ product }) {
       <Link to={`/products/${product._id}`}>
         <div className="w-full aspect-[3/4] overflow-hidden rounded">
           <img
-            src={product.variants?.[0]?.images?.[0] || "/placeholder.png"}
+            src={product.variants?.[0]?.images?.[0]}
             alt={product.name}
             className="w-full h-full object-cover"
           />

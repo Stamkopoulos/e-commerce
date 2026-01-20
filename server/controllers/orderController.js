@@ -15,8 +15,12 @@ export const createOrder = async (req, res) => {
     //const userId = req.auth.userId; //its the same
 
     let user = null;
+    let cart = null;
+    let items = [];
+
+    //Find user only if logged in
     if (userId) {
-      user = await User.findOne({ clerkId: userId }); //Find user from clerkId
+      user = await User.findOne({ clerkId: userId });
     }
 
     const {
@@ -32,23 +36,52 @@ export const createOrder = async (req, res) => {
       paymentStatus,*/
     } = req.body;
 
-    const cart = await Cart.findOne({ user: user._id })
-      .populate("items.product")
-      .session(session);
-
-    if (!cart || cart.items.length === 0) {
-      throw new Error("Cart is empty");
+    if (
+      !customerFirstName ||
+      !customerLastName ||
+      !email ||
+      !phone ||
+      !address ||
+      !zipCode
+    ) {
+      throw new Error("Missing customer information");
     }
 
-    const items = cart.items.map((item) => ({
-      productId: item.product._id,
-      name: item.product.name,
-      price: item.price,
-      quantity: item.quantity,
-      color: item.color,
-      size: item.size,
-    }));
+    if (user) {
+      cart = await Cart.findOne({ user: user._id })
+        .populate("items.product")
+        .session(session);
 
+      items = cart.items.map((item) => {
+        const productId =
+          typeof item.product === "object" ? item.product._id : item.product;
+
+        const name =
+          typeof item.product === "object" ? item.product.name : item.name;
+
+        const price = item.price;
+
+        if (!productId || !name || price == null) {
+          throw new Error("Invalid cart item data");
+        }
+
+        return {
+          productId,
+          name,
+          price,
+          quantity: item.quantity,
+          color: item.color || null,
+          size: item.size || null,
+        };
+      });
+    }
+    // Guest user: get items from request body
+    else {
+      if (!Array.isArray(req.body.items) || req.body.items.length === 0) {
+        throw new Error("Cart is empty");
+      }
+      items = req.body.items;
+    }
     const totalPrice = items.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
@@ -70,18 +103,28 @@ export const createOrder = async (req, res) => {
         paymentStatus,*/
         },
       ],
-      { session }
+      { session },
     );
 
     //Decrease stock for each item
     for (const item of items) {
-      const { productId, color, size, quantity } = item;
-      await decreaseStock({ productId, color, size, quantity }, session);
+      await decreaseStock(
+        {
+          productId: item.productId,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+        },
+        session
+      );
     }
 
     //clear cart
-    cart.items = [];
-    await cart.save({ session });
+
+    if (cart) {
+      cart.items = [];
+      await cart.save({ session });
+    }
 
     await session.commitTransaction();
     session.endSession();
@@ -90,7 +133,19 @@ export const createOrder = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    res.status(500).json({ error: error.message });
+
+    let statusCode = 500;
+
+    if (
+      error.message === "Cart is empty" ||
+      error.message.includes("stock") ||
+      error.message.includes("Missing")
+    ) {
+      statusCode = 400;
+    } else if (error.message === "User not found") {
+      statusCode = 404;
+    }
+    res.status(statusCode).json({ error: error.message });
   }
 };
 
@@ -142,11 +197,12 @@ export const getOrdersByUser = async (req, res) => {
 export const getMyOrders = async (req, res) => {
   try {
     const { userId } = getAuth(req);
+    if (!userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
 
     const user = await User.findOne({ clerkId: userId });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     const orders = await Order.find({ user: user._id }).populate(
       "user",

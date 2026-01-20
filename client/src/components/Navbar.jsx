@@ -83,7 +83,7 @@ export default function Navbar() {
         {/* Cart */}
         <div className="flex items-center gap-6 flex-nowrap text-black">
           <div
-            className="relative cursor-pointer"
+            className="relative"
             onMouseEnter={showCart}
             onMouseLeave={hideCart}
           >
@@ -97,13 +97,7 @@ export default function Navbar() {
               )}
             </Link>
 
-            {isOpen && (
-              <CartDropdown
-                animate={animate}
-                onMouseEnter={showCart}
-                onMouseLeave={hideCart}
-              />
-            )}
+            {isOpen && <CartDropdown animate={animate} />}
           </div>
           {/* Sign in button */}
           <SignedIn>
@@ -119,6 +113,18 @@ export default function Navbar() {
         </div>
         <Toaster
           position="top-right"
+          toastOptions={{
+            duration: 2200,
+            style: {
+              background: "#111",
+              color: "#fff",
+              padding: "14px 18px",
+              borderRadius: "12px",
+              fontSize: "14px",
+              fontWeight: 500,
+              letterSpacing: "0.02em",
+            },
+          }}
           containerStyle={{ marginTop: "70px", marginRight: "40px" }}
         />
       </div>

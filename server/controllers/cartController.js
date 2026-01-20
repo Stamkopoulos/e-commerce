@@ -16,11 +16,9 @@ export const getCart = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const cart = await Cart.findOne({ user: user._id });
-
-    // const cart = await Cart.findOne({ user: user._id }).populate(
-    //   "items.product"
-    // );
+    const cart = await Cart.findOne({ user: user._id }).populate(
+      "items.product"
+    );
 
     res.json(cart || { items: [] });
   } catch (err) {
@@ -62,8 +60,8 @@ export const addToCart = async (req, res) => {
     const existingItem = cart.items.find(
       (item) =>
         item.product.toString() === productId &&
-        item.color === color &&
-        item.size === size
+        item.color.toLowerCase() === color.toLowerCase() &&
+        item.size.toUpperCase() === size.toUpperCase()
     );
 
     if (existingItem) existingItem.quantity += quantity;
@@ -97,7 +95,7 @@ export const removeFromCart = async (req, res) => {
     const cart = await Cart.findOne({ user: user._id });
     if (!cart) return res.status(404).json({ error: "Cart not found" });
 
-    const item = cart.items.find((item) => item.product.toString() === itemId);
+    const item = cart.items.find((item) => item._id.toString() === itemId);
     if (!item) {
       return res.status(404).json({ error: "Item not found in cart" });
     }

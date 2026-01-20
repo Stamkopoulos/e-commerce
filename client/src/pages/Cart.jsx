@@ -22,24 +22,34 @@ export default function Cart() {
               <div className="flex flex-col gap-6">
                 {cart.map((item) => (
                   <div
-                    key={item._id}
+                    key={`${item.product._id}-${item.size}-${item.color}`}
                     className="flex items-center gap-6 border-b pb-6"
                   >
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.image}
+                      alt={item.product.name}
                       className="w-24 h-24 object-cover rounded-lg border"
                     />
 
                     <div className="flex-1">
-                      <h2 className="text-xl font-semibold">{item.name}</h2>
-                      <p className="text-gray-600">€{item.price}</p>
+                      <h2 className="text-xl font-semibold">
+                        {item.product.name}
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        {item.size} / {item.color}
+                      </p>
+                      <p className="text-gray-600">€{item.product.price}</p>
 
                       {/* Quantity Controls */}
                       <div className="flex items-center mt-3 gap-3">
                         <button
                           onClick={() =>
-                            updateQuantity(item._id, item.quantity - 1)
+                            updateQuantity(
+                              item.product._id,
+                              item.size,
+                              item.color,
+                              item.quantity - 1
+                            )
                           }
                           className="px-3 py-1 bg-gray-200 rounded-lg"
                         >
@@ -52,7 +62,12 @@ export default function Cart() {
 
                         <button
                           onClick={() =>
-                            updateQuantity(item._id, item.quantity + 1)
+                            updateQuantity(
+                              item.product._id,
+                              item.size,
+                              item.color,
+                              item.quantity + 1
+                            )
                           }
                           className="px-3 py-1 bg-gray-200 rounded-lg"
                         >
@@ -63,7 +78,9 @@ export default function Cart() {
 
                     {/* Remove button */}
                     <button
-                      onClick={() => removeFromCart(item._id)}
+                      onClick={() =>
+                        removeFromCart(item.product._id, item.size, item.color)
+                      }
                       className="text-red-700 hover:underline font-bold"
                     >
                       Remove
@@ -79,7 +96,9 @@ export default function Cart() {
                     Clear Cart
                   </button>
 
-                  <p className="text-2xl font-bold">Total: €{totalPrice}</p>
+                  <p className="text-2xl font-bold">
+                    Total: €{totalPrice.toFixed(2)}
+                  </p>
 
                   <div className="flex justify-between items-center w-full mt-4">
                     <Link
