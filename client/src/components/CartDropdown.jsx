@@ -18,13 +18,13 @@ export default function CartDropdown({ animate }) {
         ) : (
           cart.map((item) => (
             <div
-              key={item._id}
+              key={`${item.product._id}-${item.size}-${item.color}`}
               className="flex items-center gap-3 py-3 border-b last:border-b-0"
             >
               <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded-md border">
                 <img
-                  src={item.image}
-                  alt={item.name}
+                  src={item.product.image}
+                  alt={item.product.name}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -33,20 +33,26 @@ export default function CartDropdown({ animate }) {
                 {/* Name + delete button */}
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-sm font-medium truncate w-40">
-                    {item.name}
+                    {item.product.name}
                   </p>
 
                   <button
-                    onClick={() => removeFromCart(item._id)}
-                    aria-label={`Remove ${item.name}`}
+                    onClick={() =>
+                      removeFromCart(item.product._id, item.size, item.color)
+                    }
+                    aria-label={`Remove ${item.product.name}`}
                     className="text-gray-400 hover:text-red-500 transition"
                   >
                     ✕
                   </button>
                 </div>
-
+                <p className="text-xs text-gray-500">
+                  {item.size} / {item.color}
+                </p>
                 <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
-                <p className="text-sm font-semibold">€{item.price}</p>
+                <p className="text-sm font-semibold">
+                  €{item.product.price * item.quantity}
+                </p>
               </div>
             </div>
           ))

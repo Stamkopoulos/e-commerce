@@ -66,3 +66,18 @@ main {
   animation: modern-toast 0.25s ease-out !important;
   box-shadow: none !important;
 }
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeSlideUp {
+  animation: fadeSlideUp 0.5s ease-out forwards;
+}

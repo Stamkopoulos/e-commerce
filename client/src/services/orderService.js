@@ -13,7 +13,7 @@ export const placeOrder = async (orderData) => {
 
     return res.data;
   } catch (error) {
-    console.error("Order API error:", error);
+    console.error("Order API error:", error.response?.data || error.message);
     throw error.response?.data || { message: "Network error" };
   }
 };
