@@ -15,8 +15,7 @@ main {
 }
 
 .bg-main {
-  background-image: url("./assets/bg.jpg");
-  background-repeat: no-repeat;
+  background-color: #f5f5f5;
 }
 
 @layer utilities {

@@ -48,7 +48,7 @@ export default function BestSellerProducts() {
                 <img
                   src={product.variants?.[0]?.images?.[0] || "/placeholder.svg"}
                   alt={product.name}
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <h3 className="text-sm md:text-base font-medium mb-1 group-hover:text-muted-foreground transition-colors">

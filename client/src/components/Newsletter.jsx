@@ -15,7 +15,10 @@ export default function Newsletter() {
             placeholder="Enter your email"
             className="flex-1 px-4 py-3 border border-input rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
-          <button type="button" className="sm:w-auto">
+          <button
+            type="submit"
+            className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition sm:w-auto"
+          >
             Subscribe
           </button>
         </div>
