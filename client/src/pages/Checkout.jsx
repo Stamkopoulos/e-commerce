@@ -86,10 +86,10 @@ export default function Checkout() {
           ),
       });
 
-      toast.success("Order confirmed.", { icon: "✓" });
+      toast.success("Order confirmed.");
 
       setTimeout(() => {
-        clearCart();
+        clearCart({silent: true});
         setConfirmation(order);
       }, 400);
     } catch (err) {

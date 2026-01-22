@@ -29,7 +29,7 @@ export function CartProvider({ children }) {
         (item) =>
           item.product._id === product._id &&
           item.size === size &&
-          item.color === color
+          item.color === color,
       );
 
       toast.remove();
@@ -41,7 +41,7 @@ export function CartProvider({ children }) {
           item.size === size &&
           item.color === color
             ? { ...item, quantity: item.quantity + 1 }
-            : item
+            : item,
         );
       }
 
@@ -68,8 +68,8 @@ export function CartProvider({ children }) {
             item.product._id === productId &&
             item.size === size &&
             item.color === color
-          )
-      )
+          ),
+      ),
     );
     toast.error("Removed from cart.");
   };
@@ -85,14 +85,16 @@ export function CartProvider({ children }) {
         item.size === size &&
         item.color === color
           ? { ...item, quantity: newQty }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
-  const clearCart = () => {
+  const clearCart = ({ silent = false } = {}) => {
     setCart([]);
-    toast.success("Cart cleared!");
+    if (!silent) {
+      toast.success("Cart cleared.");
+    }
   };
 
   const totalPrice = cart.reduce((total, item) => {
