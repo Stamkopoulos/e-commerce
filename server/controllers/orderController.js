@@ -64,7 +64,7 @@ export const createOrder = async (req, res) => {
         if (!productId || !name || price == null) {
           throw new Error("Invalid cart item data");
         }
-
+        console.log("ORDER ITEM:", item);
         return {
           productId,
           name,
@@ -82,10 +82,28 @@ export const createOrder = async (req, res) => {
       }
       items = req.body.items;
     }
+
+    if (!items || items.length === 0) {
+      throw new Error("Cart is empty");
+    }
+
     const totalPrice = items.reduce(
       (sum, item) => sum + item.price * item.quantity,
-      0
+      0,
     );
+
+    //Decrease stock for each item
+    for (const item of items) {
+      await decreaseStock(
+        {
+          productId: item.productId,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+        },
+        session,
+      );
+    }
 
     const [newOrder] = await Order.create(
       [
@@ -105,19 +123,6 @@ export const createOrder = async (req, res) => {
       ],
       { session },
     );
-
-    //Decrease stock for each item
-    for (const item of items) {
-      await decreaseStock(
-        {
-          productId: item.productId,
-          color: item.color,
-          size: item.size,
-          quantity: item.quantity,
-        },
-        session
-      );
-    }
 
     //clear cart
 
@@ -185,7 +190,7 @@ export const getOrdersByUser = async (req, res) => {
 
     const orders = await Order.find({ user: user._id }).populate(
       "user",
-      "name email"
+      "name email",
     );
 
     res.status(200).json(orders);
@@ -206,7 +211,7 @@ export const getMyOrders = async (req, res) => {
 
     const orders = await Order.find({ user: user._id }).populate(
       "user",
-      "name email"
+      "name email",
     );
 
     res.status(200).json(orders);
@@ -224,7 +229,7 @@ export const updateOrderStatus = async (req, res) => {
     const order = await Order.findByIdAndUpdate(
       id,
       { status, paymentStatus },
-      { new: true }
+      { new: true },
     );
 
     if (!order) {

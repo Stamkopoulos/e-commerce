@@ -17,7 +17,7 @@ export const getCart = async (req, res) => {
     }
 
     const cart = await Cart.findOne({ user: user._id }).populate(
-      "items.product"
+      "items.product",
     );
 
     res.json(cart || { items: [] });
@@ -35,24 +35,24 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const { productId, color, size, quantity } = req.body;
+    const { productId, color: rawColor, size: rawSize, quantity } = req.body;
 
-    if (!productId || !color || !size || !quantity)
+    const color = rawColor.toLowerCase();
+    const size = rawSize.toUpperCase();
+
+    if (!productId || !rawColor || !rawSize || !quantity)
       return res.status(400).json({ error: "Missing required fields" });
 
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ error: "Product not found" });
 
     const variant = product.variants.find(
-      (v) => v.color.toLowerCase() === color.toLowerCase()
+      (v) => v.color.toLowerCase() === color,
     );
     if (!variant) return res.status(400).json({ error: "Color not available" });
 
-    const sizeObj = variant.sizes.find(
-      (s) => s.size.toUpperCase() === size.toUpperCase()
-    );
-    if (!sizeObj || sizeObj.quantity < quantity)
-      return res.status(400).json({ error: "Insufficient stock" });
+    const sizeObj = variant.sizes.find((s) => s.size.toUpperCase() === size);
+    if (!sizeObj) return res.status(400).json({ error: "Size not available" });
 
     let cart = await Cart.findOne({ user: user._id });
     if (!cart) cart = new Cart({ user: user._id, items: [] });
@@ -60,8 +60,8 @@ export const addToCart = async (req, res) => {
     const existingItem = cart.items.find(
       (item) =>
         item.product.toString() === productId &&
-        item.color.toLowerCase() === color.toLowerCase() &&
-        item.size.toUpperCase() === size.toUpperCase()
+        item.color === color &&
+        item.size === size,
     );
 
     if (existingItem) existingItem.quantity += quantity;
