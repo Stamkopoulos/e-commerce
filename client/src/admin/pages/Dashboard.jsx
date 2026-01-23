@@ -51,7 +51,10 @@ const Dashboard = () => {
     <div className="p-6 space-y-8">
       {/* ===== TOP STATS ===== */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard title="Total Revenue" value={`€${data.totalRevenue}`} />
+        <StatCard
+          title="Total Revenue"
+          value={`€${data.totalRevenue.toFixed(2)}`}
+        />
         <StatCard title="Orders" value={data.totalOrders} />
         <StatCard title="Products" value={data.totalProducts} />
         <StatCard title="Users" value={data.totalUsers} />

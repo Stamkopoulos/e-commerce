@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bottom-0 w-full bg-white border-t border-gray-200 p-4">
+    <footer className="bottom-0 w-full bg-white border-t border-gray-200">
       <div className="container mx-auto sm:px-4 lg:px-6 md:py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           <div>
@@ -54,7 +54,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-border mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-700 text-muted-foreground">
             VOUTS&copy;{new Date().getFullYear()}
           </p>
