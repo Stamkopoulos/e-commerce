@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { useCartUI } from "./useCartUI";
 
 const CartContext = createContext();
 
@@ -12,6 +13,8 @@ export function CartProvider({ children }) {
       return [];
     }
   });
+
+  const { openCart } = useCartUI();
 
   // Save cart to localStorage on every update
   useEffect(() => {
@@ -34,6 +37,7 @@ export function CartProvider({ children }) {
 
       toast.remove();
       toast.success("Added to cart!");
+      openCart();
 
       if (exists) {
         return prev.map((item) =>
@@ -44,7 +48,12 @@ export function CartProvider({ children }) {
             : item,
         );
       }
-
+      const variant = product.variants.find(
+        (v) => v.color.toLowerCase() === color.toLowerCase(),
+      );
+      const image =
+        variant?.images?.[0] || product.variants?.[0]?.images?.[0] || "";
+          
       return [
         ...prev,
         {
@@ -54,6 +63,7 @@ export function CartProvider({ children }) {
           price: product.price,
           size,
           color,
+          image,
           quantity: 1,
         },
       ];

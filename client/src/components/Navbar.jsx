@@ -5,34 +5,19 @@ import {
   UserButton,
   RedirectToSignIn,
 } from "@clerk/clerk-react";
-import React, { useState, useRef } from "react";
+import React from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useCart } from "../context/useCart";
+import { useCartUI } from "../context/useCartUI";
 import { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import CartDropdown from "./CartDropdown";
 
 export default function Navbar() {
   const { cart } = useCart();
+  const { openCart } = useCartUI();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const [isOpen, setIsOpen] = useState(false);
-  const [animate, setAnimate] = useState("");
-  const hideTimeoutRef = useRef(null);
-
-  const showCart = () => {
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current);
-    }
-    setAnimate("animate-slideFadeIn");
-    setIsOpen(true);
-  };
-
-  const hideCart = () => {
-    setAnimate("animate-slideFadeOut");
-    hideTimeoutRef.current = setTimeout(() => setIsOpen(false), 200);
-  };
 
   return (
     <nav className="fixed w-full relative">
@@ -83,21 +68,16 @@ export default function Navbar() {
         {/* Cart */}
         <div className="flex items-center gap-6 flex-nowrap text-black">
           <div
-            className="relative"
-            onMouseEnter={showCart}
-            onMouseLeave={hideCart}
+            className="relative flex items-center gap-2 cursor-pointer"
+            onClick={openCart}
           >
-            <Link to="/cart" className="flex items-center gap-2 cursor-pointer">
-              <span className="hidden md:inline text-xl">Your Cart</span>
-              <ShoppingCartIcon className="w-6 h-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-
-            {isOpen && <CartDropdown animate={animate} />}
+            <span className="hidden md:inline text-xl">Your Cart</span>
+            <ShoppingCartIcon className="w-6 h-6" />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {cartCount}
+              </span>
+            )}
           </div>
           {/* Sign in button */}
           <SignedIn>
