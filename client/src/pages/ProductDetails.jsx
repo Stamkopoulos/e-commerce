@@ -23,8 +23,6 @@ export default function ProductDetails() {
     const loadProduct = async () => {
       try {
         const data = await getProductById(id);
-        console.log("Product data:", data);
-        console.log("All variants:", data.variants);
         setProduct(data);
         // Set the first variant's first image as default
         if (
@@ -57,18 +55,33 @@ export default function ProductDetails() {
       </p>
     );
 
-  // Extract unique colors from variants
+  // Extract ALL colors from variants (don't filter by stock)
   const availableColors =
     product.variants?.map((variant) => variant.color) || [];
 
-  // Get the variant for the selected color
+  // Extract ALL unique sizes from all variants
+  const allSizes =
+    product.variants?.reduce((sizes, variant) => {
+      variant.sizes.forEach((sizeObj) => {
+        if (!sizes.find((s) => s.size === sizeObj.size)) {
+          sizes.push(sizeObj);
+        }
+      });
+      return sizes;
+    }, []) || [];
+
+  // Check if a specific size is in stock for the selected color
+  const isSizeInStock = (size) => {
+    if (!selectedColor) return false;
+    const variant = product.variants?.find((v) => v.color === selectedColor);
+    const sizeObj = variant?.sizes.find((s) => s.size === size);
+    return sizeObj?.quantity > 0;
+  };
+
+  // Get the variant for the selected color (still needed for images)
   const selectedVariant = product.variants?.find(
     (v) => v.color === selectedColor,
   );
-
-  // Get all sizes for the selected color (including out of stock)
-  const availableSizes = selectedVariant?.sizes || [];
-
   // Check if a color has any stock at all
   const isColorInStock = (color) => {
     const variant = product.variants?.find((v) => v.color === color);
@@ -86,9 +99,6 @@ export default function ProductDetails() {
   const stockQuantity = getStockQuantity();
 
   const handleColorChange = (color) => {
-    // Don't allow selecting out of stock colors
-    if (!isColorInStock(color)) return;
-
     setSelectedColor(color);
     setSelectedSize(null); // Reset size when color changes
     setVariantError("");
@@ -144,7 +154,7 @@ export default function ProductDetails() {
         <section className="max-w-5xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Left: Product Image */}
           <div className="w-full flex flex-col items-start">
-            <div className="w-full aspect-square border rounded-xl overflow-hidden bg-white">
+            <div className="w-full aspect-square border rounded-xl overflow-hidden bg-gray-50">
               <img
                 src={
                   currentImage ||
@@ -185,7 +195,7 @@ export default function ProductDetails() {
 
             <p className="text-3xl font-semibold">€{product.price}</p>
 
-            {/* Color */}
+            {/* Color - Show ALL colors */}
             {availableColors.length > 0 && (
               <div>
                 <p className="font-medium mb-2">Color</p>
@@ -197,21 +207,22 @@ export default function ProductDetails() {
                         key={color}
                         type="button"
                         onClick={() => handleColorChange(color)}
-                        disabled={!inStock}
-                        style={{
-                          position: "relative",
-                          textDecoration: !inStock ? "line-through" : "none",
-                          opacity: !inStock ? 0.5 : 1,
-                        }}
-                        className={`px-4 py-2 border rounded-lg transition ${
+                        className={`w-12 h-12 rounded-full border-2 transition relative ${
                           selectedColor === color
-                            ? "bg-black text-white"
-                            : inStock
-                              ? "border-gray-300 hover:border-gray-400"
-                              : "border-gray-300 text-gray-400 cursor-not-allowed"
-                        }`}
+                            ? "border-black ring-2 ring-offset-2 ring-black"
+                            : "border-gray-300 hover:border-gray-400"
+                        } ${!inStock ? "opacity-60" : ""}`}
+                        style={{ backgroundColor: color.toLowerCase() }}
+                        title={color}
                       >
-                        {color}
+                        {!inStock && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-full h-0.5 bg-red-700 transform rotate-45"></div>
+                            <span className="absolute -top-2 -right-2 bg-red-700 text-white text-[10px] px-1.5 py-0.5 rounded-full font-medium whitespace-nowrap">
+                              Sold Out
+                            </span>
+                          </div>
+                        )}
                       </button>
                     );
                   })}
@@ -219,28 +230,29 @@ export default function ProductDetails() {
               </div>
             )}
 
-            {/* Size - Show after color is selected */}
-            {selectedColor && availableSizes.length > 0 && (
+            {/* Size - Show ALL sizes from all variants */}
+            {allSizes.length > 0 && (
               <div>
                 <p className="font-medium mb-2">Size</p>
                 <div className="flex gap-2 flex-wrap">
-                  {availableSizes.map(({ size, quantity }) => {
-                    const inStock = quantity > 0;
+                  {allSizes.map(({ size }) => {
+                    const inStock = selectedColor ? isSizeInStock(size) : true;
                     return (
                       <button
                         key={size}
                         type="button"
-                        onClick={() => handleSizeChange(size, quantity)}
-                        disabled={!inStock}
+                        onClick={() => handleSizeChange(size, inStock ? 1 : 0)}
+                        disabled={selectedColor && !inStock}
                         style={{
                           position: "relative",
-                          textDecoration: !inStock ? "line-through" : "none",
-                          opacity: !inStock ? 0.5 : 1,
+                          textDecoration:
+                            selectedColor && !inStock ? "line-through" : "none",
+                          opacity: selectedColor && !inStock ? 0.5 : 1,
                         }}
                         className={`px-4 py-2 border rounded-lg transition ${
                           selectedSize === size
                             ? "bg-black text-white"
-                            : inStock
+                            : inStock || !selectedColor
                               ? "border-gray-300 hover:border-gray-400"
                               : "border-gray-300 text-gray-400 cursor-not-allowed"
                         }`}

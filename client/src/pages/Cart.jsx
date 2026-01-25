@@ -20,73 +20,85 @@ export default function Cart() {
               <p className="text-gray-600 text-lg">Your cart is empty.</p>
             ) : (
               <div className="flex flex-col gap-6">
-                {cart.map((item) => (
-                  <div
-                    key={`${item.product._id}-${item.size}-${item.color}`}
-                    className="flex items-center gap-6 border-b pb-6"
-                  >
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="w-24 h-24 object-cover rounded-lg border"
-                    />
+                {cart.map((item) => {
+                  const selectedVariant = item.product.variants?.find(
+                    (v) => v.color === item.color,
+                  );
+                  const imageUrl =
+                    selectedVariant?.images?.[0] || "/placeholder.jpg";
 
-                    <div className="flex-1">
-                      <h2 className="text-xl font-semibold">
-                        {item.product.name}
-                      </h2>
-                      <p className="text-sm text-gray-500">
-                        {item.size} / {item.color}
-                      </p>
-                      <p className="text-gray-600">€{item.product.price}</p>
-
-                      {/* Quantity Controls */}
-                      <div className="flex items-center mt-3 gap-3">
-                        <button
-                          onClick={() =>
-                            updateQuantity(
-                              item.product._id,
-                              item.size,
-                              item.color,
-                              item.quantity - 1
-                            )
-                          }
-                          className="px-3 py-1 bg-gray-200 rounded-lg"
-                        >
-                          -
-                        </button>
-
-                        <span className="text-lg font-medium">
-                          {item.quantity}
-                        </span>
-
-                        <button
-                          onClick={() =>
-                            updateQuantity(
-                              item.product._id,
-                              item.size,
-                              item.color,
-                              item.quantity + 1
-                            )
-                          }
-                          className="px-3 py-1 bg-gray-200 rounded-lg"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Remove button */}
-                    <button
-                      onClick={() =>
-                        removeFromCart(item.product._id, item.size, item.color)
-                      }
-                      className="text-red-700 hover:underline font-bold"
+                  return (
+                    <div
+                      key={`${item.product._id}-${item.size}-${item.color}`}
+                      className="flex items-center gap-6 border-b pb-6"
                     >
-                      Remove
-                    </button>
-                  </div>
-                ))}
+                      <img
+                        src={imageUrl}
+                        alt={item.product.name}
+                        className="w-24 h-24 object-cover rounded-lg border"
+                      />
+
+                      <div className="flex-1">
+                        <h2 className="text-xl font-semibold">
+                          {item.product.name}
+                        </h2>
+                        <p className="text-sm text-gray-500">
+                          {item.size} / {item.color}
+                        </p>
+                        <p className="text-gray-600">€{item.product.price}</p>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center mt-3 gap-3">
+                          <button
+                            onClick={() =>
+                              updateQuantity(
+                                item.product._id,
+                                item.size,
+                                item.color,
+                                item.quantity - 1,
+                              )
+                            }
+                            className="px-3 py-1 bg-gray-200 rounded-lg"
+                          >
+                            -
+                          </button>
+
+                          <span className="text-lg font-medium">
+                            {item.quantity}
+                          </span>
+
+                          <button
+                            onClick={() =>
+                              updateQuantity(
+                                item.product._id,
+                                item.size,
+                                item.color,
+                                item.quantity + 1,
+                              )
+                            }
+                            className="px-3 py-1 bg-gray-200 rounded-lg"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Remove button */}
+                      <button
+                        onClick={() =>
+                          removeFromCart(
+                            item.product._id,
+                            item.size,
+                            item.color,
+                          )
+                        }
+                        className="text-red-700 hover:underline font-bold"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  );
+                })}
 
                 <div className="flex flex-col items-end text-right mt-10 gap-6">
                   <button
