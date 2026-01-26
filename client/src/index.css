@@ -50,22 +50,6 @@ main {
   }
 }
 
-@keyframes modern-toast {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.react-hot-toast {
-  animation: modern-toast 0.25s ease-out !important;
-  box-shadow: none !important;
-}
-
 @keyframes fadeSlideUp {
   from {
     opacity: 0;

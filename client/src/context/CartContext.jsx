@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
 import { useCartUI } from "./useCartUI";
 
 const CartContext = createContext();
@@ -23,7 +22,6 @@ export function CartProvider({ children }) {
 
   const addToCart = ({ product, size, color }) => {
     if (!size || !color) {
-      toast.error("Please select a size and color.");
       return;
     }
 
@@ -35,8 +33,6 @@ export function CartProvider({ children }) {
           item.color === color,
       );
 
-      toast.remove();
-      toast.success("Added to cart!");
       openCart();
 
       if (exists) {
@@ -81,7 +77,6 @@ export function CartProvider({ children }) {
           ),
       ),
     );
-    toast.error("Removed from cart.");
   };
 
   const updateQuantity = (productId, size, color, newQty) => {
@@ -100,11 +95,8 @@ export function CartProvider({ children }) {
     );
   };
 
-  const clearCart = ({ silent = false } = {}) => {
+  const clearCart = () => {
     setCart([]);
-    if (!silent) {
-      toast.success("Cart cleared.");
-    }
   };
 
   const totalPrice = cart.reduce((total, item) => {

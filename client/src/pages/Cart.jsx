@@ -102,7 +102,7 @@ export default function Cart() {
 
                 <div className="flex flex-col items-end text-right mt-10 gap-6">
                   <button
-                    onClick={() => clearCart({ silent: false })}
+                    onClick={() => clearCart()}
                     className="inline-block bg-black text-white py-3 px-8 rounded-xl hover:bg-red-800 transition"
                   >
                     Clear Cart

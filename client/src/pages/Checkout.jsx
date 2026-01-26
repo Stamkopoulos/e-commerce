@@ -4,7 +4,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/useCart";
 import { placeOrder } from "../services/orderService";
-import { toast } from "react-hot-toast";
 import Receipt from "../components/Receipt";
 
 export default function Checkout() {
@@ -82,10 +81,9 @@ export default function Checkout() {
         totalPrice: Number(totalPrice),
       });
 
-      toast.success("Order confirmed.");
 
       setTimeout(() => {
-        clearCart({silent: true});
+        clearCart();
         setConfirmation(order);
       }, 400);
     } catch (err) {

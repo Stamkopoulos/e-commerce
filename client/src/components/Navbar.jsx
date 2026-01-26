@@ -3,7 +3,6 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
-  RedirectToSignIn,
 } from "@clerk/clerk-react";
 import React from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
@@ -11,8 +10,6 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useCart } from "../context/useCart";
 import { useCartUI } from "../context/useCartUI";
-import { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const { cart } = useCart();
@@ -91,22 +88,6 @@ export default function Navbar() {
             </SignInButton>
           </SignedOut>
         </div>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 2200,
-            style: {
-              background: "#111",
-              color: "#fff",
-              padding: "14px 18px",
-              borderRadius: "12px",
-              fontSize: "14px",
-              fontWeight: 500,
-              letterSpacing: "0.02em",
-            },
-          }}
-          containerStyle={{ marginTop: "70px", marginRight: "40px" }}
-        />
       </div>
     </nav>
   );
