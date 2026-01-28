@@ -8,7 +8,17 @@ import Receipt from "../components/Receipt";
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { cart, clearCart, removeFromCart } = useCart();
+  const {
+    cart,
+    clearCart,
+    removeFromCart,
+    subtotal,
+    discount,
+    shipping,
+    totalPrice,
+    applyPromoCode,
+    removePromoCode,
+  } = useCart();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -17,11 +27,31 @@ export default function Checkout() {
     email: "",
     phone: "",
     zipCode: "",
+    city: "",
   });
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState(null);
+
+  // Promo code
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState(null);
+
+  const handleApplyPromo = () => {
+    const result = applyPromoCode(promoCodeInput);
+    if (result.success) {
+      setAppliedPromo({ code: result.code, type: result.type });
+      setPromoCodeInput("");
+    } else {
+      alert(result.message);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    removePromoCode();
+    setAppliedPromo(null);
+  };
 
   const validate = () => {
     const e = {};
@@ -30,6 +60,7 @@ export default function Checkout() {
     if (!form.address.trim()) e.address = "Address is required";
     if (!form.phone.trim()) e.phone = "Phone number is required";
     if (!form.zipCode.trim()) e.zipCode = "Zip code is required";
+    if (!form.city.trim()) e.city = "City is required";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       e.email = "Valid email required";
     return e;
@@ -76,11 +107,10 @@ export default function Checkout() {
           color: item.color || null,
         })),
         subtotal: Number(subtotal),
-        shipping: Number(totalShipping),
-        discount: Number(totalDiscount),
+        shipping: Number(shipping),
+        discount: Number(discount),
         totalPrice: Number(totalPrice),
       });
-
 
       setTimeout(() => {
         clearCart();
@@ -92,48 +122,6 @@ export default function Checkout() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const [shippingCost] = useState(3.5); // Fixed shipping cost, or make it dynamic
-  const [discountAmount, setDiscountAmount] = useState(0); // Can be updated with promo codes
-
-  // Calculate subtotal (items only)
-  const subtotal = cart.reduce((sum, item) => {
-    const price =
-      typeof item.product === "object" ? item.product.price : item.price;
-    const quantity = item.quantity || 1;
-    return sum + Number(price || 0) * Number(quantity);
-  }, 0);
-
-  // Calculate total shipping
-  const totalShipping = cart.length > 0 ? shippingCost : 0;
-
-  // Calculate total discount
-  const totalDiscount = discountAmount;
-
-  // Calculate final total
-  const totalPrice = subtotal + totalShipping - totalDiscount;
-
-  // Promo code
-  const [promoCode, setPromoCode] = useState("");
-  const [appliedPromo, setAppliedPromo] = useState(null);
-
-  const applyPromoCode = () => {
-    if (promoCode.toUpperCase() === "SAVE10") {
-      setDiscountAmount(subtotal * 0.1); // 10% off
-      setAppliedPromo({ code: promoCode.toUpperCase(), type: "10% off" });
-    } else if (promoCode.toUpperCase() === "FREESHIP") {
-      setDiscountAmount(totalShipping); // Free shipping
-      setAppliedPromo({ code: promoCode.toUpperCase(), type: "Free shipping" });
-    } else {
-      alert("Invalid promo code");
-    }
-  };
-
-  const removePromoCode = () => {
-    setPromoCode("");
-    setDiscountAmount(0);
-    setAppliedPromo(null);
   };
 
   // If confirmation exists, show receipt
@@ -231,7 +219,10 @@ export default function Checkout() {
 
                   <button
                     type="button"
-                    onClick={() => navigate(-1)}
+                    onClick={() => {
+                      handleRemovePromo();
+                      navigate(-1);
+                    }}
                     className="w-full bg-gray-200 text-black py-3 px-8 rounded-xl hover:bg-gray-300 transition mt-4"
                   >
                     Back
@@ -334,7 +325,7 @@ export default function Checkout() {
                       </div>
                       <button
                         type="button"
-                        onClick={removePromoCode}
+                        onClick={handleRemovePromo}
                         className="text-green-800 hover:text-green-900 font-bold text-xl"
                         aria-label="Remove promo code"
                       >
@@ -364,15 +355,15 @@ export default function Checkout() {
                           type="text"
                           placeholder="Discount code"
                           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
-                          value={promoCode}
+                          value={promoCodeInput}
                           onChange={(e) =>
-                            setPromoCode(e.target.value.toUpperCase())
+                            setPromoCodeInput(e.target.value.toUpperCase())
                           }
                         />
                       </div>
                       <button
                         type="button"
-                        onClick={applyPromoCode}
+                        onClick={handleApplyPromo}
                         className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition"
                       >
                         Apply
@@ -391,13 +382,13 @@ export default function Checkout() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Shipping</span>
                     <span className="text-black-600">
-                      €{Number(totalShipping).toFixed(2)}
+                      €{Number(shipping).toFixed(2)}
                     </span>
                   </div>
-                  {totalDiscount > 0 && (
+                  {discount > 0 && (
                     <div className="flex justify-between text-sm text-green-600">
                       <span>Discount</span>
-                      <span>-€{Number(totalDiscount).toFixed(2)}</span>
+                      <span>-€{Number(discount).toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-lg font-bold border-t pt-2">

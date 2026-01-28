@@ -13,6 +13,9 @@ export function CartProvider({ children }) {
     }
   });
 
+  const [promoCode, setPromoCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+
   const { openCart } = useCartUI();
 
   // Save cart to localStorage on every update
@@ -49,7 +52,7 @@ export function CartProvider({ children }) {
       );
       const image =
         variant?.images?.[0] || product.variants?.[0]?.images?.[0] || "";
-          
+
       return [
         ...prev,
         {
@@ -97,9 +100,36 @@ export function CartProvider({ children }) {
 
   const clearCart = () => {
     setCart([]);
+    setDiscount(0);
+    setPromoCode("");
   };
 
-  const totalPrice = cart.reduce((total, item) => {
+  const applyPromoCode = (code) => {
+    const validCodes = {
+      SAVE10: { amount: subtotal * 0.1, type: "€10 off" },
+    };
+
+    const upperCode = code.toUpperCase();
+    if (validCodes[upperCode]) {
+      setDiscount(validCodes[upperCode].amount);
+      setPromoCode(upperCode);
+      return {
+        success: true,
+        message: `Promo code ${upperCode} applied!`,
+        code: upperCode,
+        type: validCodes[upperCode].type,
+      };
+    } else {
+      return { success: false, message: "Promo code not found" };
+    }
+  };
+
+  const removePromoCode = () => {
+    setDiscount(0);
+    setPromoCode("");
+  };
+
+  const subtotal = cart.reduce((total, item) => {
     const price =
       typeof item.price === "number"
         ? item.price
@@ -110,6 +140,9 @@ export function CartProvider({ children }) {
     return total + price * qty;
   }, 0);
 
+  const shipping = 3.5;
+  const totalPrice = subtotal - discount + shipping;
+
   return (
     <CartContext.Provider
       value={{
@@ -118,7 +151,13 @@ export function CartProvider({ children }) {
         removeFromCart,
         updateQuantity,
         clearCart,
+        subtotal,
+        discount,
+        shipping,
         totalPrice,
+        promoCode,
+        applyPromoCode,
+        removePromoCode,
       }}
     >
       {children}

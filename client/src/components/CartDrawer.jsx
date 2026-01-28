@@ -29,7 +29,7 @@ export default function CartDrawer() {
 
         <div className="p-4 flex-1 overflow-y-auto">
           {cart.length === 0 ? (
-            <p className="text-gray-500 text-center mt-12">
+            <p className="text-gray-500 text-center items-center justify-centermt-12">
               Your cart is empty
             </p>
           ) : (
