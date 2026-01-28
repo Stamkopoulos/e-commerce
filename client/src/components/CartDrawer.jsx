@@ -7,6 +7,12 @@ export default function CartDrawer() {
   const { isOpen, closeCart } = useCartUI();
   const navigate = useNavigate();
 
+  // Helper to format color for display
+  const formatColor = (color) => {
+    if (!color) return "";
+    return color.charAt(0).toUpperCase() + color.slice(1);
+  };
+
   return (
     <>
       {/* Backdrop */}
@@ -48,7 +54,7 @@ export default function CartDrawer() {
                     {item.name}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {item.color} / {item.size}
+                    {formatColor(item.color)} / {item.size}
                   </p>
                   <div className="flex items-center justify-center gap-3 mt-2">
                     <button

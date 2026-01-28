@@ -133,7 +133,7 @@ export default function Products() {
         <div className="max-w-[1600px] mx-auto px-8 py-12">
           {/* Page Title */}
           <div className="mb-8 text-center">
-            <h1 className="text-5xl tracking-tight mb-2">
+            <h1 className="text-4xl tracking-tight mb-2">
               {category
                 ? category.charAt(0).toUpperCase() + category.slice(1)
                 : "SHOP"}
@@ -259,9 +259,9 @@ export default function Products() {
                       className="w-full accent-black"
                     />
                     <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>$0</span>
-                      <span>$500</span>
-                      <span>$1000</span>
+                      <span>€0</span>
+                      <span>€500</span>
+                      <span>€1000</span>
                     </div>
                   </div>
                 </div>

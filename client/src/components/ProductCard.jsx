@@ -12,10 +12,9 @@ export default function ProductCard({ product }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        {/* Image Container */}
         <div className="text-center">
           <h3 className="font-base text-base mb-1">{product.name}</h3>
-          <p className="text-gray-900 font-light text-sm">${product.price}</p>
+          <p className="text-gray-900 font-light text-sm">€{product.price}</p>
         </div>
       </Link>
     </div>

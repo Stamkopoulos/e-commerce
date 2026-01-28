@@ -88,6 +88,22 @@ export default function ProductDetails() {
     return variant?.sizes.some((s) => s.quantity > 0) || false;
   };
 
+  const colorMap = {
+    black: "#000000",
+    white: "#FFFFFF",
+    gray: "#808080",
+    navy: "#000080",
+    beige: "#F5F5DC",
+    brown: "#8B4513",
+    yellow: "#FFFF00",
+    red: "#FF0000",
+    green: "#008000",
+    blue: "#0000FF",
+    purple: "#800080",
+    pink: "#FFC0CB",
+    orange: "#FFA500",
+  };
+
   // Get stock quantity for selected size and color
   const getStockQuantity = () => {
     if (!selectedColor || !selectedSize) return null;
@@ -135,7 +151,6 @@ export default function ProductDetails() {
     setIsAdding(true);
     addToCart({
       product,
-      quantity: 1,
       size: selectedSize,
       color: selectedColor,
     });
@@ -211,8 +226,12 @@ export default function ProductDetails() {
                           selectedColor === color
                             ? "border-black ring-2 ring-offset-2 ring-black"
                             : "border-gray-300 hover:border-gray-400"
-                        } ${!inStock ? "opacity-60" : ""}`}
-                        style={{ backgroundColor: color.toLowerCase() }}
+                        } ${inStock ? "" : "opacity-60"}`}
+                        style={{
+                          backgroundColor:
+                            colorMap[color.toLowerCase()] ||
+                            color.toLowerCase(),
+                        }}
                         title={color}
                       >
                         {!inStock && (

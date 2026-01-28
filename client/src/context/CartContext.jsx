@@ -23,17 +23,27 @@ export function CartProvider({ children }) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Helper function to normalize like backend
+  const normalizeCartData = (size, color) => {
+    return {
+      normalizedSize: size?.toUpperCase() || "",
+      normalizedColor: color?.toLowerCase() || "",
+    };
+  };
+
   const addToCart = ({ product, size, color }) => {
     if (!size || !color) {
       return;
     }
 
+    const { normalizedSize, normalizedColor } = normalizeCartData(size, color);
+
     setCart((prev) => {
       const exists = prev.find(
         (item) =>
           item.product._id === product._id &&
-          item.size === size &&
-          item.color === color,
+          item.size === normalizedSize &&
+          item.color === normalizedColor,
       );
 
       openCart();
@@ -41,14 +51,14 @@ export function CartProvider({ children }) {
       if (exists) {
         return prev.map((item) =>
           item.product._id === product._id &&
-          item.size === size &&
-          item.color === color
+          item.size === normalizedSize &&
+          item.color === normalizedColor
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
       }
       const variant = product.variants.find(
-        (v) => v.color.toLowerCase() === color.toLowerCase(),
+        (v) => v.color.toLowerCase() === normalizedColor,
       );
       const image =
         variant?.images?.[0] || product.variants?.[0]?.images?.[0] || "";
@@ -60,8 +70,8 @@ export function CartProvider({ children }) {
           // store top-level copies for easier calculations and payloads
           name: product.name,
           price: product.price,
-          size,
-          color,
+          size: normalizedSize,
+          color: normalizedColor,
           image,
           quantity: 1,
         },
@@ -70,28 +80,32 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = (productId, size, color) => {
+    const { normalizedSize, normalizedColor } = normalizeCartData(size, color);
+
     setCart((prevCart) =>
       prevCart.filter(
         (item) =>
           !(
             item.product._id === productId &&
-            item.size === size &&
-            item.color === color
+            item.size === normalizedSize &&
+            item.color === normalizedColor
           ),
       ),
     );
   };
 
   const updateQuantity = (productId, size, color, newQty) => {
+    const { normalizedSize, normalizedColor } = normalizeCartData(size, color);
+
     if (newQty < 1) {
-      removeFromCart(productId, size, color);
+      removeFromCart(productId, normalizedSize, normalizedColor);
       return;
     }
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.product._id == productId &&
-        item.size === size &&
-        item.color === color
+        item.size === normalizedSize &&
+        item.color === normalizedColor
           ? { ...item, quantity: newQty }
           : item,
       ),

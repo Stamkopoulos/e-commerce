@@ -9,12 +9,18 @@ export default function Cart() {
     cart,
     updateQuantity,
     removeFromCart,
-    clearCart,
+    //clearCart,
     subtotal,
     discount,
     shipping,
     totalPrice,
   } = useCart();
+
+  // Helper to format color for display
+  const formatColor = (color) => {
+    if (!color) return "";
+    return color.charAt(0).toUpperCase() + color.slice(1);
+  };
 
   return (
     <>
@@ -61,7 +67,7 @@ export default function Cart() {
                             </span>{" "}
                             / Color{" "}
                             <span className="font-bold text-gray-900">
-                              {item.color}
+                              {formatColor(item.color)}
                             </span>
                           </p>
                           <p className="text-2xl text-gray-900">

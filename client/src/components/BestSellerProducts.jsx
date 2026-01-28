@@ -54,7 +54,7 @@ export default function BestSellerProducts() {
               <h3 className="text-sm md:text-base font-medium mb-1 group-hover:text-muted-foreground transition-colors">
                 {product.name}
               </h3>
-              <p className="text-sm text-muted-foreground">${product.price}</p>
+              <p className="text-sm text-muted-foreground">€{product.price}</p>
             </Link>
           ))}
         </div>
