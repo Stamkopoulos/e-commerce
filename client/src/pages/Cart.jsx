@@ -173,13 +173,23 @@ export default function Cart() {
                     onClick={() => clearCart()}
                     className="self-start bg-black text-white py-3 px-8 rounded-xl hover:bg-red-800 transition"
                   >
-                    Clear Cart
+                  Clear Cart
                   </button> */}
                   <Link
                     to="/collections"
-                    className="self-start bg-black text-white py-3 px-8 rounded-3xl transition"
+                    className="self-start bg-gray-200 text-black py-3 px-8 rounded-3xl hover:bg-gray-300 transition"
                   >
-                    Continue Shopping
+                    <div className="justify-center items-center flex gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                      >
+                        <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
+                        <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
+                      </svg>
+                      Continue Shopping
+                    </div>
                   </Link>
                 </div>
 

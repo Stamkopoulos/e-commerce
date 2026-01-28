@@ -145,11 +145,14 @@ export default function Checkout() {
 
             {/* Left Column - Checkout Form */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white p-6 rounded-lg">
+              <div className="bg-white p-6 rounded-lg flex flex-col h-full">
                 <h2 className="text-xl font-semibold mb-6">
                   Shipping Information
                 </h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col flex-grow space-y-4"
+                >
                   {[
                     ["First name", "firstName", "Enter first name"],
                     ["Last name", "lastName", "Enter last name"],
@@ -216,17 +219,28 @@ export default function Checkout() {
                       )}
                     </div>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleRemovePromo();
-                      navigate(-1);
-                    }}
-                    className="w-full bg-gray-200 text-black py-3 px-8 rounded-xl hover:bg-gray-300 transition mt-4"
-                  >
-                    Back
-                  </button>
+                  <div className="mt-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleRemovePromo();
+                        navigate(-1);
+                      }}
+                      className="self-start bg-gray-200 text-black py-3 px-8 rounded-xl hover:bg-gray-300 transition mt-4"
+                    >
+                      <div className="justify-center items-center flex gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                        >
+                          <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
+                          <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
+                        </svg>
+                        Back
+                      </div>
+                    </button>
+                  </div>
                 </form>
               </div>
 
