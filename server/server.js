@@ -11,6 +11,7 @@ import webhookRoutes from "./routes/webhookRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import bestSeller from "./routes/bestSellerRoutes.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/webhook", webhookRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/best-sellers", bestSeller);
 app.use("/api/admin", adminRoutes);
 
 //Start server
