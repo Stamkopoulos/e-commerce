@@ -2,16 +2,18 @@ import { useState, useEffect, useMemo } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [sort, setSort] = useState("default");
-  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const { category } = useParams();
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Read search from URL when component mounts
   const search = useMemo(() => {
@@ -62,7 +64,7 @@ export default function Products() {
     // Price range filter
     const price =
       typeof p.price === "string" ? parseFloat(p.price) : p.price || 0;
-    const matchesPrice = price >= priceRange[0] && price <= priceRange[1];
+    const matchesPrice = price >= minPrice && price <= maxPrice;
 
     // Size filter (if sizes are selected)
     const matchesSize =
@@ -185,6 +187,7 @@ export default function Products() {
                 </div>
               </div>
               {/* Price Range Filter */}
+              {/* Price Range Filter - Dual Thumb Slider */}
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="font-medium mb-4 text-sm uppercase tracking-wider">
                   PRICE
@@ -193,19 +196,19 @@ export default function Products() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="relative flex-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500">
-                        $
+                        €
                       </span>
                       <input
                         type="number"
                         min="0"
                         max="1000"
-                        value={priceRange[0]}
+                        value={minPrice}
                         onChange={(e) => {
                           const value = Math.min(
                             parseInt(e.target.value) || 0,
-                            priceRange[1],
+                            maxPrice,
                           );
-                          setPriceRange([value, priceRange[1]]);
+                          setMinPrice(value);
                         }}
                         className="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-black"
                         placeholder="Min"
@@ -214,19 +217,19 @@ export default function Products() {
                     <span className="text-gray-400">-</span>
                     <div className="relative flex-1">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500">
-                        $
+                        €
                       </span>
                       <input
                         type="number"
                         min="0"
                         max="1000"
-                        value={priceRange[1]}
+                        value={maxPrice}
                         onChange={(e) => {
                           const value = Math.max(
                             parseInt(e.target.value) || 1000,
-                            priceRange[0],
+                            minPrice,
                           );
-                          setPriceRange([priceRange[0], value]);
+                          setMaxPrice(value);
                         }}
                         className="w-full pl-7 pr-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-black"
                         placeholder="Max"
@@ -234,19 +237,53 @@ export default function Products() {
                     </div>
                   </div>
 
-                  <div className="pt-2">
+                  {/* Dual Range Slider */}
+                  <div className="relative pt-8 pb-4">
+                    {/* Track */}
+                    <div className="absolute top-6 left-0 right-0 h-1 bg-gray-300 rounded-full"></div>
+
+                    {/* Min Thumb */}
                     <input
                       type="range"
                       min="0"
                       max="1000"
-                      step="10"
-                      value={priceRange[1]}
-                      onChange={(e) =>
-                        setPriceRange([priceRange[0], parseInt(e.target.value)])
-                      }
-                      className="w-full accent-black"
+                      value={minPrice}
+                      onChange={(e) => {
+                        const value = Math.min(
+                          parseInt(e.target.value),
+                          maxPrice,
+                        );
+                        setMinPrice(value);
+                      }}
+                      className="absolute top-6 left-0 right-0 w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-10"
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+
+                    {/* Max Thumb */}
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value={maxPrice}
+                      onChange={(e) => {
+                        const value = Math.max(
+                          parseInt(e.target.value),
+                          minPrice,
+                        );
+                        setMaxPrice(value);
+                      }}
+                      className="absolute top-6 left-0 right-0 w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-10"
+                    />
+
+                    {/* Filled Track */}
+                    <div
+                      className="absolute top-6 h-1 bg-black rounded-full"
+                      style={{
+                        left: `${(minPrice / 1000) * 100}%`,
+                        right: `${100 - (maxPrice / 1000) * 100}%`,
+                      }}
+                    ></div>
+
+                    <div className="flex justify-between text-xs text-gray-500 mt-6">
                       <span>€0</span>
                       <span>€500</span>
                       <span>€1000</span>
@@ -335,8 +372,15 @@ export default function Products() {
               <button
                 onClick={() => {
                   setSelectedSizes([]);
-                  setPriceRange([0, 1000]);
+                  setMinPrice(0);
+                  setMaxPrice(1000);
                   setSelectedColors([]);
+                  // Clear URL search parameter if it exists
+                  if (search) {
+                    navigate(
+                      category ? `/collections/${category}` : "/products",
+                    );
+                  }
                 }}
                 className="text-sm border-b border-black hover:border-gray-500 transition w-full text-center py-2 cursor-pointer"
               >
@@ -399,7 +443,8 @@ export default function Products() {
                     onClick={() => {
                       setSelectedSizes([]);
                       setSelectedColors([]);
-                      setPriceRange([0, 1000]);
+                      setMinPrice(0);
+                      setMaxPrice(1000);
                     }}
                     className="text-sm text-gray-500 hover:text-black transition"
                   >

@@ -5,7 +5,7 @@ export default function ProductCard({ product }) {
     <div className="group">
       <Link to={`/products/${product._id}`}>
         {/* Image Container */}
-        <div className="w-full max-w-[300px] mx-auto aspect-[3/4] overflow-hidden mb-4 bg-gray-50">
+        <div className="w-full max-w-[300px] mx-auto aspect-3/4 overflow-hidden mb-4 bg-gray-50">
           <img
             src={product.variants?.[0]?.images?.[0]}
             alt={product.name}
