@@ -2,12 +2,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
-const collections = [
-  { id: "men", title: "Men" },
-  { id: "women", title: "Women" },
-  { id: "accessories", title: "Accessories" },
-];
-
 export default function Collections() {
   return (
     <>
@@ -18,34 +12,7 @@ export default function Collections() {
             All Collections
           </h1>
         </div>
-
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3">
-            {collections.map((c) => (
-              <Link
-                key={c.id}
-                to={`/collections/${c.id}`}
-                className="group block rounded-lg overflow-hidden relative h-56 flex items-center justify-center"
-                aria-label={`${c.title} collection`}
-              >
-                <div className="absolute inset-0" />
-
-                <div className="relative z-10 text-center">
-                  <h2 className="text-2xl sm:text-3xl font-semibold text-black drop-shadow-md">
-                    {c.title}
-                  </h2>
-                  <span className="mt-4 inline-block px-4 py-2 border border-black/70 text-black rounded-md text-sm hover:bg-black hover:text-white transition">
-                    {`Shop for ${c.title}`}
-                  </span>
-                </div>
-
-                <div className="absolute inset-0 rounded-lg pointer-events-none border border-white/10" />
-              </Link>
-            ))}
-          </div>
-        </div>
       </section>
-
       <Footer />
     </>
   );
