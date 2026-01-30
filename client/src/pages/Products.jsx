@@ -239,9 +239,14 @@ export default function Products() {
 
                   {/* Dual Range Slider */}
                   <div className="relative pt-8 pb-4">
-                    {/* Track */}
-                    <div className="absolute top-6 left-0 right-0 h-1 bg-gray-300 rounded-full"></div>
-
+                    {/* Filled Track */}
+                    <div
+                      className="absolute top-6 h-1 bg-black rounded-full z-0"
+                      style={{
+                        left: `${(minPrice / 1000) * 100}%`,
+                        right: `${100 - (maxPrice / 1000) * 100}%`,
+                      }}
+                    ></div>
                     {/* Min Thumb */}
                     <input
                       type="range"
@@ -255,7 +260,7 @@ export default function Products() {
                         );
                         setMinPrice(value);
                       }}
-                      className="absolute top-6 left-0 right-0 w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-10"
+                      className="absolute top-6 left-0 right-0 w-full h-1 appearance-none bg-transparent pointer-events-none z-10"
                     />
 
                     {/* Max Thumb */}
@@ -271,17 +276,34 @@ export default function Products() {
                         );
                         setMaxPrice(value);
                       }}
-                      className="absolute top-6 left-0 right-0 w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-10"
+                      className="absolute top-6 left-0 right-0 w-full h-1 appearance-none bg-transparent pointer-events-none z-20"
                     />
 
-                    {/* Filled Track */}
-                    <div
-                      className="absolute top-6 h-1 bg-black rounded-full"
-                      style={{
-                        left: `${(minPrice / 1000) * 100}%`,
-                        right: `${100 - (maxPrice / 1000) * 100}%`,
-                      }}
-                    ></div>
+                    {/* Custom thumbs for both inputs */}
+                    <style>{`
+                      input[type="range"]::-webkit-slider-thumb {
+                        appearance: none;
+                        height: 16px;
+                        width: 16px;
+                        border-radius: 50%;
+                        background: black;
+                        cursor: pointer;
+                        pointer-events: auto;
+                        position: relative;
+                        z-index: 30;
+                      }
+                      
+                      input[type="range"]::-moz-range-thumb {
+                        height: 16px;
+                        width: 16px;
+                        border-radius: 50%;
+                        background: black;
+                        cursor: pointer;
+                        border: none;
+                        position: relative;
+                        z-index: 30;
+                      }
+                    `}</style>
 
                     <div className="flex justify-between text-xs text-gray-500 mt-6">
                       <span>€0</span>

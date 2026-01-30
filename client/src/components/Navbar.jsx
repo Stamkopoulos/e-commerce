@@ -59,7 +59,7 @@ export default function Navbar() {
             href="/"
             className="text-xl font-bold text-white sm:text-md md:text-xl"
           >
-            VOUTS
+            QLOSET
           </a>
 
           <Menu as="div" className="relative hidden md:block">
