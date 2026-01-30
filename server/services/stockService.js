@@ -2,37 +2,37 @@ import Product from "../models/Product.js";
 
 export const decreaseStock = async (
   { productId, color, size, quantity },
-  session = null
+  session = null,
 ) => {
   const normalizedSize = size.toUpperCase();
-  const colorRegex = new RegExp(`^${color}$`, "i");
+  const normalizedColor = color.toLowerCase();
 
-  const result = await Product.findOneAndUpdate(
-    {
-      _id: productId,
-      variants: {
-        $elemMatch: {
-          color: colorRegex,
-          sizes: {
-            $elemMatch: { size: normalizedSize, quantity: { $gte: quantity } },
-          },
-        },
-      },
-    },
-    { $inc: { "variants.$[v].sizes.$[s].quantity": -quantity } },
-    {
-      arrayFilters: [{ "v.color": colorRegex }, { "s.size": normalizedSize }],
-      new: true,
-      session,
-    }
+  const result = await Product.findById(productId).session(session);
+  if (!result) throw new Error("Product not found");
+
+  const variant = result.variants.find(
+    (v) => v.color.toLowerCase() === normalizedColor,
   );
+  if (!variant) throw new Error("Color not available");
+
+  const sizeObj = variant.sizes.find(
+    (s) => s.size.toUpperCase() === normalizedSize,
+  );
+  if (!sizeObj) throw new Error("Size not available");
+
+  if (!sizeObj.quantity || sizeObj.quantity < quantity)
+    throw new Error("Not enough stock");
+
+  sizeObj.quantity -= quantity;
+  await result.save({ session });
+
   console.log("DECREASE STOCK INPUT:", {
     productId,
-    color,
-    size,
+    color: normalizedColor,
+    size: normalizedSize,
     quantity,
+    remainingStock: sizeObj.quantity,
   });
 
-  if (!result) throw new Error("Not enough stock or product not found");
   return result;
 };

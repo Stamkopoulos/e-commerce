@@ -4,7 +4,7 @@ export default function CollectionCard({ title, image, category }) {
   return (
     <Link
       to={`/collections/${category}`}
-      className="group block overflow-hidden rounded-xl border hover:shadow-lg transition"
+      className="group block overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition"
     >
       <div className="aspect-[3/4] overflow-hidden">
         <img

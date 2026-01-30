@@ -3,16 +3,26 @@ import { useEffect, useState } from "react";
 import { getBestsellerProducts } from "../services/productService";
 
 export default function BestSellerProducts() {
-  const [bestsellerProducts, setBestsellerProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBestsellers = async () => {
       try {
-        const products = await getBestsellerProducts();
-        setBestsellerProducts(products);
-      } catch (err) {
-        console.error("Failed to fetch bestsellers:", err);
+        setLoading(true);
+        const data = await getBestsellerProducts();
+
+        // Check if data has topProducts property, otherwise use data directly
+        const productList = data?.topProducts || data || [];
+
+        console.log("Fetched data:", data);
+        console.log("Product list:", productList);
+        console.log("Number of products:", productList.length);
+
+        setProducts(productList);
+      } catch (error) {
+        console.error("Error fetching bestsellers:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -21,10 +31,12 @@ export default function BestSellerProducts() {
     fetchBestsellers();
   }, []);
 
-  if (loading)
+  if (loading) {
     return <p className="text-center mt-8">Loading bestsellers...</p>;
+  }
+
   return (
-    <section className="py-16 md:py-24 px-4 bg-muted/30">
+    <section className="max-w-6xl mx-auto px-4 py-16">
       <div className="container mx-auto">
         <div className="flex justify-between items-end mb-12">
           <div>
@@ -33,30 +45,46 @@ export default function BestSellerProducts() {
             </h2>
             <p className="text-muted-foreground">Our most-loved pieces</p>
           </div>
-          <Link variant="ghost" asChild className="hidden md:flex">
-            <Link to="/collections">View All</Link>
+          <Link to="/collections" className="hidden md:flex">
+            View All
           </Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {bestsellerProducts.slice(0, 4).map((product) => (
-            <Link
-              key={product._id}
-              to={`/products/${product._id}`}
-              className="group"
-            >
-              <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-sm">
-                <img
-                  src={product.variants?.[0]?.images?.[0] || "/placeholder.svg"}
-                  alt={product.name}
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {Array.isArray(products) && products.length > 0 ? (
+            products.map((product) => (
+              <div
+                key={product.productId}
+                className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col"
+              >
+                <Link
+                  to={`/products/${product.productId}`}
+                  className="flex flex-col flex-grow"
+                >
+                  {/* Image */}
+                  <div className="w-full aspect-[3/4] overflow-hidden rounded">
+                    <img
+                      src={product.image || "/images/placeholder.png"}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Name & Price */}
+                  <div className="flex-grow mt-4">
+                    <h3 className="font-semibold text-lg mb-1 hover:underline">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-600 mb-2">€ {product.price}</p>
+                  </div>
+                </Link>
               </div>
-              <h3 className="text-sm md:text-base font-medium mb-1 group-hover:text-muted-foreground transition-colors">
-                {product.name}
-              </h3>
-              <p className="text-sm text-muted-foreground">${product.price}</p>
-            </Link>
-          ))}
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-500 py-8">
+              No bestsellers found.
+            </p>
+          )}
         </div>
       </div>
     </section>
