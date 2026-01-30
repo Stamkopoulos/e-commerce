@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("default");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const { category } = useParams();
+  const location = useLocation();
+
+  // Read search from URL when component mounts
+  const search = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get("search") || "";
+  }, [location.search]);
 
   const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
   const colors = [
@@ -110,25 +116,7 @@ export default function Products() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
-        {/* Top Navigation Bar */}
-        <div className="w-full border-b border-gray-200">
-          <div className="max-w-[1600px] mx-auto px-8">
-            <div className="flex justify-between items-center py-4">
-              {/* Minimal Search Bar */}
-              <div className="relative w-48">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full px-3 py-2 text-sm border-b border-gray-300 focus:outline-none focus:border-black bg-transparent"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <main className="min-h-screen pt-20">
         {/* Main Content Area */}
         <div className="max-w-[1600px] mx-auto px-8 py-12">
           {/* Page Title */}
@@ -349,7 +337,6 @@ export default function Products() {
                   setSelectedSizes([]);
                   setPriceRange([0, 1000]);
                   setSelectedColors([]);
-                  setSearch("");
                 }}
                 className="text-sm border-b border-black hover:border-gray-500 transition w-full text-center py-2 cursor-pointer"
               >
