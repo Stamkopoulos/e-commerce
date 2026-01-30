@@ -10,17 +10,18 @@ const getAuthHeaders = (token) => ({
 });
 
 // ===== Dashboard =====
-export const getDashboardOverview = async (token) => {
+export const getDashboardOverview = async (token, params = {}) => {
   try {
     const res = await axios.get(
       `${API_URL}/admin/dashboard/overview`,
-      getAuthHeaders(token)
+
+      { params, ...getAuthHeaders(token) },
     );
     return res.data;
   } catch (error) {
     console.error(
       "Error fetching dashboard overview:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     throw error;
   }
@@ -30,7 +31,7 @@ export const getDashboardOverview = async (token) => {
 export const getAdminProductStats = async (token) => {
   const res = await axios.get(
     `${API_URL}/admin/products`,
-    getAuthHeaders(token)
+    getAuthHeaders(token),
   );
   return res.data;
 };
@@ -62,7 +63,7 @@ export const createProduct = async (data, token) => {
   const res = await axios.post(
     `${API_URL}/products`,
     data,
-    getAuthHeaders(token)
+    getAuthHeaders(token),
   );
   return res.data;
 };
@@ -71,7 +72,7 @@ export const updateProduct = async (id, data, token) => {
   const res = await axios.put(
     `${API_URL}/products/${id}`,
     data,
-    getAuthHeaders(token)
+    getAuthHeaders(token),
   );
   return res.data;
 };
@@ -79,7 +80,7 @@ export const updateProduct = async (id, data, token) => {
 export const deleteProduct = async (id, token) => {
   const res = await axios.delete(
     `${API_URL}/products/${id}`,
-    getAuthHeaders(token)
+    getAuthHeaders(token),
   );
   return res.data;
 };

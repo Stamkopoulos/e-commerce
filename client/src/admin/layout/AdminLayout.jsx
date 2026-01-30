@@ -1,17 +1,30 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import AdminSidebar from "../components/Sidebar";
+
+import {
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+} from "@/components/ui/sidebar";
 
 export default function AdminLayout() {
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <main className="p-6">
+    <SidebarProvider
+      style={{
+        "--sidebar-width": "calc(var(--spacing) * 72)",
+        "--header-height": "calc(var(--spacing) * 12)",
+      }}
+    >
+      {/* Sidebar */}
+      <AdminSidebar />
+
+      {/* Content area that reacts to sidebar */}
+      <SidebarInset>
+        <main className="flex flex-col gap-6 p-6">
+          <SidebarTrigger />
           <Outlet />
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -17,21 +17,59 @@ export const getDashboardOverview = async (req, res) => {
 
     const recentOrders = await Order.find({}).sort({ createdAt: -1 }).limit(5);
 
-    //Sales last 30 days
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
+    // //Sales last 30 days
+    // const startDate = new Date();
+    // startDate.setDate(startDate.getDate() - 30);
 
+    // const salesOverview = await Order.aggregate([
+    //   { $match: { createdAt: { $gte: startDate } } },
+    //   {
+    //     $group: {
+    //       _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+    //       revenue: { $sum: "$totalPrice" },
+    //       orders: { $sum: 1 },
+    //     },
+    //   },
+    //   { $sort: { _id: 1 } },
+    // ]);
+
+    // =================================================
+    // Read optional date range from query params
+    const { startDate, endDate } = req.query;
+
+    // Default range = last 30 days
+    const start = startDate
+      ? new Date(startDate)
+      : (() => {
+          const d = new Date();
+          d.setDate(d.getDate() - 30);
+          return d;
+        })();
+
+    const end = endDate ? new Date(endDate) : new Date();
+
+    // Aggregate sales based on selected date range
     const salesOverview = await Order.aggregate([
-      { $match: { createdAt: { $gte: startDate } } },
+      {
+        $match: {
+          createdAt: { $gte: start, $lte: end },
+        },
+      },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt",
+            },
+          },
           revenue: { $sum: "$totalPrice" },
           orders: { $sum: 1 },
         },
       },
       { $sort: { _id: 1 } },
     ]);
+    // =================================================
 
     // Top products by total quantity sold
     let topProducts = await Order.aggregate([
@@ -79,7 +117,7 @@ export const getDashboardOverview = async (req, res) => {
       };
     });
 
-    console.log("Top Products Aggregation Result:", topProducts);
+    //console.log("Top Products Aggregation Result:", topProducts);
 
     res.json({
       totalRevenue,
