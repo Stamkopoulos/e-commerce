@@ -27,9 +27,9 @@ export default function TopProductsTable({ products = [] }) {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="px-0 max-h-[400px] overflow-auto px-2 pt-4 sm:px-6 sm:pt-6 ">
-        <Table className=" overflow-hidden rounded-lg border border-black">
-          <TableHeader className="bg-muted sticky top-0 z-10">
+      <CardContent>
+        <Table className=" overflow-hidden rounded-lg  ">
+          <TableHeader className="bg-muted sticky top-0 z-10 ">
             <TableRow>
               <TableHead>Product</TableHead>
               <TableHead className="text-center">Units Sold</TableHead>
@@ -37,7 +37,7 @@ export default function TopProductsTable({ products = [] }) {
             </TableRow>
           </TableHeader>
 
-          <TableBody>
+          <TableBody className="">
             {products.length === 0 ? (
               <TableRow>
                 <TableCell

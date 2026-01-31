@@ -105,7 +105,7 @@ export default function RecentOrdersTable({ orders = [] }) {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="px-0 max-h-[400px] overflow-auto px-2 pt-4 sm:px-6 sm:pt-6 ">
+      <CardContent>
         <Table className="overflow-hidden rounded-lg border border-black">
           <TableHeader className="bg-muted sticky top-0 z-10">
             <TableRow>

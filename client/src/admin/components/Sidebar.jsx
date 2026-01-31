@@ -13,6 +13,8 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 
+import { ModeToggle } from "@/components/ui/mode-toggle";
+
 // Menu items for the admin dashboard
 const items = [
   {
@@ -55,7 +57,7 @@ export default function AdminSidebar() {
                     <SidebarMenuButton asChild>
                       <a
                         href={item.url}
-                        className="flex items-center gap-3 px-4 py-2 text-gray-700 rounded hover:bg-gray-100 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-gray-400 rounded hover:bg-gray-100 transition-colors"
                       >
                         <Icon className="w-5 h-5" />
                         <span>{item.title}</span>
@@ -68,24 +70,28 @@ export default function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t">
+      <SidebarFooter className="border-t pt-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="flex items-center gap-3">
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "w-8 h-8",
-                  },
-                }}
-              />
-              <div className="flex flex-col text-left">
-                <span className="text-sm font-medium">
-                  {user?.fullName || "Admin"}
-                </span>
-                <span className="text-xs text-muted-foreground">Admin</span>
+            <div className="flex items-center justify-between px-2 py-2 gap-1">
+              <div className="flex items-center gap-3">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8",
+                    },
+                  }}
+                />
+                <div className="flex flex-col text-left">
+                  <span className="text-sm font-medium">
+                    {user?.fullName || "Admin"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">Admin</span>
+                </div>
               </div>
-            </SidebarMenuButton>
+
+              <ModeToggle />
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

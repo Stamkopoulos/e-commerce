@@ -7,24 +7,28 @@ import {
   SidebarInset,
 } from "@/components/ui/sidebar";
 
+import { ThemeProvider } from "@/components/ui/theme-provider";
+
 export default function AdminLayout() {
   return (
-    <SidebarProvider
-      style={{
-        "--sidebar-width": "calc(var(--spacing) * 72)",
-        "--header-height": "calc(var(--spacing) * 12)",
-      }}
-    >
-      {/* Sidebar */}
-      <AdminSidebar />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <SidebarProvider
+        style={{
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        }}
+      >
+        {/* Sidebar */}
+        <AdminSidebar />
 
-      {/* Content area that reacts to sidebar */}
-      <SidebarInset>
-        <main className="flex flex-col gap-6 p-6">
-          <SidebarTrigger />
-          <Outlet />
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+        {/* Content area that reacts to sidebar */}
+        <SidebarInset>
+          <main className="flex flex-col gap-6 p-6">
+            <SidebarTrigger />
+            <Outlet />
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
