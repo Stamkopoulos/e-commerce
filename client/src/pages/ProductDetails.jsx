@@ -166,7 +166,7 @@ export default function ProductDetails() {
     <>
       <Navbar />
       <main className="flex flex-col min-h-screen">
-        <section className="max-w-5xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <section className="max-w-5xl mx-auto px-4 py-16 mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Left: Product Image */}
           <div className="w-full flex flex-col items-start">
             <div className="w-full aspect-square border rounded-xl overflow-hidden bg-gray-50">
