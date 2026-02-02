@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           <div>
             <h3 className="text-xl font-serif font-light tracking-wider mb-4">
-              VOUTS
+              QLOSET
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Timeless pieces crafted for the modern wardrobe. Quality, style,
