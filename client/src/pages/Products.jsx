@@ -42,21 +42,25 @@ export default function Products() {
     const loadProducts = async () => {
       try {
         let data;
-        if (category) {
+        const path = location.pathname;
+        if (path.startsWith("/collections/")) {
           const { getProductsByCategory } =
             await import("../services/productService");
           data = await getProductsByCategory(category);
-        } else {
+        } else if (path === "/products" || path === "/products/") {
+          // If we're in /products route
           const { getAllProducts } = await import("../services/productService");
-          data = await getAllProducts();
+          const response = await getAllProducts();
+          data = response.results || response; // Adjusted to handle new response structure
         }
-        setProducts(data);
+        setProducts(data || []);
       } catch (error) {
         console.error("Failed to fetch products:", error);
+        setProducts([]);
       }
     };
     loadProducts();
-  }, [category]);
+  }, [category, location.pathname]);
 
   const filteredProducts = products.filter((p) => {
     const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase());

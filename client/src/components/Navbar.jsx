@@ -16,19 +16,9 @@ import { useCartUI } from "../context/useCartUI";
 export default function Navbar() {
   const { cart } = useCart();
   const { openCart } = useCartUI();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  // Scroll effect only
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -45,60 +35,62 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-black/95 backdrop-blur-md shadow-xl py-3"
-          : "bg-black py-4"
-      }`}
-    >
+    <nav className="fixed w-full z-50 transition-all duration-300 py-3">
       <div className="w-full px-4 sm:px-6 flex items-center justify-between">
         {/* Left side: Logo and Collections */}
         <div className="flex items-center gap-4 sm:gap-6 md:gap-8">
           <a
             href="/"
-            className="text-xl font-bold text-white sm:text-md md:text-xl"
+            className=" text-3xl font-bold text-black sm:text-md md:text-3xl"
           >
-            QLOSET
+            Qloset
           </a>
+          <Menu as="div" className="static hidden md:block">
+            {({ open }) => (
+              <>
+                <MenuButton className="text-lg font-light text-black flex items-center gap-1">
+                  Collections
+                  <ChevronDownIcon aria-hidden="true" className="size-5" />
+                </MenuButton>
 
-          <Menu as="div" className="relative hidden md:block">
-            <MenuButton className="text-xl font-bold text-white hover:text-gray-300 flex items-center gap-1">
-              Collections
-              <ChevronDownIcon aria-hidden="true" className="size-5" />
-            </MenuButton>
+                {/* Backdrop blur overlay */}
+                {open && (
+                  <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40 top-[61px]" />
+                )}
 
-            <MenuItems
-              transition
-              className="absolute left-0 mt-2 w-48 bg-black/95 backdrop-blur-md border border-gray-800 rounded-lg shadow-2xl py-2 z-50"
-            >
-              <div className="py-1">
-                <MenuItem>
-                  <a
-                    href="/collections/men"
-                    className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
-                  >
-                    Men
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="/collections/women"
-                    className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
-                  >
-                    Women
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="/collections/accessories"
-                    className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
-                  >
-                    Accessories
-                  </a>
-                </MenuItem>
-              </div>
-            </MenuItems>
+                <MenuItems
+                  transition
+                  className="fixed left-0 top-[61px] w-72 py-4 z-50 bg-white border-0 outline-none shadow-lg"
+                >
+                  <div className="py-1">
+                    <MenuItem>
+                      <a
+                        href="/collections/men"
+                        className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
+                      >
+                        Men
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        href="/collections/women"
+                        className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
+                      >
+                        Women
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        href="/collections/accessories"
+                        className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
+                      >
+                        Accessories
+                      </a>
+                    </MenuItem>
+                  </div>
+                </MenuItems>
+              </>
+            )}
           </Menu>
         </div>
 
@@ -109,23 +101,23 @@ export default function Navbar() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Search"
                 value={searchInput}
                 onChange={handleInputChange}
-                className="w-36 md:w-48 lg:w-60 bg-gray-900/50 border border-gray-700 rounded-full py-1.5 px-10 md:px-10 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-white transition-all"
+                className="w-36 md:w-48 lg:w-60 bg-white border rounded-2xl py-1.5 px-10 md:px-10 text-sm text-black font-medium placeholder-black focus:outline-none focus:border-white transition-all"
               />
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black" />
             </div>
           </form>
 
           {/* Mobile Search Button */}
-          <button className="sm:hidden text-gray-300 hover:text-white">
+          <button className="sm:hidden text-black">
             <MagnifyingGlassIcon className="w-5 h-5" />
           </button>
 
           {/* Cart */}
           <div className="relative group cursor-pointer" onClick={openCart}>
-            <ShoppingCartIcon className="w-6 h-6 text-gray-300 group-hover:text-white sm:w-6 sm:h-6" />
+            <ShoppingCartIcon className="w-6 h-6 text-black group-hover:text-gray sm:w-6 sm:h-6" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
                 {cartCount}
@@ -136,7 +128,7 @@ export default function Navbar() {
           {/* Auth */}
           <SignedOut>
             <SignInButton mode="redirect" redirectUrl="/">
-              <button className="text-sm sm:text-sm text-gray-300 hover:text-white px-3 py-1.5 border border-gray-700 hover:border-white rounded-full">
+              <button className="text-md sm:text-md text-black font-medium px-3 py-1.5 ">
                 Sign In
               </button>
             </SignInButton>
@@ -147,13 +139,6 @@ export default function Navbar() {
           </SignedIn>
         </div>
       </div>
-
-      {/* Animated bottom border */}
-      <div
-        className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white to-transparent transition-transform duration-500 ${
-          isScrolled ? "scale-x-100" : "scale-x-0"
-        }`}
-      ></div>
     </nav>
   );
 }

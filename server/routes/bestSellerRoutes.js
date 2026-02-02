@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
         },
       },
       { $sort: { totalSold: -1 } },
-      { $limit: 5 },
+      { $limit: 6 },
     ]);
 
     const productIds = topProducts.map((p) => p._id);

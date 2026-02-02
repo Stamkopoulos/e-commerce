@@ -45,12 +45,12 @@ export default function BestSellerProducts() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.isArray(products) && products.length > 0 ? (
             products.map((product) => (
               <div
                 key={product.productId}
-                className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col"
+                className="p-4 transition flex flex-col"
               >
                 <Link
                   to={`/products/${product.productId}`}
@@ -67,10 +67,12 @@ export default function BestSellerProducts() {
 
                   {/* Name & Price */}
                   <div className="flex-grow mt-4">
-                    <h3 className="font-semibold text-lg mb-1 hover:underline">
+                    <h3 className="font-light text-md mb-1 hover:underline">
                       {product.name}
                     </h3>
-                    <p className="text-gray-600 mb-2">€ {product.price}</p>
+                    <p className="text-gray-600 text-sm mb-2">
+                      € {product.price}
+                    </p>
                   </div>
                 </Link>
               </div>

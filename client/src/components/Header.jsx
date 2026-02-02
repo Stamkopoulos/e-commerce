@@ -38,10 +38,30 @@ export default function Header() {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  const [showUp, setShowUp] = useState(false);
+
+  useEffect(() => {
+    const hero = document.querySelector("#hero-section");
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowUp(!entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main>
       <section className="min-h-screen flex justify-center items-center p-8 relative">
-        <div className="relative inline-block w-full max-w-7xl">
+        <div
+          className="relative inline-block w-full mt-12 max-w-7xl"
+          id="hero-section"
+        >
           {slides.map((slide, index) => (
             <div
               key={index}
@@ -107,12 +127,23 @@ export default function Header() {
           </div>
         </div>
       </section>
+
       {/* Collections */}
       <CollectionsSection />
       {/* Best Sellers */}
       <BestSellerProducts />
       {/* Newsletter */}
       <Newsletter />
+
+      {showUp && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Scroll to top"
+          className="fixed right-8 bottom-8 text-white bg-black py-2 px-4 rounded-full"
+        >
+          &#8593;
+        </button>
+      )}
     </main>
   );
 }
