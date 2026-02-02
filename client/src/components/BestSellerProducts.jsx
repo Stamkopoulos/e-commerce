@@ -14,11 +14,6 @@ export default function BestSellerProducts() {
 
         // Check if data has topProducts property, otherwise use data directly
         const productList = data?.topProducts || data || [];
-
-        console.log("Fetched data:", data);
-        console.log("Product list:", productList);
-        console.log("Number of products:", productList.length);
-
         setProducts(productList);
       } catch (error) {
         console.error("Error fetching bestsellers:", error);
