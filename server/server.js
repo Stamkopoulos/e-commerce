@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
+dotenv.config();
 
 import productRoutes from "./routes/productRoutes.js";
+import checkoutRoutes from "./routes/checkoutRoutes.js";
 import collectionRoutes from "./routes/collectionRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -14,7 +16,6 @@ import adminRoutes from "./routes/adminRoutes.js";
 import bestSeller from "./routes/bestSellerRoutes.js";
 import connectDB from "./config/db.js";
 
-dotenv.config();
 connectDB();
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/best-sellers", bestSeller);
 app.use("/api/admin", adminRoutes);
+app.use("/api/checkout", checkoutRoutes);
 
 //Start server
 app.listen(PORT, () => {
