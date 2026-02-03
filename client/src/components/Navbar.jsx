@@ -41,21 +41,31 @@ export default function Navbar() {
         <div className="flex items-center gap-4 sm:gap-6 md:gap-8">
           <a
             href="/"
-            className=" text-3xl font-bold text-black sm:text-md md:text-3xl"
+            className="text-3xl font-bold text-black sm:text-md md:text-3xl relative z-50"
           >
             Qloset
           </a>
           <Menu as="div" className="static hidden md:block">
             {({ open }) => (
               <>
-                <MenuButton className="text-lg font-light text-black flex items-center gap-1">
+                {/* White background behind navbar when dropdown is open */}
+                {open && (
+                  <div className="fixed top-0 left-0 right-0 h-[61px] w-72 bg-white z-[45] border-b border-gray-200" />
+                )}
+
+                <MenuButton className="text-lg font-light text-black flex items-center gap-1 relative z-50">
                   Collections
                   <ChevronDownIcon aria-hidden="true" className="size-5" />
                 </MenuButton>
 
-                {/* Backdrop blur overlay */}
+                {/* Backdrop that blurs the navbar area outside the white section */}
                 {open && (
-                  <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40 top-[61px]" />
+                  <div className="fixed top-0 left-72 right-0 h-[61px] backdrop-blur-sm bg-black/10 z-[45]" />
+                )}
+
+                {/* Backdrop that blurs everything below navbar */}
+                {open && (
+                  <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[45] top-[61px]" />
                 )}
 
                 <MenuItems

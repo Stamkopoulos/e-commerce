@@ -31,9 +31,65 @@ export default function Cart() {
             <h1 className="text-3xl text-center font-bold mb-10">Your Cart</h1>
 
             {cart.length === 0 ? (
-              <p className="text-gray-600 text-lg text-center">
-                Your cart is empty.
-              </p>
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Left side - Empty message */}
+                <div className="flex-1 flex flex-col items-center justify-center gap-6 bg-gray-50 rounded-xl p-6 border border-gray-200 min-h-[200px]">
+                  <p className="text-black-600 text-2xl text-center">
+                    Your cart is empty.
+                  </p>
+                  <Link
+                    to="/products"
+                    className="bg-gray-200 text-black py-3 px-8 rounded-3xl hover:bg-gray-300 transition"
+                  >
+                    <div className="flex gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                      >
+                        <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
+                        <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
+                      </svg>
+                      Continue Shopping
+                    </div>
+                  </Link>
+                </div>
+
+                {/* Right side - Order Summary */}
+                <div className="lg:w-96 bg-gray-50 p-6 rounded-xl border border-gray-200 h-fit sticky top-24">
+                  <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+
+                  <div className="space-y-4 mb-6">
+                    <div className="flex justify-between text-lg">
+                      <span className="text-gray-500">Subtotal:</span>
+                      <span>€0.00</span>
+                    </div>
+                    <div className="flex justify-between text-lg">
+                      <span className="text-gray-500">Discount:</span>
+                      <span>€0.00</span>
+                    </div>
+                    <div className="flex justify-between text-lg">
+                      <span className="text-gray-500">Shipping:</span>
+                      <span>€0.00</span>
+                    </div>
+                    <div className="border-t pt-4">
+                      <div className="flex justify-between text-2xl font-bold">
+                        <span>Total:</span>
+                        <span>€0.00</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    <button
+                      disabled
+                      className="w-full text-center bg-gray-300 text-gray-500 py-3 px-8 rounded-3xl cursor-not-allowed"
+                    >
+                      Proceed to Checkout
+                    </button>
+                  </div>
+                </div>
+              </div>
             ) : (
               <div className="flex flex-col lg:flex-row gap-8">
                 {/* Left side - Cart Items */}
@@ -176,10 +232,10 @@ export default function Cart() {
                   Clear Cart
                   </button> */}
                   <Link
-                    to="/collections"
+                    to="/products"
                     className="self-start bg-gray-200 text-black py-3 px-8 rounded-3xl hover:bg-gray-300 transition"
                   >
-                    <div className="justify-center items-center flex gap-2">
+                    <div className="flex gap-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
