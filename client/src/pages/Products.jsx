@@ -126,7 +126,7 @@ export default function Products() {
         {/* Main Content Area */}
         <div className="max-w-[1600px] mx-auto px-8 py-12">
           {/* Page Title */}
-          <div className="mb-8 text-center">
+          <div className="mb-12 text-center border-b border-gray-150 pb-8">
             <h1 className="text-4xl tracking-tight mb-2">
               {category
                 ? category.charAt(0).toUpperCase() + category.slice(1)
@@ -139,58 +139,72 @@ export default function Products() {
             </p>
           </div>
 
-          <div className="grid grid-cols-[280px_1fr] gap-12">
+          <div className="grid grid-cols-[280px_1fr] gap-16">
             {/* LEFT SIDEBAR - FILTERS */}
             <div className="space-y-8">
               {/* Categories Filter */}
-              <div className="border-b border-gray-200 pb-6">
-                <h3 className="font-medium mb-4 text-sm uppercase tracking-wider">
+              <div className="border-b border-gray-00 pb-6">
+                <h3 className="font-bold mb-4 text-md uppercase tracking-wider text-gray-900">
                   COLLECTIONS
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <a
                     href="/products"
-                    className={`flex items-center text-sm ${
+                    className={`flex items-center justify-between py-2 text-sm transition-colors ${
                       category
                         ? "font-medium text-black"
                         : "text-gray-600 hover:text-black"
                     }`}
                   >
-                    All Products
+                    <span>All Products</span>
                   </a>
-                  {["Men", "Women", "Accessories"].map((cat) => {
+                  <div className="border-t border-gray-200"></div>
+                  {["Men", "Women", "Accessories"].map((cat, index) => {
                     const categorySlug = cat.toLowerCase();
                     const isActive = category === categorySlug;
 
                     return (
-                      <a
-                        key={cat}
-                        href={`/collections/${categorySlug}`}
-                        className={`flex items-center text-sm ${
-                          isActive
-                            ? "font-medium text-black"
-                            : "text-gray-600 hover:text-black"
-                        }`}
-                      >
-                        {cat}
-                      </a>
+                      <div key={cat}>
+                        <a
+                          href={`/collections/${categorySlug}`}
+                          className={`flex items-center text-sm ${
+                            isActive
+                              ? "font-medium text-black"
+                              : "text-gray-600 hover:text-black"
+                          }`}
+                        >
+                          <span>{cat}</span>
+                        </a>
+                        {index < 2 && (
+                          <div className="border-t border-gray-100"></div>
+                        )}
+                      </div>
                     );
                   })}
-                  <a
-                    href="/products"
-                    className="flex items-center text-sm text-gray-600 hover:text-black"
-                  >
-                    New Arrivals
-                  </a>
-                  <a
-                    href="/products"
-                    className="flex items-center text-sm text-gray-600 hover:text-black"
-                  >
-                    Sale
-                  </a>
+
+                  <div className="border-t border-gray-200 mt-3 pt-3">
+                    <a
+                      href="/products"
+                      className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
+                    >
+                      <span>New Arrivals</span>
+                      <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
+                        New
+                      </span>
+                    </a>
+                    <div className="border-t border-gray-100"></div>
+                    <a
+                      href="/products"
+                      className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
+                    >
+                      <span>Sale</span>
+                      <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
+                        -30%
+                      </span>
+                    </a>
+                  </div>
                 </div>
               </div>
-              {/* Price Range Filter */}
               {/* Price Range Filter - Dual Thumb Slider */}
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="font-medium mb-4 text-sm uppercase tracking-wider">
@@ -320,15 +334,15 @@ export default function Products() {
 
               {/* Size Filter */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="font-medium mb-4 text-sm uppercase tracking-wider">
+                <h3 className="font-medium mb-4 text-sm uppercase tracking-wider text-gray-900">
                   SIZE
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   {sizes.map((size) => (
                     <button
                       key={size}
                       onClick={() => handleSizeToggle(size)}
-                      className={`px-3 py-2 text-sm border ${
+                      className={`px-3 py-2 text-sm font-medium border transition-all duration-200 ${
                         selectedSizes.includes(size)
                           ? "border-black bg-black text-white"
                           : "border-gray-300 hover:border-gray-400"
@@ -342,10 +356,10 @@ export default function Products() {
 
               {/* Color Filter */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="font-medium mb-4 text-sm uppercase tracking-wider">
+                <h3 className="font-medium mb-4 text-sm uppercase tracking-wider text-gray-900">
                   COLOR
                 </h3>
-                <div className="flex flex-wrap gap-3">
+                <div className="grid grid-cols-4 gap-3">
                   {colors.map((color) => {
                     // Define color mappings
                     const colorMap = {
@@ -369,13 +383,13 @@ export default function Products() {
                     return (
                       <div
                         key={color}
-                        className="flex flex-col items-center cursor-pointer"
+                        className="flex flex-col items-center cursor-pointer group"
                         onClick={() => handleColorToggle(color)}
                       >
                         <div
-                          className={`w-8 h-8 rounded-full mb-1 border-2 ${
+                          className={`w-10 h-10 rounded-full mb-2 border-2 transition-all duration-200 group-hover:scale-110 ${
                             isSelected
-                              ? "border-black ring-2 ring-black ring-offset-1"
+                              ? "border-black ring-2 ring-black ring-offset-1 transform scale-110"
                               : "border-gray-300"
                           }`}
                           style={{
@@ -383,7 +397,7 @@ export default function Products() {
                           }}
                         />
                         <span
-                          className={`text-xs ${isSelected ? "font-medium" : ""}`}
+                          className={`text-xs transition-colors ${isSelected ? "font-medium" : ""}`}
                         >
                           {color.charAt(0).toUpperCase() + color.slice(1)}{" "}
                           {/* Capitalize display */}
@@ -417,14 +431,14 @@ export default function Products() {
             {/* RIGHT SIDE - PRODUCTS */}
             <div>
               {/* Sort Bar */}
-              <div className="flex justify-between items-center mb-8">
-                <p className="text-sm text-gray-600">
+              <div className="flex justify-between items-center mb-8 pb-2">
+                <p className="text-sm text-gray-600 font-medium">
                   {sortedProducts.length} product
                   {sortedProducts.length !== 1 ? "s" : ""}
                 </p>
                 <div className="relative">
                   <select
-                    className="appearance-none border-b border-gray-300 bg-transparent px-3 py-2 pr-8 text-sm focus:outline-none focus:border-black"
+                    className="appearance-none border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all duration-200 w-48"
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
                   >
@@ -434,7 +448,7 @@ export default function Products() {
                     <option value="name-asc">Name: A → Z</option>
                     <option value="name-desc">Name: Z → A</option>
                   </select>
-                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                     <svg
                       className="w-4 h-4 text-gray-500"
                       fill="none"
@@ -461,8 +475,21 @@ export default function Products() {
 
               {/* No results message */}
               {filteredProducts.length === 0 && products.length > 0 && (
-                <div className="text-center py-16 col-span-3">
-                  <p className="text-gray-600 mb-4">
+                <div className="text-center py-16 col-span-3 border border-gray-200 rounded-lg bg-gray-50">
+                  <svg
+                    className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p className="text-gray-600 mb-4 font-medium">
                     No products match your filters
                   </p>
                   <button
@@ -472,7 +499,7 @@ export default function Products() {
                       setMinPrice(0);
                       setMaxPrice(1000);
                     }}
-                    className="text-sm text-gray-500 hover:text-black transition"
+                    className="text-sm text-gray-500 hover:text-black transition-colors border-b border-transparent hover:border-black"
                   >
                     Clear filters
                   </button>

@@ -4,7 +4,7 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/clerk-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
