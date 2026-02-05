@@ -110,10 +110,11 @@ export default function RecentOrdersTable({ orders = [] }) {
           <TableHeader className="bg-muted sticky top-0 z-10">
             <TableRow>
               <TableHead>Customer</TableHead>
-              <TableHead className="text-center">Total (€)</TableHead>
+              <TableHead>Total (€)</TableHead>
+              <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Payment</TableHead>
-              <TableHead>Date</TableHead>
+
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -130,14 +131,15 @@ export default function RecentOrdersTable({ orders = [] }) {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-center font-medium">
+                <TableCell className="font-medium">
                   €{o.totalPrice.toLocaleString()}
                 </TableCell>
-                <TableCell>{getStatusBadge(o.status)}</TableCell>
-                <TableCell>{getPaymentBadge(o.paymentStatus)}</TableCell>
                 <TableCell>
                   {new Date(o.createdAt).toLocaleDateString()}
                 </TableCell>
+                <TableCell>{getStatusBadge(o.status)}</TableCell>
+                <TableCell>{getPaymentBadge(o.paymentStatus)}</TableCell>
+
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

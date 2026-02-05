@@ -7,6 +7,7 @@ import {
   updateOrderStatus,
   deleteOrder,
 } from "../services/AdminApi";
+import OrdersTable from "../components/OrdersTable";
 
 const Orders = () => {
   const { getToken } = useAuth();
@@ -46,30 +47,33 @@ const Orders = () => {
 
   if (!stats) return <p>Loading...</p>;
 
-  const columns = [
-    { key: "customer", label: "Customer" },
-    { key: "email", label: "Email" },
-    { key: "total", label: "Total" },
-    { key: "status", label: "Status" },
-    { key: "actions", label: "Actions" },
-  ];
+  // const columns = [
+  //   { key: "customer", label: "Customer" },
+  //   { key: "email", label: "Email" },
+  //   { key: "total", label: "Total" },
+  //   { key: "status", label: "Status" },
+  //   { key: "actions", label: "Actions" },
+  // ];
 
   const data = orders.map((o) => ({
     _id: o._id,
     customer: `${o.customerFirstName} ${o.customerLastName}`,
     email: o.email,
     total: `€${o.totalPrice}`,
-    status: (
-      <select
-        value={o.status}
-        onChange={(e) => handleStatusChange(o._id, e.target.value)}
-        className="border p-1"
-      >
-        <option value="pending">Pending</option>
-        <option value="shipped">Shipped</option>
-        <option value="delivered">Delivered</option>
-      </select>
-    ),
+    // status: (
+    //   <select
+    //     value={o.status}
+    //     onChange={(e) => handleStatusChange(o._id, e.target.value)}
+    //     className="border p-1"
+    //   >
+    //     <option value="pending">Pending</option>
+    //     <option value="shipped">Shipped</option>
+    //     <option value="delivered">Delivered</option>
+    //   </select>
+    // ),
+    status: o.status,
+    paymentStatus: o.paymentStatus,
+    date: new Date(o.createdAt).toLocaleDateString(),
     actions: (
       <button className="text-red-600" onClick={() => handleDelete(o._id)}>
         Delete
@@ -78,16 +82,17 @@ const Orders = () => {
   }));
 
   return (
-    <div className="p-4">
-      <div className="p-4 grid grid-cols-4 gap-4 mb-4">
+    <div className=" p-4 ">
+      <div className="py-4 grid grid-cols-4 gap-4 mb-4 w-full">
         <StatCard title="Total Orders" value={stats.totalOrders} />
         <StatCard title="Pending" value={stats.pending} />
         <StatCard title="Shipped" value={stats.shipped} />
         <StatCard title="Delivered" value={stats.delivered} />
       </div>
 
-      <h1 className="text-xl font-semibold mb-4">Orders</h1>
-      <AdminTable columns={columns} data={data} />
+      {/* <h1 className="text-xl font-semibold mb-4">Orders</h1> */}
+      {/* <AdminTable columns={columns} data={data} /> */}
+      <OrdersTable data={data} onDelete={handleDelete} />
     </div>
   );
 };

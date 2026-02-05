@@ -9,6 +9,8 @@ import {
 
 import { ThemeProvider } from "@/components/ui/theme-provider";
 
+import { Toaster } from "@/components/ui/sonner";
+
 export default function AdminLayout() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -28,6 +30,7 @@ export default function AdminLayout() {
             <Outlet />
           </main>
         </SidebarInset>
+        <Toaster position="top-right" richColors closeButton />
       </SidebarProvider>
     </ThemeProvider>
   );

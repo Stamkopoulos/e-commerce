@@ -22,7 +22,7 @@ router.get(
   "/dashboard/overview",
   requireAuth(),
   requireAdmin,
-  getDashboardOverview
+  getDashboardOverview,
 );
 
 router.get("/products", requireAuth(), requireAdmin, getAdminProducts);
