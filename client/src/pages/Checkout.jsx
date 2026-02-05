@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/useCart";
 import { placeOrder } from "../services/orderService";
-import Receipt from "../components/Receipt";
+import Receipt from "./Receipt";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -124,6 +124,24 @@ export default function Checkout() {
     }
   };
 
+  const handleCheckout = async () => {
+    const res = await fetch(
+      "http://localhost:5000/api/checkout/create-checkout-session",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartItems: cart }),
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error("Checkout session failed");
+    }
+
+    const data = await res.json();
+    window.location.href = data.url;
+  };
+
   // If confirmation exists, show receipt
   if (confirmation) {
     return <Receipt confirmation={confirmation} />;
@@ -228,7 +246,10 @@ export default function Checkout() {
                       }}
                       className="self-start bg-gray-200 text-black py-3 px-8 rounded-xl hover:bg-gray-300 transition mt-4"
                     >
-                      <div className="justify-center items-center flex gap-2">
+                      <button
+                        className="justify-center items-center flex gap-2"
+                        to="/cart"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -238,7 +259,7 @@ export default function Checkout() {
                           <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
                         </svg>
                         Back
-                      </div>
+                      </button>
                     </button>
                   </div>
                 </form>
@@ -276,31 +297,6 @@ export default function Checkout() {
                         <p className="font-semibold">
                           €{Number(item.price).toFixed(2)}
                         </p>
-                        <button
-                          onClick={() =>
-                            removeFromCart(
-                              item.product._id,
-                              item.size,
-                              item.color,
-                            )
-                          }
-                          className="text-red-700 hover:underline font-bold"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="w-5 h-5 m-2"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                            />
-                          </svg>
-                        </button>
                       </div>
                     );
                   })}
@@ -413,12 +409,10 @@ export default function Checkout() {
 
                 {/* Pay Button */}
                 <button
-                  type="submit"
-                  onClick={handleSubmit}
-                  disabled={submitting}
-                  className="w-full bg-black text-white py-3 px-8 rounded-xl hover:bg-gray-800 transition disabled:bg-gray-400"
+                  onClick={handleCheckout}
+                  className="w-full bg-black text-white py-3 rounded-3xl hover:opacity-90"
                 >
-                  {submitting ? "Processing..." : "Pay Now"}
+                  Pay now
                 </button>
               </div>
             </div>

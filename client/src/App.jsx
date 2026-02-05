@@ -9,6 +9,7 @@ import Collections from "./pages/Collections";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CartDrawer from "./components/CartDrawer";
+import Receipt from "./pages/Receipt";
 import AdminRoutes from "./admin/AdminRoutes";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/collections/:category" element={<Products />} />
+          <Route path="/receipt" element={<Receipt />} />
           {/* Admin routes */}
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
