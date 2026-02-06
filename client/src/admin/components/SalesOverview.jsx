@@ -70,18 +70,33 @@ export default function ChartAreaInteractive() {
 
   return (
     <Card className="@container/card">
+      <CardHeader className="flex flex-col sm:flex-row sm:justify-between gap-2">
+        {/* Left side */}
+        <div className=" ">
+          <CardTitle className="text-lg pb-2">Total Revenue & Orders</CardTitle>
+          <CardDescription>
+            <span className="hidden @[540px]/card:block">
+              Total for selected range
+            </span>
+          </CardDescription>
+        </div>
+
+        {/* Right side */}
+        <div className="w-full sm:w-auto">
+          <DatePicker date={dateRange} setDate={setDateRange} />
+        </div>
+      </CardHeader>
+
+      {/* 
       <CardHeader>
-        <CardTitle>Total Revenue & Orders</CardTitle>
+        <CardTitle className="text-lg">Top Products</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            Total for selected range
+            Top products by unit sales
           </span>
-          <span className="@[540px]/card:hidden">Selected range</span>
         </CardDescription>
-        <CardAction>
-          <DatePicker date={dateRange} setDate={setDateRange} />
-        </CardAction>
-      </CardHeader>
+      </CardHeader> */}
+
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         {loading ? (
           <div className="text-center py-20">Loading chart...</div>

@@ -209,6 +209,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 const EditUser = ({ user = {}, onClose, onUpdate }) => {
   // Form state
@@ -247,6 +248,10 @@ const EditUser = ({ user = {}, onClose, onUpdate }) => {
       email,
     };
 
+    toast("User updated", {
+      description: `${updatedUser.name} updated successfully.`,
+    });
+
     if (onUpdate) {
       onUpdate(updatedUser); // call parent to update API
     }
@@ -279,14 +284,21 @@ const EditUser = ({ user = {}, onClose, onUpdate }) => {
           <FormLabel>Role</FormLabel>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full justify-between">
+              <Button
+                variant="outline"
+                className={` capitalize ${role.charAt(0).toUpperCase() + role.slice(1) === "Admin" ? "text-primary" : ""} w-full justify-between`}
+              >
                 {role.charAt(0).toUpperCase() + role.slice(1)}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full">
               {["user", "admin"].map((r) => (
-                <DropdownMenuItem key={r} onClick={() => setRole(r)}>
+                <DropdownMenuItem
+                  key={r}
+                  onClick={() => setRole(r)}
+                  className={`capitalize ${r === "admin" ? "text-primary" : ""}`}
+                >
                   {r.charAt(0).toUpperCase() + r.slice(1)}
                 </DropdownMenuItem>
               ))}
