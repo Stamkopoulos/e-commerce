@@ -8,7 +8,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { FileTextIcon, Loader2, Trash2Icon } from "lucide-react";
 
 const UsersTable = ({
   users,
@@ -83,7 +89,7 @@ const UsersTable = ({
                 </DropdownMenu>
               </td>
 
-              <td className="p-4">
+              {/* <td className="p-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -108,6 +114,42 @@ const UsersTable = ({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              </td> */}
+
+              <td className="h-16 px-4">
+                <TooltipProvider>
+                  <div className="flex gap-1">
+                    {/* View */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8"
+                          onClick={() => onEditUser(user)}
+                        >
+                          <FileTextIcon className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>View User</TooltipContent>
+                    </Tooltip>
+
+                    {/* Delete */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8 text-destructive hover:bg-destructive hover:text-white"
+                          onClick={() => onDeleteUser(user._id)}
+                        >
+                          <Trash2Icon className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Delete User</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </TooltipProvider>
               </td>
             </tr>
           ))}

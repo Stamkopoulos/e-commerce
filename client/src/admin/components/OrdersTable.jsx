@@ -238,7 +238,16 @@
 
 "use client";
 
-import { FileTextIcon, Loader2, Trash2Icon } from "lucide-react";
+import {
+  CheckCircle,
+  Truck,
+  FileTextIcon,
+  Loader2,
+  Trash2Icon,
+  MoreHorizontal,
+  CreditCard,
+} from "lucide-react";
+
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -262,31 +271,31 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { on } from "events";
+import EditOrder from "./EditOrder";
 
 function getStatusBadge(status) {
   switch (status) {
     case "pending":
       return (
-        <Badge className="bg-amber-500/15 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300 border-0">
+        <Badge className="bg-amber-500/15 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300 border-0 w-20">
+          <Loader2 className="w-4 h-4 text-yellow-500" />
           Pending
         </Badge>
       );
     case "shipped":
       return (
-        <Badge className="bg-blue-500/15 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border-0">
+        <Badge className="bg-blue-500/15 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border-0 w-20">
+          <Truck className="w-4 h-4 text-blue-500 " />
           Shipped
         </Badge>
       );
     case "delivered":
       return (
-        <Badge className="bg-green-500/15 text-green-700 dark:bg-green-500/10 dark:text-green-400 border-0">
+        <Badge className="bg-green-500/15 text-green-700 dark:bg-green-500/10 dark:text-green-400 border-0 w-20">
+          <CheckCircle className="w-4 h-4 text-green-500" />
           Delivered
-        </Badge>
-      );
-    case "blocked":
-      return (
-        <Badge className="bg-rose-500/15 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-0">
-          Blocked
         </Badge>
       );
     default:
@@ -298,13 +307,15 @@ function getPaymentBadge(payment) {
   switch (payment) {
     case "paid":
       return (
-        <Badge className="bg-green-500/15 text-green-700 dark:bg-green-500/10 dark:text-green-400 border-0">
+        <Badge className="bg-green-500/15 text-green-700 dark:bg-green-500/10 dark:text-green-400 border-0 w-20">
+          <CreditCard className="w-4 h-4 text-green-500" />
           Paid
         </Badge>
       );
     case "unpaid":
       return (
-        <Badge className="bg-rose-500/15 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-0">
+        <Badge className="bg-rose-500/15 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-0 w-20">
+          <MoreHorizontal className="w-4 h-4 text-red-500" />
           Unpaid
         </Badge>
       );
@@ -313,7 +324,15 @@ function getPaymentBadge(payment) {
   }
 }
 
-export default function OrdersTable({ data = [], onDelete }) {
+export default function OrdersTable({
+  data = [],
+  currentPage,
+  totalPages,
+  setCurrentPage,
+  onDelete,
+  onStatusChange,
+  onPaymentChange,
+}) {
   const [pendingAction, setPendingAction] = useState(null);
 
   const handleAction = async (orderId, actionType) => {
@@ -326,13 +345,25 @@ export default function OrdersTable({ data = [], onDelete }) {
     setPendingAction(null);
   };
 
+  const handleStatusChange = async (orderId, status) => {
+    if (onStatusChange) {
+      await onStatusChange(orderId, status);
+    }
+  };
+
+  const handlePaymentStatusChange = async (orderId, paymentStatus) => {
+    if (onPaymentChange) await onPaymentChange(orderId, paymentStatus);
+  };
+
   const renderOrderRow = (order) => (
     <TableRow key={order._id} className="hover:bg-muted/50">
       <TableCell className="h-16 px-4 font-medium">{order.customer}</TableCell>
       <TableCell className="h-16 px-4 text-sm text-muted-foreground">
         {order.email}
       </TableCell>
-      <TableCell className="h-16 px-4">€{order.total}</TableCell>
+      <TableCell className="h-16 px-4">
+        €{Number(order.total).toFixed(2)}
+      </TableCell>
       <TableCell className="h-16 px-4 text-sm text-muted-foreground">
         {order.date}
       </TableCell>
@@ -343,29 +374,47 @@ export default function OrdersTable({ data = [], onDelete }) {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="p-0">
-            {["pending", "shipped", "delivered", "blocked"].map(
-              (statusOption) => (
-                <DropdownMenuItem
-                  key={statusOption}
-                  className="cursor-pointer px-1 py-1 flex items-center justify-center"
-                  onClick={() => handleStatusChange(order._id, statusOption)}
-                >
-                  {getStatusBadge(statusOption)}
-                </DropdownMenuItem>
-              ),
-            )}
+            {["pending", "shipped", "delivered"].map((statusOption) => (
+              <DropdownMenuItem
+                key={statusOption}
+                className="cursor-pointer px-1 py-1 flex items-center justify-center"
+                onClick={() => handleStatusChange(order._id, statusOption)}
+              >
+                {getStatusBadge(statusOption)}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+      <TableCell className="h-16 px-4">
+        <DropdownMenu className="p-0 m-0">
+          <DropdownMenuTrigger className="p-0 m-0">
+            <div className="cursor-pointer">
+              {getPaymentBadge(order.paymentStatus)}
+            </div>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent className="p-0">
+            {["paid", "unpaid"].map((paymentOption) => (
+              <DropdownMenuItem
+                key={paymentOption}
+                className="cursor-pointer px-1 py-1 flex items-center justify-center"
+                onClick={() =>
+                  handlePaymentStatusChange(order._id, paymentOption)
+                }
+              >
+                {getPaymentBadge(paymentOption)}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>
 
       <TableCell className="h-16 px-4">
-        {getPaymentBadge(order.paymentStatus)}
-      </TableCell>
-      <TableCell className="h-16 px-4">
         <TooltipProvider>
           <div className="flex gap-1">
             {/* View */}
-            <Tooltip>
+            {/* <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size="icon"
@@ -378,7 +427,29 @@ export default function OrdersTable({ data = [], onDelete }) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>View Order</TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
+            <div className="flex gap-1">
+              <EditOrder
+                orderId={order._id} // pass the ID instead of the summary object
+                trigger={({ onClick }) => (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8"
+                          onClick={onClick}
+                        >
+                          <FileTextIcon className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>View Order</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              />
+            </div>
 
             {/* Delete */}
             <Tooltip>
@@ -421,6 +492,31 @@ export default function OrdersTable({ data = [], onDelete }) {
         </TableHeader>
         <TableBody>{data.map(renderOrderRow)}</TableBody>
       </Table>
+      {/* Pagination */}
+      <div className="flex justify-between p-4 border-t">
+        <span className="text-sm">
+          Page {currentPage} of {totalPages}
+        </span>
+        <div className="flex gap-2">
+          <Button
+            size="icon"
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+
+          <Button
+            size="icon"
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

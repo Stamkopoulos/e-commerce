@@ -232,12 +232,10 @@ const EditUser = ({ user = {}, onClose, onUpdate }) => {
     }
   }, [user]);
 
-  const handleCopy = (value, field) => {
+  const handleCopy = (value, fieldName) => {
     navigator.clipboard.writeText(value);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(""), 1500); // hide after 1.5s
+    toast.success(`${fieldName} copied to clipboard`);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 

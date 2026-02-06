@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";
 
-const UserSearch = ({ search, setSearch }) => {
+const SearchBox = ({ search, setSearch }) => {
   return (
     <div className="flex flex-wrap gap-4 items-center">
       <div className="relative max-w-sm flex-1">
@@ -15,15 +15,8 @@ const UserSearch = ({ search, setSearch }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-
-      <div className="ml-auto flex gap-2">
-        <Button size="sm" variant="primary">
-          <Plus className="h-4 w-4 mr-2" />
-          Add User
-        </Button>
-      </div>
     </div>
   );
 };
 
-export default UserSearch;
+export default SearchBox;
