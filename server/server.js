@@ -14,6 +14,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import bestSeller from "./routes/bestSellerRoutes.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
 import connectDB from "./config/db.js";
 
 connectDB();
@@ -21,9 +22,21 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-//Middleware
-app.use(cors());
-app.use(express.json());
+//Middleware (MUST come FIRST)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+app.use(express.json()); // This MUST come before routes
+
+//Public Routes (after express.json() but before clerkMiddleware)
+app.use("/api/newsletter", newsletterRoutes);
+
+//Clerk Middleware (applies to routes below)
 app.use(clerkMiddleware());
 
 //Routes
