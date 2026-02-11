@@ -68,7 +68,8 @@ const Orders = () => {
         .toLowerCase()
         .includes(value) ||
       o.email?.toLowerCase().includes(value) ||
-      formatDate(o.createdAt).includes(value)
+      formatDate(o.createdAt).includes(value) ||
+      o._id?.toLowerCase().includes(value)
     );
   });
   //sort: Newest orders first

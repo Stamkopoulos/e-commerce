@@ -84,6 +84,8 @@ const Users = () => {
     return (
       u.name?.toLowerCase().includes(value) ||
       u.email?.toLowerCase().includes(value) ||
+      u._id?.toLowerCase().includes(value) ||
+      u.clerkId?.toLowerCase().includes(value) ||
       formatDate(u.createdAt).toLowerCase().includes(value)
     );
   });

@@ -394,7 +394,7 @@ const EditUser = ({ user = {}, onClose, onUpdate }) => {
 
         {/* Submit / Cancel */}
         <div className="flex gap-2 mt-4">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Save changes</Button>
           <SheetClose asChild>
             <Button variant="outline">Cancel</Button>
           </SheetClose>

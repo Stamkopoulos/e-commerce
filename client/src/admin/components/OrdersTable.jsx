@@ -430,6 +430,8 @@ export default function OrdersTable({
             </Tooltip> */}
             <div className="flex gap-1">
               <EditOrder
+                onStatusChange={handleStatusChange}
+                onPaymentChange={handlePaymentStatusChange}
                 orderId={order._id} // pass the ID instead of the summary object
                 trigger={({ onClick }) => (
                   <TooltipProvider>
