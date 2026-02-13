@@ -232,12 +232,10 @@ const EditUser = ({ user = {}, onClose, onUpdate }) => {
     }
   }, [user]);
 
-  const handleCopy = (value, field) => {
+  const handleCopy = (value, fieldName) => {
     navigator.clipboard.writeText(value);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(""), 1500); // hide after 1.5s
+    toast.success(`${fieldName} copied to clipboard`);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -396,7 +394,7 @@ const EditUser = ({ user = {}, onClose, onUpdate }) => {
 
         {/* Submit / Cancel */}
         <div className="flex gap-2 mt-4">
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Save changes</Button>
           <SheetClose asChild>
             <Button variant="outline">Cancel</Button>
           </SheetClose>
