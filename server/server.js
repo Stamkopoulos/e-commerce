@@ -31,6 +31,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+app.use("/api/webhook", webhookRoutes);
 app.use(express.json()); // This MUST come before routes
 
 //Public Routes (after express.json() but before clerkMiddleware)
@@ -44,7 +45,6 @@ app.use("/api/collections", collectionRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/webhook", webhookRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/best-sellers", bestSeller);

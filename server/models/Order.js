@@ -8,6 +8,15 @@ const orderSchema = new mongoose.Schema(
       required: false, // Allow guest checkout
     },
 
+    stripeSessionId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows null but enforces uniqueness when present
+    },
+    stripePaymentIntentId: {
+      type: String,
+    },
+
     // Customer details
     customerFirstName: { type: String, required: true },
     customerLastName: { type: String, required: true },
@@ -22,13 +31,13 @@ const orderSchema = new mongoose.Schema(
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
-          required: true,
+          required: false,
         },
         name: { type: String, required: true },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true },
-        color: { type: String, required: false }, //Change to true later
-        size: { type: String, required: false }, //Change to true later
+        color: { type: String, required: false },
+        size: { type: String, required: false },
       },
     ],
 

@@ -125,6 +125,21 @@ export default function Checkout() {
   };
 
   const handleCheckout = async () => {
+    // Validate form before proceeding to checkout
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length) {
+      setErrors({
+        form: "Please fill in all required fields before proceeding.",
+      });
+      return;
+    }
+
+    if (!cart.length) {
+      setErrors({ form: "Your cart is empty." });
+      return;
+    }
+
     const res = await fetch(
       "http://localhost:5000/api/checkout/create-checkout-session",
       {
@@ -186,6 +201,7 @@ export default function Checkout() {
                         value={form[key]}
                         onChange={onChange(key)}
                         placeholder={placeholder}
+                        required
                         className={`w-full text-sm px-4 py-2 border rounded-lg ${
                           errors[key] ? "border-red-500" : "border-gray-300"
                         }`}
@@ -207,6 +223,7 @@ export default function Checkout() {
                         value={form.city}
                         onChange={onChange("city")}
                         placeholder={"Enter city"}
+                        required
                         className={`w-full px-4 py-2 border rounded-lg ${
                           errors.city ? "border-red-500" : "border-gray-300"
                         }`}
@@ -226,6 +243,7 @@ export default function Checkout() {
                         value={form.zipCode}
                         onChange={onChange("zipCode")}
                         placeholder={"Enter ZIP code"}
+                        required
                         className={`w-full px-4 py-2 border rounded-lg ${
                           errors.zipCode ? "border-red-500" : "border-gray-300"
                         }`}
@@ -242,24 +260,19 @@ export default function Checkout() {
                       type="button"
                       onClick={() => {
                         handleRemovePromo();
-                        navigate(-1);
+                        navigate("/cart");
                       }}
-                      className="self-start bg-gray-200 text-black py-3 px-8 rounded-xl hover:bg-gray-300 transition mt-4"
+                      className="self-start justify-center items-center flex gap-2 bg-gray-200 text-black py-3 px-8 rounded-xl hover:bg-gray-300 transition mt-4"
                     >
-                      <button
-                        className="justify-center items-center flex gap-2"
-                        to="/cart"
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                        >
-                          <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
-                          <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
-                        </svg>
-                        Back
-                      </button>
+                        <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
+                        <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
+                      </svg>
+                      Back
                     </button>
                   </div>
                 </form>
