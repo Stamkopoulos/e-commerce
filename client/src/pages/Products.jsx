@@ -14,6 +14,8 @@ export default function Products() {
   const [maxPrice, setMaxPrice] = useState(1000);
   const location = useLocation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const searchQuery = params.get("search")?.toLowerCase() || "";
 
   // Read search from URL when component mounts
   const search = useMemo(() => {
@@ -61,9 +63,51 @@ export default function Products() {
     };
     loadProducts();
   }, [category, location.pathname]);
+  // Helper function to normalize search terms (remove special characters, spaces)
+  const normalizeText = (text) => {
+    return text.toLowerCase().replace(/[-\s]/g, ""); // Remove hyphens and spaces
+  };
+
+  // Helper function to check if a product matches the search query with variations
+  const searchMatches = (productName, searchQuery) => {
+    if (!searchQuery) return true;
+
+    const normalizedName = normalizeText(productName);
+    const normalizedQuery = normalizeText(searchQuery);
+
+    // Direct match after normalization (handles "tshirt" vs "t-shirt")
+    if (normalizedName.includes(normalizedQuery)) {
+      return true;
+    }
+
+    // Handle common variations
+    const variations = {
+      tshirt: ["t-shirt", "t shirts", "tee"],
+      "t-shirt": ["tshirt", "t shirts", "tee"],
+      hoodie: ["hoody", "sweatshirt"],
+      sweater: ["jumper", "pullover"],
+      // Add more as needed
+    };
+
+    // Check if the search query matches any variations of words in the product name
+    for (const [key, values] of Object.entries(variations)) {
+      if (normalizedQuery.includes(key) || key.includes(normalizedQuery)) {
+        // If query matches a variation key, check if product name contains any variation
+        return (
+          values.some((variation) => normalizedName.includes(variation)) ||
+          normalizedName.includes(key)
+        );
+      }
+    }
+
+    return false;
+  };
 
   const filteredProducts = products.filter((p) => {
-    const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase());
+    // Enhanced search with variations
+    const matchesSearch = searchQuery
+      ? searchMatches(p.name, searchQuery)
+      : true;
 
     // Price range filter
     const price =
@@ -94,7 +138,6 @@ export default function Products() {
 
     return matchesSearch && matchesPrice && matchesSize && matchesColor;
   });
-
   // Sorting
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sort === "price-asc") return a.price - b.price;
@@ -132,11 +175,28 @@ export default function Products() {
                 ? category.charAt(0).toUpperCase() + category.slice(1)
                 : "SHOP"}
             </h1>
-            <p className="text-gray-600 text-sm">
-              {search
-                ? `Search results for "${search}"`
-                : "Discover our collection"}
-            </p>
+            {search ? (
+              <div className="space-y-2">
+                <p className="text-gray-600 text-sm">
+                  Search results for "
+                  <span className="font-semibold text-black">{search}</span>"
+                </p>
+
+                {/* Clear search button */}
+                <button
+                  onClick={() =>
+                    navigate(
+                      category ? `/collections/${category}` : "/products",
+                    )
+                  }
+                  className="text-xs text-gray-500 hover:text-black underline mt-2 inline-block"
+                >
+                  Clear search
+                </button>
+              </div>
+            ) : (
+              <p className="text-gray-600 text-sm">Discover our collection</p>
+            )}
           </div>
 
           <div className="grid grid-cols-[280px_1fr] gap-16">
@@ -416,11 +476,7 @@ export default function Products() {
                   setMaxPrice(1000);
                   setSelectedColors([]);
                   // Clear URL search parameter if it exists
-                  if (search) {
-                    navigate(
-                      category ? `/collections/${category}` : "/products",
-                    );
-                  }
+                  navigate(category ? `/collections/${category}` : "/products");
                 }}
                 className="text-sm border-b border-black hover:border-gray-500 transition w-full text-center py-2 cursor-pointer"
               >
@@ -469,7 +525,11 @@ export default function Products() {
               {/* Products Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sortedProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    searchQuery={searchQuery}
+                  />
                 ))}
               </div>
 
@@ -477,7 +537,7 @@ export default function Products() {
               {filteredProducts.length === 0 && products.length > 0 && (
                 <div className="text-center py-16 col-span-3 border border-gray-200 rounded-lg bg-gray-50">
                   <svg
-                    className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                    className="w-16 h-16 text-gray-300 mx-auto mb-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -486,23 +546,67 @@ export default function Products() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="1.5"
-                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                  <p className="text-gray-600 mb-4 font-medium">
-                    No products match your filters
+                  <p className="text-gray-700 mb-2 font-medium">
+                    {searchQuery
+                      ? `No results for "${searchQuery}"`
+                      : "No products match your filters"}
                   </p>
-                  <button
-                    onClick={() => {
-                      setSelectedSizes([]);
-                      setSelectedColors([]);
-                      setMinPrice(0);
-                      setMaxPrice(1000);
-                    }}
-                    className="text-sm text-gray-500 hover:text-black transition-colors border-b border-transparent hover:border-black"
-                  >
-                    Clear filters
-                  </button>
+                  <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">
+                    {searchQuery ? (
+                      <>
+                        Try different keywords or browse our collections below
+                      </>
+                    ) : (
+                      <>Try adjusting your filters or browse all products</>
+                    )}
+                  </p>
+
+                  {/* Suggestions */}
+                  <div className="flex flex-wrap justify-center gap-3 mb-6">
+                    {searchQuery && (
+                      <>
+                        <button
+                          onClick={() => {
+                            const params = new URLSearchParams(location.search);
+                            params.delete("search");
+                            navigate(
+                              `${location.pathname}?${params.toString()}`,
+                            );
+                          }}
+                          className="text-sm px-4 py-2 bg-white border border-gray-300 rounded hover:border-black transition-colors"
+                        >
+                          Clear search
+                        </button>
+                        <button
+                          onClick={() => navigate("/products")}
+                          className="text-sm px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+                        >
+                          Browse all products
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Category suggestions */}
+                  <div className="mt-4">
+                    <p className="text-xs text-gray-500 mb-3">
+                      Popular categories:
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {["Men", "Women", "Accessories"].map((cat) => (
+                        <a
+                          key={cat}
+                          href={`/collections/${cat.toLowerCase()}`}
+                          className="text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-black transition-colors"
+                        >
+                          {cat}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 
