@@ -7,35 +7,39 @@ export default function Receipt() {
   const navigate = useNavigate();
   const location = useLocation();
   const [confirmation, setConfirmation] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const session_id = query.get("session_id");
+    const sessionId = new URLSearchParams(window.location.search).get(
+      "session_id",
+    );
 
-    if (session_id) {
-      fetch(`http://localhost:5000/api/checkout/session/${session_id}`)
+    if (sessionId) {
+      fetch("http://localhost:5000/api/checkout/create-order-from-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      })
         .then((res) => res.json())
-        .then((session) => {
-          const items = session.line_items.data.map((li) => ({
-            _id: li.id,
-            name: li.description,
-            price: li.price.unit_amount / 100,
-            quantity: li.quantity,
-          }));
-
-          setConfirmation({
-            _id: session.id,
-            email: session.customer_details.email,
-            items,
-            totalPrice: session.amount_total / 100,
-          });
+        .then((data) => {
+          setConfirmation(data.order);
+          setLoading(false);
         })
-        .catch(() => setConfirmation(null));
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
-  }, [location]);
+  }, []);
+
+  if (loading) {
+    return <p className="text-center mt-20">Loading your receipt...</p>;
+  }
 
   if (!confirmation) {
-    return <p className="text-center mt-20">Loading your receipt...</p>;
+    return <p className="text-center mt-20">No order found.</p>;
   }
 
   return (
@@ -53,8 +57,8 @@ export default function Receipt() {
         <div className="bg-gray-50 border rounded-lg p-6 text-left">
           <h3 className="font-semibold mb-2">Order summary</h3>
           <ul className="divide-y">
-            {confirmation.items.map((it) => (
-              <li key={it._id} className="py-2 flex justify-between">
+            {confirmation.items.map((it, idx) => (
+              <li key={idx} className="py-2 flex justify-between">
                 <span>
                   {it.name} × {it.quantity}
                 </span>
