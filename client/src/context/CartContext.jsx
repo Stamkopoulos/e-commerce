@@ -103,7 +103,7 @@ export function CartProvider({ children }) {
     }
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.product._id == productId &&
+        item.product._id === productId &&
         item.size === normalizedSize &&
         item.color === normalizedColor
           ? { ...item, quantity: newQty }
@@ -117,6 +117,16 @@ export function CartProvider({ children }) {
     setDiscount(0);
     setPromoCode("");
   };
+  const subtotal = cart.reduce((total, item) => {
+    const price =
+      typeof item.price === "number"
+        ? item.price
+        : item.product && typeof item.product.price === "number"
+          ? item.product.price
+          : Number(item.price) || 0;
+    const qty = Number(item.quantity) || 0;
+    return total + price * qty;
+  }, 0);
 
   const applyPromoCode = (code) => {
     const validCodes = {
@@ -142,17 +152,6 @@ export function CartProvider({ children }) {
     setDiscount(0);
     setPromoCode("");
   };
-
-  const subtotal = cart.reduce((total, item) => {
-    const price =
-      typeof item.price === "number"
-        ? item.price
-        : item.product && typeof item.product.price === "number"
-          ? item.product.price
-          : Number(item.price) || 0;
-    const qty = Number(item.quantity) || 0;
-    return total + price * qty;
-  }, 0);
 
   const shipping = 3.5;
   const totalPrice = subtotal - discount + shipping;

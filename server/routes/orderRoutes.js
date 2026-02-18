@@ -1,4 +1,4 @@
-import Router from "express";
+import { Router } from "express";
 import { requireAuth } from "@clerk/express";
 import { requireAdmin } from "../middlewares/requireAdmin.js";
 import {
