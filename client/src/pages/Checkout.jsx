@@ -11,7 +11,6 @@ export default function Checkout() {
   const {
     cart,
     clearCart,
-    removeFromCart,
     subtotal,
     discount,
     shipping,
@@ -29,6 +28,8 @@ export default function Checkout() {
     zipCode: "",
     city: "",
   });
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -141,7 +142,7 @@ export default function Checkout() {
     }
 
     const res = await fetch(
-      "http://localhost:5000/api/checkout/create-checkout-session",
+      `${API_BASE_URL}/api/checkout/create-checkout-session`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

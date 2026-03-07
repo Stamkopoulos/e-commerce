@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function Receipt() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [confirmation, setConfirmation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get(
@@ -15,7 +15,7 @@ export default function Receipt() {
     );
 
     if (sessionId) {
-      fetch("http://localhost:5000/api/checkout/create-order-from-session", {
+      fetch(`${API_BASE_URL}/api/checkout/create-order-from-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId }),

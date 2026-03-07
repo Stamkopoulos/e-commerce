@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // Helper to set headers with token
 const getAuthHeaders = (token) => ({
@@ -13,7 +14,7 @@ const getAuthHeaders = (token) => ({
 export const getDashboardOverview = async (token, params = {}) => {
   try {
     const res = await axios.get(
-      `${API_URL}/admin/dashboard/overview`,
+      `${API_BASE_URL}/admin/dashboard/overview`,
 
       { params, ...getAuthHeaders(token) },
     );
@@ -30,7 +31,7 @@ export const getDashboardOverview = async (token, params = {}) => {
 // ===== PRODUCTS (STATS) =====
 export const getAdminProductStats = async (token) => {
   const res = await axios.get(
-    `${API_URL}/admin/products`,
+    `${API_BASE_URL}/admin/products`,
     getAuthHeaders(token),
   );
   return res.data;
@@ -38,13 +39,19 @@ export const getAdminProductStats = async (token) => {
 
 // ===== ORDERS (STATS) =====
 export const getAdminOrderStats = async (token) => {
-  const res = await axios.get(`${API_URL}/admin/orders`, getAuthHeaders(token));
+  const res = await axios.get(
+    `${API_BASE_URL}/admin/orders`,
+    getAuthHeaders(token),
+  );
   return res.data;
 };
 
 // ===== USERS (STATS) =====
 export const getAdminUserStats = async (token) => {
-  const res = await axios.get(`${API_URL}/admin/users`, getAuthHeaders(token));
+  const res = await axios.get(
+    `${API_BASE_URL}/admin/users`,
+    getAuthHeaders(token),
+  );
   return res.data;
 };
 
@@ -52,7 +59,7 @@ export const getAdminUserStats = async (token) => {
 
 // Admin list (same as public, but admin UI)
 export const getAdminProducts = async (params, token) => {
-  const res = await axios.get(`${API_URL}/products`, {
+  const res = await axios.get(`${API_BASE_URL}/products`, {
     params,
     ...getAuthHeaders(token),
   });
@@ -61,7 +68,7 @@ export const getAdminProducts = async (params, token) => {
 
 export const createProduct = async (data, token) => {
   const res = await axios.post(
-    `${API_URL}/products`,
+    `${API_BASE_URL}/products`,
     data,
     getAuthHeaders(token),
   );
@@ -70,7 +77,7 @@ export const createProduct = async (data, token) => {
 
 export const updateProduct = async (id, data, token) => {
   const res = await axios.put(
-    `${API_URL}/products/${id}`,
+    `${API_BASE_URL}/products/${id}`,
     data,
     getAuthHeaders(token),
   );
@@ -79,7 +86,7 @@ export const updateProduct = async (id, data, token) => {
 
 export const deleteProduct = async (id, token) => {
   const res = await axios.delete(
-    `${API_URL}/products/${id}`,
+    `${API_BASE_URL}/products/${id}`,
     getAuthHeaders(token),
   );
   return res.data;
@@ -87,21 +94,21 @@ export const deleteProduct = async (id, token) => {
 
 // ===== ORDERS (ADMIN) =====
 export const getAdminOrders = async (token) => {
-  const res = await axios.get(`${API_URL}/orders`, {
+  const res = await axios.get(`${API_BASE_URL}/orders`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
 };
 
 export const updateOrderStatus = async (id, data, token) => {
-  const res = await axios.put(`${API_URL}/orders/${id}`, data, {
+  const res = await axios.put(`${API_BASE_URL}/orders/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
 };
 
 export const deleteOrder = async (id, token) => {
-  const res = await axios.delete(`${API_URL}/orders/${id}`, {
+  const res = await axios.delete(`${API_BASE_URL}/orders/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
@@ -109,21 +116,21 @@ export const deleteOrder = async (id, token) => {
 
 // ===== USERS (ADMIN) =====
 export const getAdminUsers = async (token) => {
-  const res = await axios.get(`${API_URL}/users`, {
+  const res = await axios.get(`${API_BASE_URL}/users`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
 };
 
 export const updateUser = async (id, data, token) => {
-  const res = await axios.put(`${API_URL}/users/${id}`, data, {
+  const res = await axios.put(`${API_BASE_URL}/users/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
 };
 
 export const deleteUser = async (id, token) => {
-  const res = await axios.delete(`${API_URL}/users/${id}`, {
+  const res = await axios.delete(`${API_BASE_URL}/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;

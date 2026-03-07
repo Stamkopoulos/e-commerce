@@ -52,8 +52,8 @@ export default function EditOrder({
   const [itemsWithImages, setItemsWithImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [copiedField, setCopiedField] = useState(null);
   const { getToken } = useAuth();
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   // Fetch order and product images when sheet opens
   const handleOpen = async () => {
@@ -64,12 +64,9 @@ export default function EditOrder({
     setError("");
 
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/orders/${orderId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const res = await axios.get(`${API_BASE_URL}/api/orders/${orderId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const orderData = res.data;
       setOrder(orderData);
@@ -80,7 +77,7 @@ export default function EditOrder({
 
           try {
             const productRes = await axios.get(
-              `http://localhost:5000/api/products/${item.productId}`,
+              `${API_BASE_URL}/api/products/${item.productId}`,
               { headers: { Authorization: `Bearer ${token}` } },
             );
 
