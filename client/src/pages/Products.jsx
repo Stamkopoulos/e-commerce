@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
+import { XMarkIcon, FunnelIcon } from "@heroicons/react/24/outline";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ export default function Products() {
   const { category } = useParams();
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
@@ -165,12 +167,12 @@ export default function Products() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-16 sm:pt-20">
         {/* Main Content Area */}
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12">
           {/* Page Title */}
-          <div className="mb-12 text-center border-b border-gray-150 pb-8">
-            <h1 className="text-4xl tracking-tight mb-2">
+          <div className="mb-8 sm:mb-10 md:mb-12 text-center border-b border-gray-150 pb-6 sm:pb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2">
               {category
                 ? category.charAt(0).toUpperCase() + category.slice(1)
                 : "SHOP"}
@@ -199,9 +201,23 @@ export default function Products() {
             )}
           </div>
 
-          <div className="grid grid-cols-[280px_1fr] gap-16">
-            {/* LEFT SIDEBAR - FILTERS */}
-            <div className="space-y-8">
+          {/* Mobile Filter Button - visible on screens smaller than lg */}
+          <div className="lg:hidden mb-4 flex items-center justify-between">
+            <button
+              onClick={() => setMobileFiltersOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:border-black transition"
+            >
+              <FunnelIcon className="w-4 h-4" />
+              Filters
+            </button>
+            <span className="text-sm text-gray-500">
+              {sortedProducts.length} products
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-16">
+            {/* LEFT SIDEBAR - FILTERS - Desktop only (lg and above) */}
+            <div className="hidden lg:block space-y-8">
               {/* Categories Filter */}
               <div className="border-b border-gray-00 pb-6">
                 <h3 className="font-bold mb-4 text-md uppercase tracking-wider text-gray-900">
@@ -487,14 +503,14 @@ export default function Products() {
             {/* RIGHT SIDE - PRODUCTS */}
             <div>
               {/* Sort Bar */}
-              <div className="flex justify-between items-center mb-8 pb-2">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-2">
                 <p className="text-sm text-gray-600 font-medium">
                   {sortedProducts.length} product
                   {sortedProducts.length !== 1 ? "s" : ""}
                 </p>
-                <div className="relative">
+                <div className="relative w-full sm:w-auto">
                   <select
-                    className="appearance-none border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all duration-200 w-48"
+                    className="appearance-none border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all duration-200 w-full sm:w-48"
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
                   >
@@ -523,7 +539,7 @@ export default function Products() {
               </div>
 
               {/* Products Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                 {sortedProducts.map((product) => (
                   <ProductCard
                     key={product._id}
@@ -628,6 +644,149 @@ export default function Products() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Filters Drawer */}
+        {mobileFiltersOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/40 z-50 lg:hidden"
+              onClick={() => setMobileFiltersOpen(false)}
+            />
+            {/* Drawer */}
+            <div className="fixed top-0 left-0 h-full w-full sm:w-[85%] md:w-[60%] lg:w-[50%] bg-white z-50 overflow-y-auto transform transition-transform duration-300">
+              <div className="flex justify-between items-center p-4 border-b sticky top-0 bg-white">
+                <h2 className="text-lg font-semibold">Filters</h2>
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="p-2"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="p-4 space-y-6">
+                {/* Categories */}
+                <div className="border-b pb-4">
+                  <h3 className="font-bold mb-3 text-md uppercase tracking-wider text-gray-900">
+                    COLLECTIONS
+                  </h3>
+                  <div className="space-y-2">
+                    <Link
+                      to="/products"
+                      className={`flex items-center py-1 text-sm ${
+                        !category ? "font-medium text-black" : "text-gray-600"
+                      }`}
+                      onClick={() => setMobileFiltersOpen(false)}
+                    >
+                      All Products
+                    </Link>
+                    {["Men", "Women", "Accessories"].map((cat) => (
+                      <Link
+                        key={cat}
+                        to={`/collections/${cat.toLowerCase()}`}
+                        className={`flex items-center py-1 text-sm ${
+                          category === cat.toLowerCase()
+                            ? "font-medium text-black"
+                            : "text-gray-600"
+                        }`}
+                        onClick={() => setMobileFiltersOpen(false)}
+                      >
+                        {cat}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="border-b pb-4">
+                  <h3 className="font-medium mb-3 text-sm uppercase tracking-wider">
+                    PRICE
+                  </h3>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      value={minPrice}
+                      onChange={(e) =>
+                        setMinPrice(parseInt(e.target.value) || 0)
+                      }
+                      className="w-20 px-2 py-1 text-sm border rounded"
+                      placeholder="Min"
+                    />
+                    <span className="text-gray-400">-</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={maxPrice}
+                      onChange={(e) =>
+                        setMaxPrice(parseInt(e.target.value) || 1000)
+                      }
+                      className="w-20 px-2 py-1 text-sm border rounded"
+                      placeholder="Max"
+                    />
+                  </div>
+                </div>
+
+                {/* Size */}
+                <div className="border-b pb-4">
+                  <h3 className="font-medium mb-3 text-sm uppercase tracking-wider text-gray-900">
+                    SIZE
+                  </h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => handleSizeToggle(size)}
+                        className={`px-2 py-1.5 text-sm border ${
+                          selectedSizes.includes(size)
+                            ? "border-black bg-black text-white"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color */}
+                <div className="border-b pb-4">
+                  <h3 className="font-medium mb-3 text-sm uppercase tracking-wider text-gray-900">
+                    COLOR
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {colors.map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => handleColorToggle(color)}
+                        className={`w-8 h-8 rounded-full border-2 ${
+                          selectedColors.includes(color)
+                            ? "border-black ring-2 ring-black ring-offset-1"
+                            : "border-gray-300"
+                        }`}
+                        style={{ backgroundColor: color }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Clear Filters */}
+                <button
+                  onClick={() => {
+                    setSelectedSizes([]);
+                    setMinPrice(0);
+                    setMaxPrice(1000);
+                    setSelectedColors([]);
+                  }}
+                  className="w-full py-2 border border-black text-sm"
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </main>
       <Footer />
     </>

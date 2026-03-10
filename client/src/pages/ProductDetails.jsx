@@ -166,10 +166,10 @@ export default function ProductDetails() {
     <>
       <Navbar />
       <main className="flex flex-col min-h-screen">
-        <section className="max-w-5xl mx-auto px-4 py-16 mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <section className="max-w-6xl mx-auto px-3 sm:px-4 py-8 sm:py-12 md:py-16 mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
           {/* Left: Product Image */}
-          <div className="w-full flex flex-col items-start">
-            <div className="w-full aspect-square border rounded-xl overflow-hidden bg-gray-50">
+          <div className="w-full flex flex-col items-start order-1">
+            <div className="w-full aspect-square sm:aspect-[4/5] border rounded-xl overflow-hidden bg-gray-50">
               <img
                 src={
                   currentImage ||
@@ -184,14 +184,14 @@ export default function ProductDetails() {
 
             {/* Thumbnail images */}
             {selectedVariant && selectedVariant.images.length > 1 && (
-              <div className="flex gap-2 mt-4">
+              <div className="flex gap-2 mt-3 sm:mt-4 overflow-x-auto">
                 {selectedVariant.images.map((img, idx) => (
                   <img
                     key={idx}
                     src={img}
                     alt={`${product.name} ${idx + 1}`}
                     onClick={() => setCurrentImage(img)}
-                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${
+                    className={`w-14 h-14 sm:w-16 sm:h-20 object-cover rounded-lg cursor-pointer border-2 flex-shrink-0 ${
                       currentImage === img ? "border-black" : "border-gray-300"
                     }`}
                   />
@@ -201,14 +201,18 @@ export default function ProductDetails() {
           </div>
 
           {/* Right: Product Info */}
-          <div className="flex flex-col gap-6">
-            <h1 className="text-4xl font-bold">{product.name}</h1>
+          <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 order-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+              {product.name}
+            </h1>
 
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
               {product.description}
             </p>
 
-            <p className="text-3xl font-semibold">€{product.price}</p>
+            <p className="text-2xl sm:text-3xl font-semibold">
+              €{product.price}
+            </p>
 
             {/* Color - Show ALL colors */}
             {availableColors.length > 0 && (
@@ -222,7 +226,7 @@ export default function ProductDetails() {
                         key={color}
                         type="button"
                         onClick={() => handleColorChange(color)}
-                        className={`w-12 h-12 rounded-full border-2 transition relative ${
+                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 transition relative ${
                           selectedColor === color
                             ? "border-black ring-2 ring-offset-2 ring-black"
                             : "border-gray-300 hover:border-gray-400"
@@ -268,7 +272,7 @@ export default function ProductDetails() {
                             selectedColor && !inStock ? "line-through" : "none",
                           opacity: selectedColor && !inStock ? 0.5 : 1,
                         }}
-                        className={`px-4 py-2 border rounded-lg transition ${
+                        className={`px-3 py-2 sm:px-4 sm:py-2 border rounded-lg transition text-sm sm:text-base ${
                           selectedSize === size
                             ? "bg-black text-white"
                             : inStock || !selectedColor
@@ -313,14 +317,12 @@ export default function ProductDetails() {
                 isAdding ||
                 (selectedSize && selectedColor && stockQuantity === 0)
               }
-              className={`py-3 px-6 rounded-xl transition
-                ${
-                  isAdding ||
-                  (selectedSize && selectedColor && stockQuantity === 0)
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-800"
-                }
-              `}
+              className={`py-3 px-6 rounded-xl transition text-sm sm:text-base ${
+                isAdding ||
+                (selectedSize && selectedColor && stockQuantity === 0)
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-black text-white hover:bg-gray-800"
+              }`}
             >
               {isAdding
                 ? "Adding..."
@@ -332,7 +334,7 @@ export default function ProductDetails() {
               onClick={() => {
                 navigate(-1);
               }}
-              className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition"
+              className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition text-sm sm:text-base"
             >
               Back
             </button>

@@ -26,14 +26,16 @@ export default function Cart() {
     <>
       <Navbar />
       <main className="flex flex-col min-h-screen">
-        <section className="w-full min-h-screen py-20">
-          <div className="max-w-7xl mx-auto px-4">
-            <h1 className="text-3xl text-center font-bold mb-10">Your Cart</h1>
+        <section className="w-full min-h-screen py-12 sm:py-16 md:py-20">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4">
+            <h1 className="text-2xl sm:text-3xl text-center font-bold mb-8 sm:mb-10">
+              Your Cart
+            </h1>
 
             {cart.length === 0 ? (
-              <div className="flex flex-col lg:flex-row gap-8">
+              <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
                 {/* Left side - Empty message */}
-                <div className="flex-1 flex flex-col items-center justify-center gap-6 bg-gray-50 rounded-xl p-6 border border-gray-200 min-h-[200px]">
+                <div className="flex-1 flex flex-col items-center justify-center gap-4 sm:gap-6 bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200 min-h-[200px]">
                   <p className="text-black-600 text-2xl text-center">
                     Your cart is empty.
                   </p>
@@ -91,9 +93,9 @@ export default function Cart() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col lg:flex-row gap-8">
+              <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
                 {/* Left side - Cart Items */}
-                <div className="flex-1 flex flex-col gap-6 bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div className="flex-1 flex flex-col gap-4 sm:gap-6 bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200">
                   {cart.map((item) => {
                     const selectedVariant = item.product.variants?.find(
                       (v) => v.color === item.color,
@@ -104,16 +106,16 @@ export default function Cart() {
                     return (
                       <div
                         key={`${item.product._id}-${item.size}-${item.color}`}
-                        className="flex items-center gap-6 border-b pb-6"
+                        className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 border-b pb-4 sm:pb-6"
                       >
                         <img
                           src={imageUrl}
                           alt={item.product.name}
-                          className="w-24 h-24 object-cover rounded-lg border border-gray-500"
+                          className="w-20 h-24 sm:w-24 sm:h-24 object-cover rounded-lg border border-gray-500"
                         />
 
-                        <div className="flex-1 p-4">
-                          <h2 className="text-xl font-semibold my-2">
+                        <div className="flex-1 w-full sm:p-4">
+                          <h2 className="text-lg sm:text-xl font-semibold my-2">
                             {item.product.name}
                           </h2>
                           <p className="text-sm text-gray-500 my-2">

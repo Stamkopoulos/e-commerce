@@ -22,41 +22,41 @@ export default function CartDrawer() {
 
       {/* Drawer */}
       <aside
-        className={`fixed top-0 right-0 h-full w-[27%] min-w-[340px] bg-white z-60 rounded-xl 3xl
+        className={`fixed top-0 right-0 h-full w-full sm:w-[85%] md:w-[60%] lg:w-[45%] xl:w-[35%] 2xl:w-[27%] bg-white z-60 rounded-l-xl
         shadow-2xl transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Your cart</h2>
-          <button onClick={closeCart} className="text-xl">
+          <button onClick={closeCart} className="text-xl p-1">
             ✕
           </button>
         </div>
 
-        <div className="p-4 flex-1 overflow-y-auto">
+        <div className="p-4 flex-1 overflow-y-auto h-[calc(100vh-180px)]">
           {cart.length === 0 ? (
-            <p className="text-gray-500 text-center items-center justify-centermt-12">
+            <p className="text-gray-500 text-center items-center justify-center mt-12">
               Your cart is empty
             </p>
           ) : (
             cart.map((item, index) => (
               <div
                 key={`${item.product._id}-${item.size}-${item.color}`}
-                className={`flex mb-3 items-center py-4 ${index !== cart.length - 1 ? "border-b" : ""}`}
+                className={`flex gap-3 sm:gap-4 items-center py-3 sm:py-4 ${index !== cart.length - 1 ? "border-b" : ""}`}
               >
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-20 h-28 object-cover rounded"
+                  className="w-16 h-20 sm:w-20 sm:h-28 object-cover rounded"
                 />
-                <div className="flex-1 text-center min-w-0">
-                  <p className="font-medium text-md tracking-tight break-words text-wrap sm:text-balance md:text-balance md: leading-tight">
+                <div className="flex-1 min-w-0 text-sm sm:text-base">
+                  <p className="font-medium text-sm sm:text-base tracking-tight break-words">
                     {item.name}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     {formatColor(item.color)} / {item.size}
                   </p>
-                  <div className="flex items-center justify-center gap-3 mt-2">
+                  <div className="flex items-center justify-start gap-2 sm:gap-3 mt-1 sm:mt-2">
                     <button
                       onClick={() =>
                         updateQuantity(
@@ -66,7 +66,7 @@ export default function CartDrawer() {
                           item.quantity - 1,
                         )
                       }
-                      className="w-7 h-7 border rounded flex items-center justify-center hover:bg-gray-100"
+                      className="w-6 h-6 sm:w-7 sm:h-7 border rounded flex items-center justify-center hover:bg-gray-100 text-sm"
                     >
                       −
                     </button>
@@ -82,7 +82,7 @@ export default function CartDrawer() {
                           item.quantity + 1,
                         )
                       }
-                      className="w-7 h-7 border rounded flex items-center justify-center hover:bg-gray-100"
+                      className="w-6 h-6 sm:w-7 sm:h-7 border rounded flex items-center justify-center hover:bg-gray-100 text-sm"
                     >
                       +
                     </button>
@@ -108,7 +108,7 @@ export default function CartDrawer() {
               closeCart();
               navigate("/cart");
             }}
-            className="w-full border py-3 rounded"
+            className="w-full border py-2.5 sm:py-3 rounded text-sm sm:text-base"
           >
             View cart
           </button>
@@ -118,7 +118,7 @@ export default function CartDrawer() {
               closeCart();
               navigate("/checkout");
             }}
-            className="w-full bg-black text-white py-3 rounded"
+            className="w-full bg-black text-white py-2.5 sm:py-3 rounded text-sm sm:text-base"
           >
             Proceed to checkout
           </button>

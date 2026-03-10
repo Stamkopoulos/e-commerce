@@ -5,20 +5,24 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  MagnifyingGlassIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useCart } from "../context/useCart";
 import { useCartUI } from "../context/useCartUI";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function Navbar() {
   const { cart } = useCart();
   const { openCart } = useCartUI();
   const navigate = useNavigate();
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Initialize searchInput from URL params
   const [searchInput, setSearchInput] = useState(() => {
@@ -114,13 +118,26 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="w-full z-50 transition-all duration-300 py-3">
+    <nav className="w-full z-50 transition-all duration-300 py-3 bg-white">
       <div className="w-full px-4 sm:px-6 flex items-center justify-between">
-        {/* Left side: Logo and Collections */}
-        <div className="flex items-center gap-4 sm:gap-6 md:gap-8">
+        {/* Left side: Logo and Menu Button */}
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8">
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 -ml-2 text-black"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <XMarkIcon className="w-6 h-6" />
+            ) : (
+              <Bars3Icon className="w-6 h-6" />
+            )}
+          </button>
+
           <Link
             to="/"
-            className="text-3xl font-bold text-black sm:text-md md:text-3xl relative z-50"
+            className="text-2xl sm:text-2xl md:text-3xl font-bold text-black relative z-50"
           >
             Qloset
           </Link>
@@ -184,9 +201,9 @@ export default function Navbar() {
         </div>
 
         {/* Right side: Search, Cart, Auth */}
-        <div className="flex items-center gap-3 md:gap-8 mr-2">
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="hidden sm:block relative">
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8">
+          {/* Search Bar - Desktop */}
+          <form onSubmit={handleSearch} className="hidden lg:block relative">
             <div className="relative">
               <input
                 ref={searchInputRef}
@@ -203,7 +220,7 @@ export default function Navbar() {
                   // Delay hiding to allow click on suggestions
                   setTimeout(() => setShowSuggestions(false), 200);
                 }}
-                className={`w-40 md:w-56 lg:w-64 bg-transparent border-b py-2 pl-8 pr-8 text-sm text-black placeholder-gray-500 focus:outline-none transition-all ${
+                className={`w-40 xl:w-64 bg-transparent border-b py-2 pl-8 pr-8 text-sm text-black placeholder-gray-500 focus:outline-none transition-all ${
                   isSearchFocused
                     ? "border-black border-b-2"
                     : "border-gray-300"
@@ -275,15 +292,19 @@ export default function Navbar() {
           </form>
 
           {/* Mobile Search Button */}
-          <button className="sm:hidden text-black">
+          <button
+            className="lg:hidden p-2 text-black"
+            onClick={() => navigate("/products")}
+            aria-label="Search"
+          >
             <MagnifyingGlassIcon className="w-5 h-5" />
           </button>
 
           {/* Cart */}
           <div className="relative group cursor-pointer" onClick={openCart}>
-            <ShoppingCartIcon className="w-6 h-6 text-black group-hover:text-gray sm:w-6 sm:h-6" />
+            <ShoppingCartIcon className="w-5 h-5 sm:w-6 sm:h-6 text-black group-hover:text-gray" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+              <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full">
                 {cartCount}
               </span>
             )}
@@ -292,7 +313,7 @@ export default function Navbar() {
           {/* Auth */}
           <SignedOut>
             <SignInButton mode="redirect" redirecturl="/">
-              <button className="text-md sm:text-md text-black font-medium px-3 py-1.5 ">
+              <button className="text-sm sm:text-md text-black font-medium px-2 sm:px-3 py-1.5">
                 Sign In
               </button>
             </SignInButton>
@@ -303,6 +324,51 @@ export default function Navbar() {
           </SignedIn>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b shadow-lg">
+          <div className="px-4 py-4 space-y-4">
+            <Link
+              to="/collections/men"
+              className="block py-2 text-lg text-black hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Men
+            </Link>
+            <Link
+              to="/collections/women"
+              className="block py-2 text-lg text-black hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Women
+            </Link>
+            <Link
+              to="/collections/accessories"
+              className="block py-2 text-lg text-black hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Accessories
+            </Link>
+            <div className="border-t pt-4">
+              <Link
+                to="/products"
+                className="block py-2 text-lg text-black hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                All Products
+              </Link>
+              <Link
+                to="/collections"
+                className="block py-2 text-lg text-black hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Collections
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
