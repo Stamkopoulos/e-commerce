@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -208,16 +208,16 @@ export default function Products() {
                   COLLECTIONS
                 </h3>
                 <div className="space-y-3">
-                  <a
-                    href="/products"
+                  <Link
+                    to="/products"
                     className={`flex items-center justify-between py-2 text-sm transition-colors ${
-                      category
+                      !category
                         ? "font-medium text-black"
                         : "text-gray-600 hover:text-black"
                     }`}
                   >
                     <span>All Products</span>
-                  </a>
+                  </Link>
                   <div className="border-t border-gray-200"></div>
                   {["Men", "Women", "Accessories"].map((cat, index) => {
                     const categorySlug = cat.toLowerCase();
@@ -225,8 +225,8 @@ export default function Products() {
 
                     return (
                       <div key={cat}>
-                        <a
-                          href={`/collections/${categorySlug}`}
+                        <Link
+                          to={`/collections/${categorySlug}`}
                           className={`flex items-center text-sm ${
                             isActive
                               ? "font-medium text-black"
@@ -234,7 +234,7 @@ export default function Products() {
                           }`}
                         >
                           <span>{cat}</span>
-                        </a>
+                        </Link>
                         {index < 2 && (
                           <div className="border-t border-gray-100"></div>
                         )}
@@ -243,25 +243,25 @@ export default function Products() {
                   })}
 
                   <div className="border-t border-gray-200 mt-3 pt-3">
-                    <a
-                      href="/products"
+                    <Link
+                      to="/products"
                       className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
                     >
                       <span>New Arrivals</span>
                       <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
                         New
                       </span>
-                    </a>
+                    </Link>
                     <div className="border-t border-gray-100"></div>
-                    <a
-                      href="/products"
+                    <Link
+                      to="/products"
                       className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
                     >
                       <span>Sale</span>
                       <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
                         -30%
                       </span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
