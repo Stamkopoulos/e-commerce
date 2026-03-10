@@ -41,8 +41,6 @@ router.post("/create-checkout-session", async (req, res) => {
       cancel_url: `${process.env.FRONTEND_URL}/checkout`,
     });
 
-    console.log("Stripe session created:", session.url);
-
     res.json({ url: session.url });
   } catch (err) {
     console.error("Stripe checkout error:", err);

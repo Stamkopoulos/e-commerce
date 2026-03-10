@@ -64,7 +64,6 @@ export const createOrder = async (req, res) => {
         if (!productId || !name || price == null) {
           throw new Error("Invalid cart item data");
         }
-        console.log("ORDER ITEM:", item);
         return {
           productId,
           name,
