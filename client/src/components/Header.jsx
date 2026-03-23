@@ -139,7 +139,7 @@ export default function Header() {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Scroll to top"
-          className="fixed right-8 bottom-8 text-white bg-black py-2 px-4 rounded-full"
+          className="fixed right-6 bottom-20 text-white bg-black py-2 px-4 rounded-full"
         >
           &#8593;
         </button>
