@@ -37,11 +37,11 @@ export const addToCart = async (req, res) => {
 
     const { productId, color: rawColor, size: rawSize, quantity } = req.body;
 
-    const color = rawColor.toLowerCase();
-    const size = rawSize.toUpperCase();
-
     if (!productId || !rawColor || !rawSize || !quantity)
       return res.status(400).json({ error: "Missing required fields" });
+
+    const color = rawColor.toLowerCase();
+    const size = rawSize.toUpperCase();
 
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ error: "Product not found" });
@@ -103,7 +103,7 @@ export const removeFromCart = async (req, res) => {
     if (item.quantity > 1) {
       item.quantity -= 1;
     } else {
-      item.remove();
+      cart.items.pull({ _id: item._id });
     }
 
     await cart.save();

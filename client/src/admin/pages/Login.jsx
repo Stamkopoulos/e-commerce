@@ -7,7 +7,7 @@ export default function Login() {
         path="/admin/login"
         routing="path"
         signUpUrl="/sign-up"
-        redirectUrl="/admin"
+        redirecturl="/admin"
       />
     </div>
   );

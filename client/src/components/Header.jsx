@@ -57,9 +57,9 @@ export default function Header() {
 
   return (
     <main>
-      <section className="min-h-screen flex justify-center items-center p-8 relative">
+      <section className="min-h-screen sm:min-h-[80vh] lg:min-h-screen flex justify-center items-center p-2 sm:p-4 md:p-8 relative">
         <div
-          className="relative inline-block w-full mt-12 max-w-7xl"
+          className="relative inline-block w-full mt-8 sm:mt-12 lg:mt-12 max-w-7xl"
           id="hero-section"
         >
           {slides.map((slide, index) => (
@@ -74,18 +74,18 @@ export default function Header() {
               <img
                 src={slide.image}
                 alt={`Slide ${index + 1}`}
-                className="object-contain w-full"
+                className="object-contain w-full h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh]"
               />
 
               <div
-                className={`absolute inset-0 flex flex-col justify-center items-center text-center px-6 ${
+                className={`absolute inset-0 flex flex-col justify-center items-center text-center px-3 sm:px-4 md:px-6 ${
                   index === 1 ? "text-white" : ""
                 }`}
               >
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-6">
+                <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
                   Modern Essentials. Timeless Elegance.
                 </h1>
-                <p className="text-base md:text-lg lg:text-xl font-light">
+                <p className="text-xs sm:text-sm md:text-base lg:text-xl font-light px-2 sm:px-4">
                   Modern essentials, thoughtfully curated for the conscious
                   wardrobe.
                 </p>
@@ -96,29 +96,29 @@ export default function Header() {
           {/* Navigation Buttons */}
           <button
             onClick={goToPrevious}
-            className="absolute text-white left-4 top-1/2 -translate-y-1/2  p-2 transition-all z-10"
+            className="absolute text-white left-2 sm:left-4 top-1/2 -translate-y-1/2 p-1 sm:p-2 transition-all z-10 hover:bg-black/20 rounded-full"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
           </button>
 
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white p-2 transition-all z-10"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-white p-1 sm:p-2 transition-all z-10 hover:bg-black/20 rounded-full"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
           </button>
 
           {/* Indicator Dots */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
+                className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full transition-all ${
                   index === currentIndex
-                    ? "bg-white w-8"
+                    ? "bg-white w-6 sm:w-8"
                     : "bg-white/50 hover:bg-white/75"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}

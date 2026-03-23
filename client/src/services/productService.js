@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // Get all products
 export const getAllProducts = async () => {
   try {
-    const response = await axios.get(`${API_URL}/products`);
+    const response = await axios.get(`${API_BASE_URL}/api/products`);
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -16,7 +16,7 @@ export const getAllProducts = async () => {
 // Get one product by ID
 export const getProductById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/products/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/api/products/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching product with id ${id}:`, error);
@@ -28,7 +28,7 @@ export const getProductById = async (id) => {
 export const getProductsByCategory = async (category) => {
   try {
     const response = await axios.get(
-      `${API_URL}/products/collections/${category}`,
+      `${API_BASE_URL}/api/collections/${category}`,
     );
     return response.data;
   } catch (error) {
@@ -40,7 +40,7 @@ export const getProductsByCategory = async (category) => {
 // Get bestseller products
 export const getBestsellerProducts = async () => {
   try {
-    const response = await axios.get(`${API_URL}/best-sellers`);
+    const response = await axios.get(`${API_BASE_URL}/api/best-sellers`);
     return response.data; // array of top products
   } catch (error) {
     console.error("Error fetching bestseller products:", error);

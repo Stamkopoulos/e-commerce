@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
+import { XMarkIcon, FunnelIcon } from "@heroicons/react/24/outline";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -12,8 +13,11 @@ export default function Products() {
   const { category } = useParams();
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const searchQuery = params.get("search")?.toLowerCase() || "";
 
   // Read search from URL when component mounts
   const search = useMemo(() => {
@@ -61,9 +65,51 @@ export default function Products() {
     };
     loadProducts();
   }, [category, location.pathname]);
+  // Helper function to normalize search terms (remove special characters, spaces)
+  const normalizeText = (text) => {
+    return text.toLowerCase().replace(/[-\s]/g, ""); // Remove hyphens and spaces
+  };
+
+  // Helper function to check if a product matches the search query with variations
+  const searchMatches = (productName, searchQuery) => {
+    if (!searchQuery) return true;
+
+    const normalizedName = normalizeText(productName);
+    const normalizedQuery = normalizeText(searchQuery);
+
+    // Direct match after normalization (handles "tshirt" vs "t-shirt")
+    if (normalizedName.includes(normalizedQuery)) {
+      return true;
+    }
+
+    // Handle common variations
+    const variations = {
+      tshirt: ["t-shirt", "t shirts", "tee"],
+      "t-shirt": ["tshirt", "t shirts", "tee"],
+      hoodie: ["hoody", "sweatshirt"],
+      sweater: ["jumper", "pullover"],
+      // Add more as needed
+    };
+
+    // Check if the search query matches any variations of words in the product name
+    for (const [key, values] of Object.entries(variations)) {
+      if (normalizedQuery.includes(key) || key.includes(normalizedQuery)) {
+        // If query matches a variation key, check if product name contains any variation
+        return (
+          values.some((variation) => normalizedName.includes(variation)) ||
+          normalizedName.includes(key)
+        );
+      }
+    }
+
+    return false;
+  };
 
   const filteredProducts = products.filter((p) => {
-    const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase());
+    // Enhanced search with variations
+    const matchesSearch = searchQuery
+      ? searchMatches(p.name, searchQuery)
+      : true;
 
     // Price range filter
     const price =
@@ -94,7 +140,6 @@ export default function Products() {
 
     return matchesSearch && matchesPrice && matchesSize && matchesColor;
   });
-
   // Sorting
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sort === "price-asc") return a.price - b.price;
@@ -122,42 +167,73 @@ export default function Products() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-16 sm:pt-20">
         {/* Main Content Area */}
-        <div className="max-w-[1600px] mx-auto px-8 py-12">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-10 md:py-12">
           {/* Page Title */}
-          <div className="mb-12 text-center border-b border-gray-150 pb-8">
-            <h1 className="text-4xl tracking-tight mb-2">
+          <div className="mb-8 sm:mb-10 md:mb-12 text-center border-b border-gray-150 pb-6 sm:pb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2">
               {category
                 ? category.charAt(0).toUpperCase() + category.slice(1)
                 : "SHOP"}
             </h1>
-            <p className="text-gray-600 text-sm">
-              {search
-                ? `Search results for "${search}"`
-                : "Discover our collection"}
-            </p>
+            {search ? (
+              <div className="space-y-2">
+                <p className="text-gray-600 text-sm">
+                  Search results for "
+                  <span className="font-semibold text-black">{search}</span>"
+                </p>
+
+                {/* Clear search button */}
+                <button
+                  onClick={() =>
+                    navigate(
+                      category ? `/collections/${category}` : "/products",
+                    )
+                  }
+                  className="text-xs text-gray-500 hover:text-black underline mt-2 inline-block"
+                >
+                  Clear search
+                </button>
+              </div>
+            ) : (
+              <p className="text-gray-600 text-sm">Discover our collection</p>
+            )}
           </div>
 
-          <div className="grid grid-cols-[280px_1fr] gap-16">
-            {/* LEFT SIDEBAR - FILTERS */}
-            <div className="space-y-8">
+          {/* Mobile Filter Button - visible on screens smaller than lg */}
+          <div className="lg:hidden mb-4 flex items-center justify-between">
+            <button
+              onClick={() => setMobileFiltersOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:border-black transition"
+            >
+              <FunnelIcon className="w-4 h-4" />
+              Filters
+            </button>
+            <span className="text-sm text-gray-500">
+              {sortedProducts.length} products
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-16">
+            {/* LEFT SIDEBAR - FILTERS - Desktop only (lg and above) */}
+            <div className="hidden lg:block space-y-8">
               {/* Categories Filter */}
               <div className="border-b border-gray-00 pb-6">
                 <h3 className="font-bold mb-4 text-md uppercase tracking-wider text-gray-900">
                   COLLECTIONS
                 </h3>
                 <div className="space-y-3">
-                  <a
-                    href="/products"
+                  <Link
+                    to="/products"
                     className={`flex items-center justify-between py-2 text-sm transition-colors ${
-                      category
+                      !category
                         ? "font-medium text-black"
                         : "text-gray-600 hover:text-black"
                     }`}
                   >
                     <span>All Products</span>
-                  </a>
+                  </Link>
                   <div className="border-t border-gray-200"></div>
                   {["Men", "Women", "Accessories"].map((cat, index) => {
                     const categorySlug = cat.toLowerCase();
@@ -165,8 +241,8 @@ export default function Products() {
 
                     return (
                       <div key={cat}>
-                        <a
-                          href={`/collections/${categorySlug}`}
+                        <Link
+                          to={`/collections/${categorySlug}`}
                           className={`flex items-center text-sm ${
                             isActive
                               ? "font-medium text-black"
@@ -174,7 +250,7 @@ export default function Products() {
                           }`}
                         >
                           <span>{cat}</span>
-                        </a>
+                        </Link>
                         {index < 2 && (
                           <div className="border-t border-gray-100"></div>
                         )}
@@ -183,25 +259,25 @@ export default function Products() {
                   })}
 
                   <div className="border-t border-gray-200 mt-3 pt-3">
-                    <a
-                      href="/products"
+                    <Link
+                      to="/products"
                       className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
                     >
                       <span>New Arrivals</span>
                       <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
                         New
                       </span>
-                    </a>
+                    </Link>
                     <div className="border-t border-gray-100"></div>
-                    <a
-                      href="/products"
+                    <Link
+                      to="/products"
                       className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
                     >
                       <span>Sale</span>
                       <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
                         -30%
                       </span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -416,11 +492,7 @@ export default function Products() {
                   setMaxPrice(1000);
                   setSelectedColors([]);
                   // Clear URL search parameter if it exists
-                  if (search) {
-                    navigate(
-                      category ? `/collections/${category}` : "/products",
-                    );
-                  }
+                  navigate(category ? `/collections/${category}` : "/products");
                 }}
                 className="text-sm border-b border-black hover:border-gray-500 transition w-full text-center py-2 cursor-pointer"
               >
@@ -431,14 +503,14 @@ export default function Products() {
             {/* RIGHT SIDE - PRODUCTS */}
             <div>
               {/* Sort Bar */}
-              <div className="flex justify-between items-center mb-8 pb-2">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-2">
                 <p className="text-sm text-gray-600 font-medium">
                   {sortedProducts.length} product
                   {sortedProducts.length !== 1 ? "s" : ""}
                 </p>
-                <div className="relative">
+                <div className="relative w-full sm:w-auto">
                   <select
-                    className="appearance-none border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all duration-200 w-48"
+                    className="appearance-none border border-gray-300 bg-white px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all duration-200 w-full sm:w-48"
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
                   >
@@ -467,9 +539,13 @@ export default function Products() {
               </div>
 
               {/* Products Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                 {sortedProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    searchQuery={searchQuery}
+                  />
                 ))}
               </div>
 
@@ -477,7 +553,7 @@ export default function Products() {
               {filteredProducts.length === 0 && products.length > 0 && (
                 <div className="text-center py-16 col-span-3 border border-gray-200 rounded-lg bg-gray-50">
                   <svg
-                    className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                    className="w-16 h-16 text-gray-300 mx-auto mb-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -486,23 +562,67 @@ export default function Products() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="1.5"
-                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                  <p className="text-gray-600 mb-4 font-medium">
-                    No products match your filters
+                  <p className="text-gray-700 mb-2 font-medium">
+                    {searchQuery
+                      ? `No results for "${searchQuery}"`
+                      : "No products match your filters"}
                   </p>
-                  <button
-                    onClick={() => {
-                      setSelectedSizes([]);
-                      setSelectedColors([]);
-                      setMinPrice(0);
-                      setMaxPrice(1000);
-                    }}
-                    className="text-sm text-gray-500 hover:text-black transition-colors border-b border-transparent hover:border-black"
-                  >
-                    Clear filters
-                  </button>
+                  <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">
+                    {searchQuery ? (
+                      <>
+                        Try different keywords or browse our collections below
+                      </>
+                    ) : (
+                      <>Try adjusting your filters or browse all products</>
+                    )}
+                  </p>
+
+                  {/* Suggestions */}
+                  <div className="flex flex-wrap justify-center gap-3 mb-6">
+                    {searchQuery && (
+                      <>
+                        <button
+                          onClick={() => {
+                            const params = new URLSearchParams(location.search);
+                            params.delete("search");
+                            navigate(
+                              `${location.pathname}?${params.toString()}`,
+                            );
+                          }}
+                          className="text-sm px-4 py-2 bg-white border border-gray-300 rounded hover:border-black transition-colors"
+                        >
+                          Clear search
+                        </button>
+                        <button
+                          onClick={() => navigate("/products")}
+                          className="text-sm px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+                        >
+                          Browse all products
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Category suggestions */}
+                  <div className="mt-4">
+                    <p className="text-xs text-gray-500 mb-3">
+                      Popular categories:
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {["Men", "Women", "Accessories"].map((cat) => (
+                        <a
+                          key={cat}
+                          href={`/collections/${cat.toLowerCase()}`}
+                          className="text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-black transition-colors"
+                        >
+                          {cat}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -524,6 +644,149 @@ export default function Products() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Filters Drawer */}
+        {mobileFiltersOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/40 z-50 lg:hidden"
+              onClick={() => setMobileFiltersOpen(false)}
+            />
+            {/* Drawer */}
+            <div className="fixed top-0 left-0 h-full w-full sm:w-[85%] md:w-[60%] lg:w-[50%] bg-white z-50 overflow-y-auto transform transition-transform duration-300">
+              <div className="flex justify-between items-center p-4 border-b sticky top-0 bg-white">
+                <h2 className="text-lg font-semibold">Filters</h2>
+                <button
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="p-2"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="p-4 space-y-6">
+                {/* Categories */}
+                <div className="border-b pb-4">
+                  <h3 className="font-bold mb-3 text-md uppercase tracking-wider text-gray-900">
+                    COLLECTIONS
+                  </h3>
+                  <div className="space-y-2">
+                    <Link
+                      to="/products"
+                      className={`flex items-center py-1 text-sm ${
+                        !category ? "font-medium text-black" : "text-gray-600"
+                      }`}
+                      onClick={() => setMobileFiltersOpen(false)}
+                    >
+                      All Products
+                    </Link>
+                    {["Men", "Women", "Accessories"].map((cat) => (
+                      <Link
+                        key={cat}
+                        to={`/collections/${cat.toLowerCase()}`}
+                        className={`flex items-center py-1 text-sm ${
+                          category === cat.toLowerCase()
+                            ? "font-medium text-black"
+                            : "text-gray-600"
+                        }`}
+                        onClick={() => setMobileFiltersOpen(false)}
+                      >
+                        {cat}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="border-b pb-4">
+                  <h3 className="font-medium mb-3 text-sm uppercase tracking-wider">
+                    PRICE
+                  </h3>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      value={minPrice}
+                      onChange={(e) =>
+                        setMinPrice(parseInt(e.target.value) || 0)
+                      }
+                      className="w-20 px-2 py-1 text-sm border rounded"
+                      placeholder="Min"
+                    />
+                    <span className="text-gray-400">-</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={maxPrice}
+                      onChange={(e) =>
+                        setMaxPrice(parseInt(e.target.value) || 1000)
+                      }
+                      className="w-20 px-2 py-1 text-sm border rounded"
+                      placeholder="Max"
+                    />
+                  </div>
+                </div>
+
+                {/* Size */}
+                <div className="border-b pb-4">
+                  <h3 className="font-medium mb-3 text-sm uppercase tracking-wider text-gray-900">
+                    SIZE
+                  </h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => handleSizeToggle(size)}
+                        className={`px-2 py-1.5 text-sm border ${
+                          selectedSizes.includes(size)
+                            ? "border-black bg-black text-white"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color */}
+                <div className="border-b pb-4">
+                  <h3 className="font-medium mb-3 text-sm uppercase tracking-wider text-gray-900">
+                    COLOR
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {colors.map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => handleColorToggle(color)}
+                        className={`w-8 h-8 rounded-full border-2 ${
+                          selectedColors.includes(color)
+                            ? "border-black ring-2 ring-black ring-offset-1"
+                            : "border-gray-300"
+                        }`}
+                        style={{ backgroundColor: color }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Clear Filters */}
+                <button
+                  onClick={() => {
+                    setSelectedSizes([]);
+                    setMinPrice(0);
+                    setMaxPrice(1000);
+                    setSelectedColors([]);
+                  }}
+                  className="w-full py-2 border border-black text-sm"
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </main>
       <Footer />
     </>

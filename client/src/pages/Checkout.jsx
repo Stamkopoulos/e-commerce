@@ -11,7 +11,6 @@ export default function Checkout() {
   const {
     cart,
     clearCart,
-    removeFromCart,
     subtotal,
     discount,
     shipping,
@@ -29,6 +28,8 @@ export default function Checkout() {
     zipCode: "",
     city: "",
   });
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -141,7 +142,7 @@ export default function Checkout() {
     }
 
     const res = await fetch(
-      "http://localhost:5000/api/checkout/create-checkout-session",
+      `${API_BASE_URL}/api/checkout/create-checkout-session`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,9 +169,11 @@ export default function Checkout() {
       <Navbar />
 
       <main className="flex flex-col min-h-screen">
-        <section className="min-h-screen flex items-center justify-center py-20">
-          <div className="w-full max-w-5xl mx-auto px-4">
-            <h1 className="text-3xl font-bold mb-8 text-center">Checkout</h1>
+        <section className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20">
+          <div className="w-full max-w-5xl mx-auto px-3 sm:px-4">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">
+              Checkout
+            </h1>
 
             {errors.form && (
               <div className="mb-4 text-red-600 text-center">{errors.form}</div>
@@ -214,7 +217,7 @@ export default function Checkout() {
                     </div>
                   ))}
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">
                         City <span className="text-red-500">*</span>
@@ -279,7 +282,7 @@ export default function Checkout() {
               </div>
 
               {/* Right Column - Order Summary */}
-              <div className="bg-gray-50 p-6 rounded-lg h-fit sticky top-4">
+              <div className="bg-gray-50 p-4 sm:p-6 rounded-lg h-fit sticky top-4">
                 <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
 
                 {/* Product List */}

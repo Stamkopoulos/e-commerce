@@ -3,7 +3,7 @@ import Product from "../models/Product.js";
 
 const router = express.Router();
 
-router.get("/collections/:type", async (req, res) => {
+router.get("/:type", async (req, res) => {
   const { type } = req.params;
 
   try {
