@@ -59,7 +59,7 @@ export default function Header() {
     <main>
       <section className="min-h-screen sm:min-h-[80vh] lg:min-h-screen flex justify-center items-center p-2 sm:p-4 md:p-8 relative">
         <div
-          className="relative inline-block w-full mt-8 sm:mt-12 lg:mt-12 max-w-7xl"
+          className="relative inline-block w-full mt-2 sm:mt-2 lg:mt-2 max-w-7xl"
           id="hero-section"
         >
           {slides.map((slide, index) => (
@@ -71,24 +71,26 @@ export default function Header() {
                   : "opacity-0 absolute inset-0"
               }`}
             >
-              <img
-                src={slide.image}
-                alt={`Slide ${index + 1}`}
-                className="object-contain w-full h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh]"
-              />
+              <div className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen">
+                <img
+                  src={slide.image}
+                  alt={`Slide ${index + 1}`}
+                  className="object-cover w-full h-full"
+                />
 
-              <div
-                className={`absolute inset-0 flex flex-col justify-center items-center text-center px-3 sm:px-4 md:px-6 ${
-                  index === 1 ? "text-white" : ""
-                }`}
-              >
-                <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
-                  Modern Essentials. Timeless Elegance.
-                </h1>
-                <p className="text-xs sm:text-sm md:text-base lg:text-xl font-light px-2 sm:px-4">
-                  Modern essentials, thoughtfully curated for the conscious
-                  wardrobe.
-                </p>
+                <div
+                  className={`absolute inset-0 flex flex-col justify-center items-center text-center px-3 sm:px-4 md:px-6 ${
+                    index === 1 ? "text-white" : ""
+                  }`}
+                >
+                  <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
+                    Modern Essentials. Timeless Elegance.
+                  </h1>
+                  <p className="text-xs sm:text-sm md:text-base lg:text-xl font-light px-2 sm:px-4">
+                    Modern essentials, thoughtfully curated for the conscious
+                    wardrobe.
+                  </p>
+                </div>
               </div>
             </div>
           ))}

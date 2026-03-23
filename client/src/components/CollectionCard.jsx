@@ -6,17 +6,21 @@ export default function CollectionCard({ title, image, category }) {
       to={`/collections/${category}`}
       className="group block overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition"
     >
-      <div className="aspect-[3/4] overflow-hidden">
+      <div className="h-48 sm:h-64 md:h-80 lg:h-96 bg-gray-50 flex items-center justify-center overflow-hidden">
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+          className="w-full h-full object-contain group-hover:scale-105 transition duration-300"
         />
       </div>
 
-      <div className="p-4 text-center">
-        <h3 className="text-xl font-semibold tracking-wide">{title}</h3>
-        <p className="text-sm text-gray-500 mt-1">Explore collection</p>
+      <div className="p-3 sm:p-4 text-center">
+        <h3 className="text-base sm:text-lg md:text-xl font-semibold tracking-wide">
+          {title}
+        </h3>
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+          Explore collection
+        </p>
       </div>
     </Link>
   );
