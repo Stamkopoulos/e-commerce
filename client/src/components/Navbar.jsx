@@ -17,14 +17,17 @@ import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useCart } from "../context/useCart";
 import { useCartUI } from "../context/useCartUI";
 import { useTranslation } from "react-i18next";
+import { useLangPath } from "../hooks/useLangPath";
+import { useLangNavigate } from "../hooks/useLangNavigate";
 
 export default function Navbar() {
   const { cart } = useCart();
   const { openCart } = useCartUI();
-  const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t } = useTranslation();
+  const lp = useLangPath();
+  const navigate = useLangNavigate();
 
   // Initialize searchInput from URL params
   const [searchInput, setSearchInput] = useState(() => {
@@ -138,7 +141,7 @@ export default function Navbar() {
           </button>
 
           <Link
-            to="/"
+            to={lp("/")}
             className="text-2xl sm:text-2xl md:text-3xl font-bold text-black relative z-50"
           >
             Qloset
@@ -173,7 +176,7 @@ export default function Navbar() {
                   <div className="py-1">
                     <MenuItem>
                       <Link
-                        to="/collections/men"
+                        to={lp("/collections/men")}
                         className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
                       >
                         {t("nav.men")}
@@ -181,7 +184,7 @@ export default function Navbar() {
                     </MenuItem>
                     <MenuItem>
                       <Link
-                        to="/collections/women"
+                        to={lp("/collections/women")}
                         className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
                       >
                         {t("nav.women")}
@@ -189,7 +192,7 @@ export default function Navbar() {
                     </MenuItem>
                     <MenuItem>
                       <Link
-                        to="/collections/accessories"
+                        to={lp("/collections/accessories")}
                         className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
                       >
                         {t("nav.accessories")}
@@ -332,21 +335,21 @@ export default function Navbar() {
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b shadow-lg">
           <div className="px-4 py-4 space-y-4">
             <Link
-              to="/collections/men"
+              to={lp("/collections/men")}
               className="block py-2 text-lg text-black hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(false)}
             >
               {t("nav.men")}
             </Link>
             <Link
-              to="/collections/women"
+              to={lp("/collections/women")}
               className="block py-2 text-lg text-black hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(false)}
             >
               {t("nav.women")}
             </Link>
             <Link
-              to="/collections/accessories"
+              to={lp("/collections/accessories")}
               className="block py-2 text-lg text-black hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -354,14 +357,14 @@ export default function Navbar() {
             </Link>
             <div className="border-t pt-4">
               <Link
-                to="/products"
+                to={lp("/products")}
                 className="block py-2 text-lg text-black hover:bg-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {t("nav.all_products")}
               </Link>
               <Link
-                to="/collections"
+                to={lp("/collections")}
                 className="block py-2 text-lg text-black hover:bg-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >

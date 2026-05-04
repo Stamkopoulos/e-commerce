@@ -1,11 +1,13 @@
 import { useCart } from "../context/useCart";
-import { useNavigate } from "react-router-dom";
 import { useCartUI } from "../context/useCartUI";
+import { useTranslation } from "react-i18next";
+import { useLangNavigate } from "../hooks/useLangNavigate";
 
 export default function CartDrawer() {
   const { cart, subtotal, updateQuantity } = useCart();
   const { isOpen, closeCart } = useCartUI();
-  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const navigate = useLangNavigate();
 
   // Helper to format color for display
   const formatColor = (color) => {
@@ -27,7 +29,7 @@ export default function CartDrawer() {
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-semibold">Your cart</h2>
+          <h2 className="text-lg font-semibold">{t("cart_drawer.title")}</h2>
           <button onClick={closeCart} className="text-xl p-1">
             ✕
           </button>
@@ -36,7 +38,7 @@ export default function CartDrawer() {
         <div className="p-4 flex-1 overflow-y-auto h-[calc(100vh-180px)]">
           {cart.length === 0 ? (
             <p className="text-gray-500 text-center items-center justify-center mt-12">
-              Your cart is empty
+              {t("cart_drawer.empty")}
             </p>
           ) : (
             cart.map((item, index) => (
@@ -99,7 +101,7 @@ export default function CartDrawer() {
         {/* Footer */}
         <div className="border-t p-4 space-y-3">
           <div className="flex justify-between font-semibold">
-            <span>Total</span>
+            <span>{t("cart_drawer.total")}</span>
             <span>€{subtotal.toFixed(2)}</span>
           </div>
 
@@ -110,7 +112,7 @@ export default function CartDrawer() {
             }}
             className="w-full border py-2.5 sm:py-3 rounded text-sm sm:text-base"
           >
-            View cart
+            {t("cart_drawer.view_cart")}
           </button>
 
           <button
@@ -120,7 +122,7 @@ export default function CartDrawer() {
             }}
             className="w-full bg-black text-white py-2.5 sm:py-3 rounded text-sm sm:text-base"
           >
-            Proceed to checkout
+            {t("cart_drawer.proceed_to_checkout")}
           </button>
         </div>
       </aside>

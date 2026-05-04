@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "../hooks/useLangPath";
+import { useLangNavigate } from "../hooks/useLangNavigate";
 
 export default function CollectionCard({ title, image, category }) {
+  const { t } = useTranslation();
+  const lp = useLangPath();
+
   return (
     <Link
-      to={`/collections/${category}`}
+      to={lp(`/collections/${category}`)}
       className="group block overflow-hidden rounded-xl border border-gray-200 hover:shadow-lg transition"
     >
       <div className="h-48 sm:h-64 md:h-80 lg:h-96 bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -19,7 +25,7 @@ export default function CollectionCard({ title, image, category }) {
           {title}
         </h3>
         <p className="text-xs sm:text-sm text-gray-500 mt-1">
-          Explore collection
+          {t("collections.explore")}
         </p>
       </div>
     </Link>

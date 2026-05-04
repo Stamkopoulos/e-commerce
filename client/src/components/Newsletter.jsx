@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
   const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,15 +28,15 @@ export default function Newsletter() {
 
       if (response.ok) {
         setStatus("success");
-        setMessage("Thank you for subscribing!");
+        setMessage(t("newsletter.success"));
         setEmail("");
       } else {
         setStatus("error");
-        setMessage(data.error || "Something went wrong. Please try again.");
+        setMessage(data.error || t("newsletter.error_generic"));
       }
     } catch (error) {
       setStatus("error");
-      setMessage("Failed to subscribe. Please try again later.");
+      setMessage(t("newsletter.error_failed"));
     }
   };
 
@@ -42,11 +44,10 @@ export default function Newsletter() {
     <section className="py-16 md:py-40 px-4 bg-muted/30">
       <div className="container mx-auto max-w-2xl text-center">
         <h2 className="text-2xl md:text-3xl font-serif font-light tracking-wide mb-4">
-          Join Our Community
+          {t("newsletter.title")}
         </h2>
         <p className="text-muted-foreground mb-8 leading-relaxed">
-          Subscribe to receive exclusive offers, style inspiration, and updates
-          on new arrivals
+          {t("newsletter.subtitle")}
         </p>
         <form
           onSubmit={handleSubmit}
@@ -54,7 +55,7 @@ export default function Newsletter() {
         >
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder={t("newsletter.placeholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -66,7 +67,9 @@ export default function Newsletter() {
             disabled={status === "loading"}
             className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {status === "loading" ? "Subscribing..." : "Subscribe"}
+            {status === "loading"
+              ? t("newsletter.subscribing")
+              : t("newsletter.subscribe")}
           </button>
         </form>
         {message && (

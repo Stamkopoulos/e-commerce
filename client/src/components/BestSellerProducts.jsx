@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getBestsellerProducts } from "../services/productService";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "../hooks/useLangPath";
 
 export default function BestSellerProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
+  const lp = useLangPath();
 
   useEffect(() => {
     const fetchBestsellers = async () => {
@@ -27,7 +31,7 @@ export default function BestSellerProducts() {
   }, []);
 
   if (loading) {
-    return <p className="text-center mt-8">Loading bestsellers...</p>;
+    return <p className="text-center mt-8">{t("bestsellers.loading")}</p>;
   }
 
   return (
@@ -36,15 +40,15 @@ export default function BestSellerProducts() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-10 md:mb-12 gap-4">
           <div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-light tracking-wide mb-2">
-              Best Sellers
+              {t("bestsellers.title")}
             </h2>
-            <p className="text-muted-foreground">Our most-loved pieces</p>
+            <p className="text-muted-foreground">{t("bestsellers.subtitle")}</p>
           </div>
           <Link
-            to="/collections"
+            to={lp("/collections")}
             className="hidden md:flex text-sm hover:underline"
           >
-            View All
+            {t("bestsellers.view_all")}
           </Link>
         </div>
 
@@ -56,7 +60,7 @@ export default function BestSellerProducts() {
                 className="p-2 sm:p-4 transition flex flex-col"
               >
                 <Link
-                  to={`/products/${product.productId}`}
+                  to={lp(`/products/${product.productId}`)}
                   className="flex flex-col flex-grow"
                 >
                   {/* Image */}
@@ -82,15 +86,15 @@ export default function BestSellerProducts() {
             ))
           ) : (
             <p className="col-span-full text-center text-gray-500 py-8">
-              No bestsellers found.
+              {t("bestsellers.none_found")}
             </p>
           )}
         </div>
 
         {/* Mobile View All Link */}
         <div className="mt-6 md:hidden text-center">
-          <Link to="/collections" className="text-sm hover:underline">
-            View All
+          <Link to={lp("/collections")} className="text-sm hover:underline">
+            {t("bestsellers.view_all")}
           </Link>
         </div>
       </div>

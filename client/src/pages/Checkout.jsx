@@ -5,9 +5,12 @@ import Footer from "../components/Footer";
 import { useCart } from "../context/useCart";
 import { placeOrder } from "../services/orderService";
 import Receipt from "./Receipt";
+import { useTranslation } from "react-i18next";
+import { useLangNavigate } from "../hooks/useLangNavigate";
 
 export default function Checkout() {
-  const navigate = useNavigate();
+  const navigate = useLangNavigate();
+  const { t } = useTranslation();
   const {
     cart,
     clearCart,
@@ -81,7 +84,7 @@ export default function Checkout() {
     if (Object.keys(e).length) return;
 
     if (!cart.length) {
-      setErrors({ form: "Your cart is empty." });
+      setErrors({ form: t("checkout.errors.empty_cart") });
       return;
     }
 
@@ -119,7 +122,7 @@ export default function Checkout() {
       }, 400);
     } catch (err) {
       console.error(err);
-      setErrors({ form: "Failed to place order. Try again." });
+      setErrors({ form: t("checkout.errors.order_failed") });
     } finally {
       setSubmitting(false);
     }
@@ -131,13 +134,13 @@ export default function Checkout() {
     setErrors(e);
     if (Object.keys(e).length) {
       setErrors({
-        form: "Please fill in all required fields before proceeding.",
+        form: t("checkout.errors.fill_required"),
       });
       return;
     }
 
     if (!cart.length) {
-      setErrors({ form: "Your cart is empty." });
+      setErrors({ form: t("checkout.errors.empty_cart") });
       return;
     }
 
@@ -172,7 +175,7 @@ export default function Checkout() {
         <section className="min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20">
           <div className="w-full max-w-5xl mx-auto px-3 sm:px-4">
             <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">
-              Checkout
+              {t("checkout.title")}
             </h1>
 
             {errors.form && (
@@ -183,18 +186,38 @@ export default function Checkout() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="bg-white p-6 rounded-lg flex flex-col h-full">
                 <h2 className="text-xl font-semibold mb-6">
-                  Shipping Information
+                  {t("checkout.shipping_info")}
                 </h2>
                 <form
                   onSubmit={handleSubmit}
                   className="flex flex-col flex-grow space-y-4"
                 >
                   {[
-                    ["First name", "firstName", "Enter first name"],
-                    ["Last name", "lastName", "Enter last name"],
-                    ["Email address", "email", "Enter email address"],
-                    ["Phone number", "phone", "Enter phone number"],
-                    ["Address", "address", "Enter address"],
+                    [
+                      t("checkout.first_name"),
+                      "firstName",
+                      t("checkout.placeholders.first_name"),
+                    ],
+                    [
+                      t("checkout.last_name"),
+                      "lastName",
+                      t("checkout.placeholders.last_name"),
+                    ],
+                    [
+                      t("checkout.email"),
+                      "email",
+                      t("checkout.placeholders.email"),
+                    ],
+                    [
+                      t("checkout.phone"),
+                      "phone",
+                      t("checkout.placeholders.phone"),
+                    ],
+                    [
+                      t("checkout.address"),
+                      "address",
+                      t("checkout.placeholders.address"),
+                    ],
                   ].map(([label, key, placeholder]) => (
                     <div key={key}>
                       <label className="block text-sm font-medium mb-1">
@@ -220,14 +243,15 @@ export default function Checkout() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        City <span className="text-red-500">*</span>
+                        {t("checkout.city")}{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         value={form.city}
                         onChange={onChange("city")}
-                        placeholder={"Enter city"}
+                        placeholder={t("checkout.placeholders.city")}
                         required
-                        className={`w-full px-4 py-2 border rounded-lg ${
+                        className={`w-full text-sm px-4 py-2 border rounded-lg ${
                           errors.city ? "border-red-500" : "border-gray-300"
                         }`}
                       />
@@ -240,14 +264,15 @@ export default function Checkout() {
 
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        ZIP Code <span className="text-red-500">*</span>
+                        {t("checkout.zip_code")}{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         value={form.zipCode}
                         onChange={onChange("zipCode")}
-                        placeholder={"Enter ZIP code"}
+                        placeholder={t("checkout.placeholders.zip_code")}
                         required
-                        className={`w-full px-4 py-2 border rounded-lg ${
+                        className={`w-full text-sm px-4 py-2 border rounded-lg ${
                           errors.zipCode ? "border-red-500" : "border-gray-300"
                         }`}
                       />
@@ -275,7 +300,7 @@ export default function Checkout() {
                         <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
                         <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
                       </svg>
-                      Back
+                      {t("checkout.back")}
                     </button>
                   </div>
                 </form>
@@ -283,7 +308,9 @@ export default function Checkout() {
 
               {/* Right Column - Order Summary */}
               <div className="bg-gray-50 p-4 sm:p-6 rounded-lg h-fit sticky top-4">
-                <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
+                <h2 className="text-xl font-semibold mb-6">
+                  {t("checkout.order_summary")}
+                </h2>
 
                 {/* Product List */}
                 <div className="space-y-4 mb-6">
@@ -307,7 +334,7 @@ export default function Checkout() {
                         <div className="flex-1 ml-4">
                           <p className="font-medium">{item.name}</p>
                           <p className="text-sm text-gray-600">
-                            Qty: {item.quantity || 1}
+                            {t("checkout.qty")}: {item.quantity || 1}
                           </p>
                         </div>
                         <p className="font-semibold">
@@ -345,7 +372,7 @@ export default function Checkout() {
                             {appliedPromo.code}
                           </p>
                           <p className="text-sm text-green-600">
-                            {appliedPromo.type} applied
+                            {appliedPromo.type} {t("checkout.promo.applied")}
                           </p>
                         </div>
                       </div>
@@ -379,7 +406,7 @@ export default function Checkout() {
                         </svg>
                         <input
                           type="text"
-                          placeholder="Discount code"
+                          placeholder={t("checkout.promo.placeholder")}
                           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
                           value={promoCodeInput}
                           onChange={(e) =>
@@ -392,7 +419,7 @@ export default function Checkout() {
                         onClick={handleApplyPromo}
                         className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition"
                       >
-                        Apply
+                        {t("checkout.promo.apply")}
                       </button>
                     </div>
                   )}
@@ -400,25 +427,29 @@ export default function Checkout() {
                 {/* Price Summary */}
                 <div className="border-t pt-4 space-y-2 mb-6">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-gray-600">
+                      {t("checkout.subtotal")}
+                    </span>
                     <span className="text-black-600">
                       €{Number(subtotal).toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Shipping</span>
+                    <span className="text-gray-600">
+                      {t("checkout.shipping")}
+                    </span>
                     <span className="text-black-600">
                       €{Number(shipping).toFixed(2)}
                     </span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-sm text-green-600">
-                      <span>Discount</span>
+                      <span>{t("checkout.discount")}</span>
                       <span>-€{Number(discount).toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-lg font-bold border-t pt-2">
-                    <span>Total</span>
+                    <span>{t("checkout.total")}</span>
                     <span>€{Number(totalPrice).toFixed(2)}</span>
                   </div>
                 </div>
@@ -428,7 +459,7 @@ export default function Checkout() {
                   onClick={handleCheckout}
                   className="w-full bg-black text-white py-3 rounded-3xl hover:opacity-90"
                 >
-                  Pay now
+                  {t("checkout.pay_now")}
                 </button>
               </div>
             </div>

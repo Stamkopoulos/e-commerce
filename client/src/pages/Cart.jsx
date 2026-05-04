@@ -3,6 +3,8 @@ import { useCart } from "../context/useCart";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "../hooks/useLangPath";
 
 export default function Cart() {
   const {
@@ -15,6 +17,8 @@ export default function Cart() {
     shipping,
     totalPrice,
   } = useCart();
+  const { t } = useTranslation();
+  const lp = useLangPath();
 
   // Helper to format color for display
   const formatColor = (color) => {
@@ -29,7 +33,7 @@ export default function Cart() {
         <section className="w-full min-h-screen py-12 sm:py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
             <h1 className="text-2xl sm:text-3xl text-center font-bold mb-8 sm:mb-10">
-              Your Cart
+              {t("cart.title")}
             </h1>
 
             {cart.length === 0 ? (
@@ -37,10 +41,10 @@ export default function Cart() {
                 {/* Left side - Empty message */}
                 <div className="flex-1 flex flex-col items-center justify-center gap-4 sm:gap-6 bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200 min-h-[200px]">
                   <p className="text-black-600 text-2xl text-center">
-                    Your cart is empty.
+                    {t("cart.empty")}
                   </p>
                   <Link
-                    to="/products"
+                    to={lp("/products")}
                     className="bg-gray-200 text-black py-3 px-8 rounded-3xl hover:bg-gray-300 transition"
                   >
                     <div className="flex gap-2">
@@ -52,31 +56,39 @@ export default function Cart() {
                         <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
                         <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
                       </svg>
-                      Continue Shopping
+                      {t("cart.continue_shopping")}
                     </div>
                   </Link>
                 </div>
 
                 {/* Right side - Order Summary */}
                 <div className="lg:w-96 bg-gray-50 p-6 rounded-xl border border-gray-200 h-fit sticky top-24">
-                  <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+                  <h2 className="text-2xl font-bold mb-6">
+                    {t("cart.order_summary")}
+                  </h2>
 
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-500">Subtotal:</span>
+                      <span className="text-gray-500">
+                        {t("cart.subtotal")}:
+                      </span>
                       <span>€0.00</span>
                     </div>
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-500">Discount:</span>
+                      <span className="text-gray-500">
+                        {t("cart.discount")}:
+                      </span>
                       <span>€0.00</span>
                     </div>
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-500">Shipping:</span>
+                      <span className="text-gray-500">
+                        {t("cart.shipping")}:
+                      </span>
                       <span>€0.00</span>
                     </div>
                     <div className="border-t pt-4">
                       <div className="flex justify-between text-2xl font-bold">
-                        <span>Total:</span>
+                        <span>{t("cart.total")}:</span>
                         <span>€0.00</span>
                       </div>
                     </div>
@@ -87,7 +99,7 @@ export default function Cart() {
                       disabled
                       className="w-full text-center bg-gray-300 text-gray-500 py-3 px-8 rounded-3xl cursor-not-allowed"
                     >
-                      Proceed to Checkout
+                      {t("cart.proceed_to_checkout")}
                     </button>
                   </div>
                 </div>
@@ -119,11 +131,11 @@ export default function Cart() {
                             {item.product.name}
                           </h2>
                           <p className="text-sm text-gray-500 my-2">
-                            Size{" "}
+                            {t("cart.size")}{" "}
                             <span className="font-bold text-gray-900">
                               {item.size}
                             </span>{" "}
-                            / Color{" "}
+                            / {t("cart.color")}{" "}
                             <span className="font-bold text-gray-900">
                               {formatColor(item.color)}
                             </span>
@@ -234,7 +246,7 @@ export default function Cart() {
                   Clear Cart
                   </button> */}
                   <Link
-                    to="/products"
+                    to={lp("/products")}
                     className="self-start bg-gray-200 text-black py-3 px-8 rounded-3xl hover:bg-gray-300 transition"
                   >
                     <div className="flex gap-2">
@@ -246,31 +258,39 @@ export default function Cart() {
                         <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z" />
                         <path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z" />
                       </svg>
-                      Continue Shopping
+                      {t("cart.continue_shopping")}
                     </div>
                   </Link>
                 </div>
 
                 {/* Right side - Order Summary */}
                 <div className="lg:w-96 bg-gray-50 p-6 rounded-xl border border-gray-200 h-fit sticky top-24">
-                  <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+                  <h2 className="text-2xl font-bold mb-6">
+                    {t("cart.order_summary")}
+                  </h2>
 
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-500">Subtotal:</span>
+                      <span className="text-gray-500">
+                        {t("cart.subtotal")}:
+                      </span>
                       <span>€{subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-500">Discount:</span>
+                      <span className="text-gray-500">
+                        {t("cart.discount")}:
+                      </span>
                       <span>€ {discount.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-lg">
-                      <span className="text-gray-500">Shipping:</span>
+                      <span className="text-gray-500">
+                        {t("cart.shipping")}:
+                      </span>
                       <span>€ {shipping.toFixed(2)}</span>
                     </div>
                     <div className="border-t pt-4">
                       <div className="flex justify-between text-2xl font-bold">
-                        <span>Total:</span>
+                        <span>{t("cart.total")}:</span>
                         <span>€{totalPrice.toFixed(2)}</span>
                       </div>
                     </div>
@@ -278,10 +298,10 @@ export default function Cart() {
 
                   <div className="flex flex-col gap-4">
                     <Link
-                      to="/checkout"
+                      to={lp("/checkout")}
                       className="w-full text-center bg-black text-white py-3 px-8 rounded-3xl hover:bg-gray-800 transition"
                     >
-                      Proceed to Checkout
+                      {t("cart.proceed_to_checkout")}
                     </Link>
                   </div>
                 </div>

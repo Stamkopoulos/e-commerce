@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLangPath } from "../hooks/useLangPath";
 
 export default function Footer() {
+  const { t } = useTranslation();
+  const lp = useLangPath();
+
   return (
     <footer className="bottom-0 w-full bg-white border-t border-gray-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
@@ -10,8 +15,7 @@ export default function Footer() {
               QLOSET
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Timeless pieces crafted for the modern wardrobe. Quality, style,
-              and sustainability in every stitch.
+              {t("footer.tagline")}
             </p>
           </div>
           <div className="hidden md:block"></div>
@@ -20,18 +24,18 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               <li>
                 <Link
-                  href="/about"
+                  href={lp("/about")}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  About Us
+                  {t("footer.about")}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href={lp("/contact")}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Contact
+                  {t("footer.contact")}
                 </Link>
               </li>
             </ul>
@@ -46,19 +50,19 @@ export default function Footer() {
               href="#"
               className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Privacy Policy
+              {t("footer.privacy")}
             </Link>
             <Link
               href="#"
               className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Terms of Service
+              {t("footer.terms")}
             </Link>
             <Link
               href="#"
               className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Shipping Policy
+              {t("footer.shipping")}
             </Link>
           </div>
         </div>
