@@ -16,6 +16,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useCart } from "../context/useCart";
 import { useCartUI } from "../context/useCartUI";
+import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
   const { cart } = useCart();
@@ -23,6 +24,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   // Initialize searchInput from URL params
   const [searchInput, setSearchInput] = useState(() => {
@@ -150,7 +152,7 @@ export default function Navbar() {
                 )}
 
                 <MenuButton className="text-lg font-light text-black flex items-center gap-1 relative z-50">
-                  Collections
+                  {t("nav.collections")}
                   <ChevronDownIcon aria-hidden="true" className="size-5" />
                 </MenuButton>
 
@@ -174,7 +176,7 @@ export default function Navbar() {
                         to="/collections/men"
                         className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
                       >
-                        Men
+                        {t("nav.men")}
                       </Link>
                     </MenuItem>
                     <MenuItem>
@@ -182,7 +184,7 @@ export default function Navbar() {
                         to="/collections/women"
                         className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
                       >
-                        Women
+                        {t("nav.women")}
                       </Link>
                     </MenuItem>
                     <MenuItem>
@@ -190,7 +192,7 @@ export default function Navbar() {
                         to="/collections/accessories"
                         className="block px-4 py-6 text-xl text-black hover:bg-gray-100"
                       >
-                        Accessories
+                        {t("nav.accessories")}
                       </Link>
                     </MenuItem>
                   </div>
@@ -208,7 +210,7 @@ export default function Navbar() {
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search products..."
+                placeholder={t("nav.search_placeholder")}
                 value={searchInput}
                 onChange={handleInputChange}
                 onFocus={() => {
@@ -247,7 +249,7 @@ export default function Navbar() {
                   {/* Search tips */}
                   {searchInput.length > 0 && searchInput.length < 3 && (
                     <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
-                      Type at least 3 characters to search
+                      {t("nav.search_min_chars")}
                     </div>
                   )}
 
@@ -255,7 +257,7 @@ export default function Navbar() {
                   {recentSearches.length > 0 && !searchInput && (
                     <>
                       <div className="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-50">
-                        Recent Searches
+                        {t("nav.recent_searches")}
                       </div>
                       {recentSearches.map((item, idx) => (
                         <button
@@ -274,7 +276,7 @@ export default function Navbar() {
                   {!searchInput && recentSearches.length === 0 && (
                     <>
                       <div className="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-50">
-                        Popular Categories
+                        {t("nav.popular_categories")}
                       </div>
                       {["Men", "Women", "Accessories"].map((cat) => (
                         <button
@@ -282,7 +284,7 @@ export default function Navbar() {
                           onClick={() => handleSuggestionClick(cat)}
                           className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                         >
-                          Shop {cat}
+                          {t("nav.shop_category", { category: cat })}
                         </button>
                       ))}
                     </>
@@ -314,7 +316,7 @@ export default function Navbar() {
           <SignedOut>
             <SignInButton mode="redirect" redirecturl="/">
               <button className="text-sm sm:text-md text-black font-medium px-2 sm:px-3 py-1.5">
-                Sign In
+                {t("nav.sign_in")}
               </button>
             </SignInButton>
           </SignedOut>
@@ -334,21 +336,21 @@ export default function Navbar() {
               className="block py-2 text-lg text-black hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Men
+              {t("nav.men")}
             </Link>
             <Link
               to="/collections/women"
               className="block py-2 text-lg text-black hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Women
+              {t("nav.women")}
             </Link>
             <Link
               to="/collections/accessories"
               className="block py-2 text-lg text-black hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Accessories
+              {t("nav.accessories")}
             </Link>
             <div className="border-t pt-4">
               <Link
@@ -356,14 +358,14 @@ export default function Navbar() {
                 className="block py-2 text-lg text-black hover:bg-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                All Products
+                {t("nav.all_products")}
               </Link>
               <Link
                 to="/collections"
                 className="block py-2 text-lg text-black hover:bg-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Collections
+                {t("nav.collections")}
               </Link>
             </div>
           </div>

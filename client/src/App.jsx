@@ -1,6 +1,7 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
+import LanguageWrapper from "./components/LanguageWrapper";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
@@ -18,15 +19,17 @@ function App() {
       <BrowserRouter>
         <CartDrawer />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/collections" element={<Collections />} />
-          <Route path="/collections/:category" element={<Products />} />
-          <Route path="/receipt" element={<Receipt />} />
-          {/* Admin routes */}
+          <Route path="/" element={<Navigate to="/en" replace />} />
+          <Route path="/:lang" element={<LanguageWrapper />}>
+            <Route index element={<Home />} />
+            <Route path="products" element={<Products />} />
+            <Route path="products/:id" element={<ProductDetails />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="collections" element={<Collections />} />
+            <Route path="collections/:category" element={<Products />} />
+            <Route path="receipt" element={<Receipt />} />
+          </Route>
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
       </BrowserRouter>

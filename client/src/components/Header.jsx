@@ -6,9 +6,11 @@ import CollectionsSection from "./CollectionsSection";
 import couple from "../assets/couple.jpg";
 import img from "../assets/header.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { t } = useTranslation();
 
   const slides = [
     {
@@ -84,11 +86,10 @@ export default function Header() {
                   }`}
                 >
                   <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
-                    Modern Essentials. Timeless Elegance.
+                    {t("hero.title")}
                   </h1>
                   <p className="text-xs sm:text-sm md:text-base lg:text-xl font-light px-2 sm:px-4">
-                    Modern essentials, thoughtfully curated for the conscious
-                    wardrobe.
+                    {t("hero.subtitle")}
                   </p>
                 </div>
               </div>
@@ -99,7 +100,7 @@ export default function Header() {
           <button
             onClick={goToPrevious}
             className="absolute text-white left-2 sm:left-4 top-1/2 -translate-y-1/2 p-1 sm:p-2 transition-all z-10 hover:bg-black/20 rounded-full"
-            aria-label="Previous slide"
+            aria-label={t("hero.prev_slide")}
           >
             <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
           </button>
@@ -107,7 +108,7 @@ export default function Header() {
           <button
             onClick={goToNext}
             className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-white p-1 sm:p-2 transition-all z-10 hover:bg-black/20 rounded-full"
-            aria-label="Next slide"
+            aria-label={t("hero.next_slide")}
           >
             <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
           </button>
@@ -123,7 +124,7 @@ export default function Header() {
                     ? "bg-white w-6 sm:w-8"
                     : "bg-white/50 hover:bg-white/75"
                 }`}
-                aria-label={`Go to slide ${index + 1}`}
+                aria-label={t("hero.go_to_slide", { slide: index + 1 })}
               />
             ))}
           </div>
@@ -140,7 +141,7 @@ export default function Header() {
       {showUp && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label="Scroll to top"
+          aria-label={t("hero.scroll_to_top")}
           className="fixed right-6 bottom-20 text-white bg-black py-2 px-4 rounded-full"
         >
           &#8593;
