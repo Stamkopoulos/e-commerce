@@ -5,6 +5,9 @@ import Footer from "../components/Footer";
 import { getProductById } from "../services/productService";
 import { useCart } from "../context/useCart";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+import { useLangNavigate } from "../hooks/useLangNavigate";
+import { useLangPath } from "../hooks/useLangPath";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -16,8 +19,9 @@ export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [variantError, setVariantError] = useState("");
   const [currentImage, setCurrentImage] = useState("");
-
-  let navigate = useNavigate();
+  const navigate = useLangNavigate();
+  const { t } = useTranslation();
+  const lp = useLangPath();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -45,13 +49,13 @@ export default function ProductDetails() {
   if (loading)
     return (
       <p className="text-center mt-20 text-xl text-gray-600">
-        Loading product details...
+        {t("product_details.loading")}
       </p>
     );
   if (!product)
     return (
       <p className="text-center mt-20 text-xl text-red-600">
-        Product not found.
+        {t("product_details.not_found")}
       </p>
     );
 
@@ -217,7 +221,7 @@ export default function ProductDetails() {
             {/* Color - Show ALL colors */}
             {availableColors.length > 0 && (
               <div>
-                <p className="font-medium mb-2">Color</p>
+                <p className="font-medium mb-2">{t("product_details.color")}</p>
                 <div className="flex gap-2 flex-wrap">
                   {availableColors.map((color) => {
                     const inStock = isColorInStock(color);
@@ -242,7 +246,7 @@ export default function ProductDetails() {
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-full h-0.5 bg-red-700 transform rotate-45"></div>
                             <span className="absolute -top-2 -right-2 bg-red-700 text-white text-[10px] px-1.5 py-0.5 rounded-full font-medium whitespace-nowrap">
-                              Sold Out
+                              {t("product_details.sold_out")}
                             </span>
                           </div>
                         )}
@@ -256,7 +260,7 @@ export default function ProductDetails() {
             {/* Size - Show ALL sizes from all variants */}
             {allSizes.length > 0 && (
               <div>
-                <p className="font-medium mb-2">Size</p>
+                <p className="font-medium mb-2">{t("product_details.size")}</p>
                 <div className="flex gap-2 flex-wrap">
                   {allSizes.map(({ size }) => {
                     const inStock = selectedColor ? isSizeInStock(size) : true;
@@ -294,15 +298,21 @@ export default function ProductDetails() {
                 {stockQuantity > 0 ? (
                   stockQuantity < 5 ? (
                     <span className="text-orange-600">
-                      Only {stockQuantity} left in stock!
+                      {t("product_details.stock_low", {
+                        quantity: stockQuantity,
+                      })}
                     </span>
                   ) : (
                     <span className="text-green-600">
-                      In stock ({stockQuantity} available)
+                      {t("product_details.stock_ok", {
+                        quantity: stockQuantity,
+                      })}
                     </span>
                   )
                 ) : (
-                  <span className="text-red-600">Out of stock</span>
+                  <span className="text-red-600">
+                    {t("product_details.out_of_stock")}
+                  </span>
                 )}
               </p>
             )}
@@ -325,10 +335,10 @@ export default function ProductDetails() {
               }`}
             >
               {isAdding
-                ? "Adding..."
+                ? t("product_details.adding")
                 : stockQuantity === 0
-                  ? "Out of Stock"
-                  : "Add to Cart"}
+                  ? t("product_details.out_of_stock")
+                  : t("product_details.add_to_cart")}
             </button>
             <button
               onClick={() => {
@@ -336,7 +346,7 @@ export default function ProductDetails() {
               }}
               className="bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition text-sm sm:text-base"
             >
-              Back
+              {t("product_details.back")}
             </button>
           </div>
         </section>

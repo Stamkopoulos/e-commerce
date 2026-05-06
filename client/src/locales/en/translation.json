@@ -25,7 +25,10 @@
   "collections": {
     "title": "Collections",
     "subtitle": "Explore our complete range",
-    "explore": "Explore collection"
+    "explore": "Explore collection",
+    "men": "Men",
+    "women": "Women",
+    "accessories": "Accessories"
   },
   "bestsellers": {
     "title": "Best Sellers",
@@ -43,6 +46,14 @@
     "success": "Thank you for subscribing!",
     "error_generic": "Something went wrong. Please try again.",
     "error_failed": "Failed to subscribe. Please try again later."
+  },
+  "cart_drawer": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "continue_shopping": "Continue Shopping",
+    "view_cart": "View Cart",
+    "proceed_to_checkout": "Proceed to Checkout"
   },
   "cart": {
     "title": "Your Cart",
@@ -115,7 +126,11 @@
     "filters": "Filters",
     "collections": "COLLECTIONS",
     "all_products": "All Products",
+    "men": "Men",
+    "women": "Women",
+    "accessories": "Accessories",
     "new_arrivals": "New Arrivals",
+    "new": "NEW",
     "sale": "Sale",
     "price": "PRICE",
     "size": "SIZE",
@@ -126,8 +141,8 @@
     "sort_price_desc": "Price: High → Low",
     "sort_name_asc": "Name: A → Z",
     "sort_name_desc": "Name: Z → A",
-    "count_one": "{{count}} product",
-    "count_other": "{{count}} products",
+    "count_one": " product",
+    "count_other": "s",
     "no_results_query": "No results for \"{{query}}\"",
     "no_results_filters": "No products match your filters",
     "try_keywords": "Try different keywords or browse our collections below",
@@ -143,8 +158,8 @@
     "color": "Color",
     "size": "Size",
     "sold_out": "Sold Out",
-    "stock_low": "Only {{count}} left in stock!",
-    "stock_ok": "In stock ({{count}} available)",
+    "stock_low": "Only {{quantity}} left in stock!",
+    "stock_ok": "In stock ({{quantity}} available)",
     "out_of_stock": "Out of stock",
     "select_variant": "Please select a size and color.",
     "item_out_of_stock": "This item is out of stock.",

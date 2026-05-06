@@ -19,6 +19,7 @@ import { useCartUI } from "../context/useCartUI";
 import { useTranslation } from "react-i18next";
 import { useLangPath } from "../hooks/useLangPath";
 import { useLangNavigate } from "../hooks/useLangNavigate";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const { cart } = useCart();
@@ -304,6 +305,8 @@ export default function Navbar() {
           >
             <MagnifyingGlassIcon className="w-5 h-5" />
           </button>
+
+          <LanguageSwitcher />
 
           {/* Cart */}
           <div className="relative group cursor-pointer" onClick={openCart}>

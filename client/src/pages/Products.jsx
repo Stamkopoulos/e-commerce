@@ -2,8 +2,11 @@ import { useState, useEffect, useMemo } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
+import { useParams, useLocation, Link } from "react-router-dom";
 import { XMarkIcon, FunnelIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
+import { useLangNavigate } from "../hooks/useLangNavigate";
+import { useLangPath } from "../hooks/useLangPath";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -15,7 +18,9 @@ export default function Products() {
   const [maxPrice, setMaxPrice] = useState(1000);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate = useLangNavigate();
+  const { t } = useTranslation();
+  const lp = useLangPath();
   const params = new URLSearchParams(location.search);
   const searchQuery = params.get("search")?.toLowerCase() || "";
 
@@ -175,12 +180,12 @@ export default function Products() {
             <h1 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2">
               {category
                 ? category.charAt(0).toUpperCase() + category.slice(1)
-                : "SHOP"}
+                : t("products.shop")}
             </h1>
             {search ? (
               <div className="space-y-2">
                 <p className="text-gray-600 text-sm">
-                  Search results for "
+                  {t("products.search_results")} "
                   <span className="font-semibold text-black">{search}</span>"
                 </p>
 
@@ -193,11 +198,11 @@ export default function Products() {
                   }
                   className="text-xs text-gray-500 hover:text-black underline mt-2 inline-block"
                 >
-                  Clear search
+                  {t("products.clear_search")}
                 </button>
               </div>
             ) : (
-              <p className="text-gray-600 text-sm">Discover our collection</p>
+              <p className="text-gray-600 text-sm">{t("products.discover")}</p>
             )}
           </div>
 
@@ -208,7 +213,7 @@ export default function Products() {
               className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:border-black transition"
             >
               <FunnelIcon className="w-4 h-4" />
-              Filters
+              {t("products.filters")}
             </button>
             <span className="text-sm text-gray-500">
               {sortedProducts.length} products
@@ -221,28 +226,32 @@ export default function Products() {
               {/* Categories Filter */}
               <div className="border-b border-gray-00 pb-6">
                 <h3 className="font-bold mb-4 text-md uppercase tracking-wider text-gray-900">
-                  COLLECTIONS
+                  {t("products.collections")}
                 </h3>
                 <div className="space-y-3">
                   <Link
-                    to="/products"
+                    to={lp("/products")}
                     className={`flex items-center justify-between py-2 text-sm transition-colors ${
                       !category
                         ? "font-medium text-black"
                         : "text-gray-600 hover:text-black"
                     }`}
                   >
-                    <span>All Products</span>
+                    <span>{t("products.all_products")}</span>
                   </Link>
                   <div className="border-t border-gray-200"></div>
-                  {["Men", "Women", "Accessories"].map((cat, index) => {
+                  {[
+                    t("products.men"),
+                    t("products.women"),
+                    t("products.accessories"),
+                  ].map((cat, index) => {
                     const categorySlug = cat.toLowerCase();
                     const isActive = category === categorySlug;
 
                     return (
                       <div key={cat}>
                         <Link
-                          to={`/collections/${categorySlug}`}
+                          to={lp(`/collections/${categorySlug}`)}
                           className={`flex items-center text-sm ${
                             isActive
                               ? "font-medium text-black"
@@ -260,20 +269,20 @@ export default function Products() {
 
                   <div className="border-t border-gray-200 mt-3 pt-3">
                     <Link
-                      to="/products"
+                      to={lp("/products")}
                       className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
                     >
-                      <span>New Arrivals</span>
+                      <span>{t("products.new_arrivals")}</span>
                       <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
-                        New
+                        {t("products.new")}
                       </span>
                     </Link>
                     <div className="border-t border-gray-100"></div>
                     <Link
-                      to="/products"
+                      to={lp("/products")}
                       className="flex items-center justify-between py-2 text-sm text-gray-600 hover:text-black transition-colors"
                     >
-                      <span>Sale</span>
+                      <span>{t("products.sale")}</span>
                       <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">
                         -30%
                       </span>
@@ -284,7 +293,7 @@ export default function Products() {
               {/* Price Range Filter - Dual Thumb Slider */}
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="font-medium mb-4 text-sm uppercase tracking-wider">
-                  PRICE
+                  {t("products.price")}
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-3">
@@ -411,7 +420,7 @@ export default function Products() {
               {/* Size Filter */}
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="font-medium mb-4 text-sm uppercase tracking-wider text-gray-900">
-                  SIZE
+                  {t("products.size")}
                 </h3>
                 <div className="grid grid-cols-3 gap-2">
                   {sizes.map((size) => (
@@ -433,7 +442,7 @@ export default function Products() {
               {/* Color Filter */}
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="font-medium mb-4 text-sm uppercase tracking-wider text-gray-900">
-                  COLOR
+                  {t("products.color")}
                 </h3>
                 <div className="grid grid-cols-4 gap-3">
                   {colors.map((color) => {
@@ -496,7 +505,7 @@ export default function Products() {
                 }}
                 className="text-sm border-b border-black hover:border-gray-500 transition w-full text-center py-2 cursor-pointer"
               >
-                Clear All Filters
+                {t("products.clear_all")}
               </button>
             </div>
 
@@ -505,8 +514,10 @@ export default function Products() {
               {/* Sort Bar */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-2">
                 <p className="text-sm text-gray-600 font-medium">
-                  {sortedProducts.length} product
-                  {sortedProducts.length !== 1 ? "s" : ""}
+                  {sortedProducts.length} {t("products.count_one")}
+                  {sortedProducts.length !== 1
+                    ? `${t("products.count_other")}`
+                    : ""}
                 </p>
                 <div className="relative w-full sm:w-auto">
                   <select
@@ -514,11 +525,19 @@ export default function Products() {
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
                   >
-                    <option value="default">Sort By</option>
-                    <option value="price-asc">Price: Low → High</option>
-                    <option value="price-desc">Price: High → Low</option>
-                    <option value="name-asc">Name: A → Z</option>
-                    <option value="name-desc">Name: Z → A</option>
+                    <option value="default">{t("products.sort_by")}</option>
+                    <option value="price-asc">
+                      {t("products.sort_price_asc")}
+                    </option>
+                    <option value="price-desc">
+                      {t("products.sort_price_desc")}
+                    </option>
+                    <option value="name-asc">
+                      {t("products.sort_name_asc")}
+                    </option>
+                    <option value="name-desc">
+                      {t("products.sort_name_desc")}
+                    </option>
                   </select>
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                     <svg
@@ -567,16 +586,14 @@ export default function Products() {
                   </svg>
                   <p className="text-gray-700 mb-2 font-medium">
                     {searchQuery
-                      ? `No results for "${searchQuery}"`
-                      : "No products match your filters"}
+                      ? `{t("products.no_results_query", { query: searchQuery })}`
+                      : `{t("products.no_results_filters")}`}
                   </p>
                   <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">
                     {searchQuery ? (
-                      <>
-                        Try different keywords or browse our collections below
-                      </>
+                      <>{t("products.try_keywords")}</>
                     ) : (
-                      <>Try adjusting your filters or browse all products</>
+                      <>{t("products.try_filters")}</>
                     )}
                   </p>
 
@@ -594,13 +611,13 @@ export default function Products() {
                           }}
                           className="text-sm px-4 py-2 bg-white border border-gray-300 rounded hover:border-black transition-colors"
                         >
-                          Clear search
+                          {t("products.clear_search")}
                         </button>
                         <button
                           onClick={() => navigate("/products")}
                           className="text-sm px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
                         >
-                          Browse all products
+                          {t("products.browse_all")}
                         </button>
                       </>
                     )}
@@ -609,18 +626,22 @@ export default function Products() {
                   {/* Category suggestions */}
                   <div className="mt-4">
                     <p className="text-xs text-gray-500 mb-3">
-                      Popular categories:
+                      {t("products.popular_categories")}
                     </p>
                     <div className="flex flex-wrap justify-center gap-2">
-                      {["Men", "Women", "Accessories"].map((cat) => (
+                      {[
+                        t("products.men"),
+                        t("products.women"),
+                        t("products.accessories"),
+                      ].map((cat, index) => {
                         <a
                           key={cat}
                           href={`/collections/${cat.toLowerCase()}`}
                           className="text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-black transition-colors"
                         >
                           {cat}
-                        </a>
-                      ))}
+                        </a>;
+                      })}
                     </div>
                   </div>
                 </div>
@@ -629,7 +650,7 @@ export default function Products() {
               {/* Loading state */}
               {products.length === 0 && (
                 <div className="text-center py-20 col-span-3">
-                  <p className="text-gray-600">Loading products...</p>
+                  <p className="text-gray-600">{t("products.loading")}</p>
                 </div>
               )}
 
@@ -638,7 +659,9 @@ export default function Products() {
                 filteredProducts.length === 0 &&
                 !search && (
                   <div className="text-center py-20 col-span-3">
-                    <p className="text-gray-600">No products available.</p>
+                    <p className="text-gray-600">
+                      {t("products.none_available")}
+                    </p>
                   </div>
                 )}
             </div>
@@ -668,22 +691,26 @@ export default function Products() {
                 {/* Categories */}
                 <div className="border-b pb-4">
                   <h3 className="font-bold mb-3 text-md uppercase tracking-wider text-gray-900">
-                    COLLECTIONS
+                    {t("products.collections")}
                   </h3>
                   <div className="space-y-2">
                     <Link
-                      to="/products"
+                      to={lp("/products")}
                       className={`flex items-center py-1 text-sm ${
                         !category ? "font-medium text-black" : "text-gray-600"
                       }`}
                       onClick={() => setMobileFiltersOpen(false)}
                     >
-                      All Products
+                      {t("products.all_products")}
                     </Link>
-                    {["Men", "Women", "Accessories"].map((cat) => (
+                    {[
+                      t("products.men"),
+                      t("products.women"),
+                      t("products.accessories"),
+                    ].map((cat) => (
                       <Link
                         key={cat}
-                        to={`/collections/${cat.toLowerCase()}`}
+                        to={lp(`/collections/${cat.toLowerCase()}`)}
                         className={`flex items-center py-1 text-sm ${
                           category === cat.toLowerCase()
                             ? "font-medium text-black"
@@ -700,7 +727,7 @@ export default function Products() {
                 {/* Price */}
                 <div className="border-b pb-4">
                   <h3 className="font-medium mb-3 text-sm uppercase tracking-wider">
-                    PRICE
+                    {t("products.price")}
                   </h3>
                   <div className="flex gap-2">
                     <input
@@ -730,7 +757,7 @@ export default function Products() {
                 {/* Size */}
                 <div className="border-b pb-4">
                   <h3 className="font-medium mb-3 text-sm uppercase tracking-wider text-gray-900">
-                    SIZE
+                    {t("products.size")}
                   </h3>
                   <div className="grid grid-cols-3 gap-2">
                     {sizes.map((size) => (
@@ -752,7 +779,7 @@ export default function Products() {
                 {/* Color */}
                 <div className="border-b pb-4">
                   <h3 className="font-medium mb-3 text-sm uppercase tracking-wider text-gray-900">
-                    COLOR
+                    {t("products.color")}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {colors.map((color) => (
@@ -781,7 +808,7 @@ export default function Products() {
                   }}
                   className="w-full py-2 border border-black text-sm"
                 >
-                  Clear All Filters
+                  {t("products.clear_all")}
                 </button>
               </div>
             </div>
